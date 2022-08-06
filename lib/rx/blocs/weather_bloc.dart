@@ -1,9 +1,9 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/managers/weather_api.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
-import 'package:client/types/weather_forecast.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
@@ -19,6 +19,10 @@ class WeatherBloc extends RxBloc {
   final _weatherApi = BehaviorSubject<WeatherApi>();
   final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
   final _weatherApiUnits = BehaviorSubject<WeatherUnits>();
+
+  Stream<WeatherUnits> get units => _weatherApiUnits.stream;
+
+  Stream<WeatherApiProvider> get apiProvider => _weatherApiProvider.stream;
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 

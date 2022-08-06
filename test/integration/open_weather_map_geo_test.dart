@@ -1,6 +1,6 @@
+import 'package:client/models/location.dart';
 import 'package:client/rx/managers/geo_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
-import 'package:client/types/location.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 

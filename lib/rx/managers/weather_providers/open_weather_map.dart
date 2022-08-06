@@ -1,5 +1,5 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/weather_api.dart';
-import 'package:client/types/weather_forecast.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
   final String appId;

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:client/types/weather_forecast.dart';
+import 'package:client/models/weather_forecast.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

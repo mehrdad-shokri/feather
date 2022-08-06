@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:client/types/location.dart';
+import 'package:client/models/location.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

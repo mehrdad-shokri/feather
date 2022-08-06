@@ -1,10 +1,10 @@
+import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/managers/geo_api.dart';
 import 'package:client/rx/managers/geo_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/geo_providers.dart';
-import 'package:client/types/location.dart';
 import 'package:client/utils/constants.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';

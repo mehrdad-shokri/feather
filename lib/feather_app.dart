@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:client/pages/init_page.dart';
-import 'package:client/pages/next_7_days.dart';
+import 'package:client/pages/next_days_page.dart';
 import 'package:client/rx/app_provider.dart';
 import 'package:client/types/next_days_page_arguments.dart';
 import 'package:client/utils/constants.dart';
@@ -83,7 +83,7 @@ class FeatherAppState extends State<FeatherApp> {
           case '/7days':
             return platformPageRoute(
                 context: context,
-                builder: (context) => Next7Days(
+                builder: (context) => NextDaysPage(
                       arguments: settings.arguments as NextDaysPageArguments,
                     ));
           default:

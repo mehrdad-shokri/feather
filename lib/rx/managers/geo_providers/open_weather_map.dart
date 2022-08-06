@@ -1,5 +1,5 @@
+import 'package:client/models/location.dart';
 import 'package:client/rx/managers/geo_api.dart';
-import 'package:client/types/location.dart';
 
 class OpenWeatherMapGeoApi extends GeoApi {
   final String appId;

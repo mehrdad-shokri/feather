@@ -1,5 +1,5 @@
+import 'package:client/models/location.dart';
 import 'package:client/rx/managers/api_client.dart';
-import 'package:client/types/location.dart';
 
 abstract class GeoApi {
   final String lang;

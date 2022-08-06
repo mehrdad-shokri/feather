@@ -1,6 +1,6 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
-import 'package:client/types/weather_forecast.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 

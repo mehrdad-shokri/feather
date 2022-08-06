@@ -1,5 +1,5 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/api_client.dart';
-import 'package:client/types/weather_forecast.dart';
 
 abstract class WeatherApi {
   final ApiClient apiClient;
