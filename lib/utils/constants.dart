@@ -1,9 +1,19 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
+import 'package:client/types/geo_providers.dart';
+import 'package:client/types/weather_providers.dart';
+import 'package:client/types/weather_units.dart';
 import 'package:flutter/material.dart';
 
 class Constants {
   Constants._();
+
+  static const String LAST_CITY_PREFS = 'last_city';
+  static const String USER_LOCALE_PREFS = 'user_locale';
+  static const String IS_FIRST_VISIT_PREFS = 'is_first_visit';
+  static const String WEATHER_API_PROVIDER_PREFS = 'weather_api_provider';
+  static const String WEATHER_UNITS_PREFS = 'weather_api_units';
+  static const String GEO_API_PROVIDER_PREFS = 'geo_api_provider';
 
   static final Color PRIMARY_COLOR = Colors.blue.shade300;
   static final Color PRIMARY_COLOR_DARK = Colors.blue.shade500;
@@ -59,4 +69,13 @@ class Constants {
       EdgeInsets.symmetric(horizontal: 8, vertical: 4);
   static final ShapeBorder CARD_SHAPE =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
+
+  static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
+  static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =
+      WeatherApiProvider.openWeatherMap;
+
+  static const GeoApiProviders DEFAULT_GEO_API_PROVIDER =
+      GeoApiProviders.openWeatherMap;
+
+  static const String OPEN_WEATHER_MAP_API_KEY_ENV = 'OPEN_WEATHER_MAP_API_KEY';
 }

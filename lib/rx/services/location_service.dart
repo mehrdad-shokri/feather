@@ -5,6 +5,8 @@ class LocationService extends RxService {
   late LocationPermission hasPermission;
   late bool isEnabled;
 
+  get instance => Geolocator;
+
   @override
   Future<void> onCreate() async {
     hasPermission = await Geolocator.checkPermission();

@@ -1,33 +1,26 @@
 import 'dart:io';
 
-import 'package:client/pages/edit_lists_page.dart';
-import 'package:client/pages/inbox_page.dart';
-import 'package:client/pages/signup_page.dart';
-import 'package:client/pages/root_page.dart';
-import 'package:client/rx/blocs/settings_bloc.dart';
-import 'package:client/rx/services/app_service.dart';
-import 'package:client/types/enums.dart';
-import 'package:client/types/inbox_page_arguments.dart';
+import 'package:client/pages/init_page.dart';
+import 'package:client/pages/next_7_days.dart';
+import 'package:client/rx/app_provider.dart';
+import 'package:client/types/next_days_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/utils.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class FeatherApp extends StatefulWidget {
-  const ShanbeApp({Key? key}) : super(key: key);
+  const FeatherApp({Key? key}) : super(key: key);
 
   @override
-  _FeatherAppState createState() => _FeatherAppState();
+  FeatherAppState createState() => FeatherAppState();
 }
 
-class _FeatherAppState extends State<FeatherApp> {
+class FeatherAppState extends State<FeatherApp> {
   late Future<void> appInitFuture;
-  late AppService appService;
-  late SettingsBloc settingsBloc;
+  late AppProvider appProvider;
   late Locale locale;
   late Brightness brightness;
   late ThemeMode theme;
@@ -43,60 +36,29 @@ class _FeatherAppState extends State<FeatherApp> {
   }
 
   Future<void> bootstrapApp() async {
-    appService = AppService();
+    appProvider = AppProvider();
     try {
-      await appService.onCreate();
-    } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack);
+      await appProvider.onCreate();
+    } catch (e) {
+      //  Catch error by crashlytics
     }
-    settingsBloc = SettingsBloc(appService.storageService);
-    settingsBloc.locale.listen((event) {
-      setState(() {
-        locale = event;
-      });
-    });
-    settingsBloc.theme.listen((event) {
-      theme = event;
-      if (event == ThemeMode.dark) {
-        setState(() {
-          brightness = Brightness.dark;
-        });
-      } else if (event == ThemeMode.light) {
-        setState(() {
-          brightness = Brightness.light;
-        });
-      } else {
-        setState(() {
-          brightness =
-              WidgetsBinding.instance.platformDispatcher.platformBrightness;
-        });
-      }
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    appService.onTerminate();
+    appProvider.onDispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformApp(
-      key: GlobalKey(debugLabel: 'shanbeApp'),
+      key: GlobalKey(debugLabel: 'featherApp'),
       showSemanticsDebugger: false,
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fa')
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
       localeResolutionCallback:
           (Locale? locale, Iterable<Locale> supportedLocales) {
@@ -115,93 +77,83 @@ class _FeatherAppState extends State<FeatherApp> {
           case '/':
             return platformPageRoute(
                 context: context,
-                builder: (context) => RootPage(
-                  appInitFuture: appInitFuture,
-                ));
-          case '/inbox':
+                builder: (context) => InitPage(
+                      future: appInitFuture,
+                    ));
+          case '/7days':
             return platformPageRoute(
                 context: context,
-                builder: (context) => InboxPage(
-                  arguments: settings.arguments as InboxPageArguments?,
-                  context: context,
-                ));
-          case '/edit-lists':
-            return platformPageRoute(
-                context: context, builder: (context) => const EditListsPage());
-          case '/signup':
-            return platformPageRoute(
-                context: context,
-                builder: (context) => SignupPage(
-                  context: context,
-                ));
+                builder: (context) => Next7Days(
+                      arguments: settings.arguments as NextDaysPageArguments,
+                    ));
           default:
             return null;
         }
       },
       cupertino: (context, target) => CupertinoAppData(
           theme: CupertinoThemeData(
-            brightness: brightness,
-            primaryColor: Constants.PRIMARY_COLOR,
-            primaryContrastingColor: Colors.white,
-            scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
-            textTheme: CupertinoTextThemeData(
-              primaryColor: Constants.PRIMARY_COLOR,
-              textStyle: const TextStyle(
-                color: Constants.TEXT_BODY_COLOR,
-                fontSize: Constants.S1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-              ),
-              tabLabelTextStyle: const TextStyle(
-                  fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                  fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                  fontSize: Constants.CAPTION_FONT_SIZE,
-                  color: CupertinoColors.inactiveGray,
-                  fontWeight: Constants.MEDIUM_FONT_WEIGHT),
-              navTitleTextStyle: const TextStyle(
-                  fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                  fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                  fontSize: Constants.H5_FONT_SIZE,
-                  color: Constants.TEXT_BLACK_COLOR,
-                  fontWeight: Constants.DEMI_BOLD_FONT_WEIGHT),
-              actionTextStyle: const TextStyle(
-                color: CupertinoColors.activeBlue,
-                fontSize: Constants.S1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-              ),
-              navActionTextStyle: const TextStyle(
-                color: CupertinoColors.activeBlue,
-                fontSize: Constants.S1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-              ),
-              navLargeTitleTextStyle: const TextStyle(
-                color: Constants.TEXT_BLACK_COLOR,
-                fontSize: Constants.H1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.BOLD_FONT_WEIGHT,
-              ),
-              pickerTextStyle: const TextStyle(
-                color: Constants.TEXT_BODY_COLOR,
-                fontSize: Constants.S1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-              ),
-              dateTimePickerTextStyle: const TextStyle(
-                color: Constants.TEXT_BODY_COLOR,
-                fontSize: Constants.S1_FONT_SIZE,
-                fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-              ),
-            ),
-          )),
+        brightness: brightness,
+        primaryColor: Constants.PRIMARY_COLOR,
+        primaryContrastingColor: Colors.white,
+        scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
+        textTheme: CupertinoTextThemeData(
+          primaryColor: Constants.PRIMARY_COLOR,
+          textStyle: const TextStyle(
+            color: Constants.TEXT_BODY_COLOR,
+            fontSize: Constants.S1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+          ),
+          tabLabelTextStyle: const TextStyle(
+              fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+              fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+              fontSize: Constants.CAPTION_FONT_SIZE,
+              color: CupertinoColors.inactiveGray,
+              fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+          navTitleTextStyle: const TextStyle(
+              fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+              fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+              fontSize: Constants.H5_FONT_SIZE,
+              color: Constants.TEXT_BLACK_COLOR,
+              fontWeight: Constants.DEMI_BOLD_FONT_WEIGHT),
+          actionTextStyle: const TextStyle(
+            color: CupertinoColors.activeBlue,
+            fontSize: Constants.S1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+          ),
+          navActionTextStyle: const TextStyle(
+            color: CupertinoColors.activeBlue,
+            fontSize: Constants.S1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+          ),
+          navLargeTitleTextStyle: const TextStyle(
+            color: Constants.TEXT_BLACK_COLOR,
+            fontSize: Constants.H1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.BOLD_FONT_WEIGHT,
+          ),
+          pickerTextStyle: const TextStyle(
+            color: Constants.TEXT_BODY_COLOR,
+            fontSize: Constants.S1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+          ),
+          dateTimePickerTextStyle: const TextStyle(
+            color: Constants.TEXT_BODY_COLOR,
+            fontSize: Constants.S1_FONT_SIZE,
+            fontFamily: Constants.APPLICATION_DEFAULT_FONT,
+            fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
+            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+          ),
+        ),
+      )),
       material: (context, target) => MaterialAppData(
           themeMode: theme,
           darkTheme: ThemeData(
@@ -245,7 +197,7 @@ class _FeatherAppState extends State<FeatherApp> {
               bottomSheetTheme: const BottomSheetThemeData(
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24)))),
+                          BorderRadius.vertical(top: Radius.circular(24)))),
               textTheme: Theme.of(context).textTheme.apply(
                   fontFamily: Constants.APPLICATION_DEFAULT_FONT,
                   bodyColor: Constants.TEXT_BODY_COLOR_DARK,
@@ -291,7 +243,7 @@ class _FeatherAppState extends State<FeatherApp> {
               bottomSheetTheme: const BottomSheetThemeData(
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24)))),
+                          BorderRadius.vertical(top: Radius.circular(24)))),
               textTheme: Theme.of(context).textTheme.apply(
                   fontFamily: Constants.APPLICATION_DEFAULT_FONT,
                   bodyColor: Constants.TEXT_BODY_COLOR,

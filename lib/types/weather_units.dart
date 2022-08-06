@@ -1,0 +1,1 @@
+enum WeatherUnits { imperial, metric }

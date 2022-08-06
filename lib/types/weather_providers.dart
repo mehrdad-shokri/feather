@@ -1,0 +1,1 @@
+enum WeatherApiProvider { openWeatherMap }
