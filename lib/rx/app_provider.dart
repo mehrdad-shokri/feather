@@ -1,25 +1,25 @@
 import 'package:client/rx/services/connectivity_service.dart';
 import 'package:client/rx/services/env_service.dart';
-import 'package:client/rx/services/location_service.dart';
+import 'package:client/rx/services/position_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:get_it/get_it.dart';
 
 class AppProvider {
   late ConnectivityService connectivityService;
-  late LocationService locationService;
+  late PositionService positionService;
   late SharedPrefsService sharedPrefsService;
   late EnvService envService;
 
   AppProvider() {
     connectivityService = ConnectivityService();
-    locationService = LocationService();
+    positionService = PositionService();
     sharedPrefsService = SharedPrefsService();
     envService = EnvService();
   }
 
   Future<void> onCreate() async {
     _registerSingleton();
-    await locationService.onCreate();
+    await positionService.onCreate();
     await sharedPrefsService.onCreate();
     await connectivityService.onCreate();
     await envService.onCreate();
@@ -29,7 +29,7 @@ class AppProvider {
     connectivityService.onTerminate();
     sharedPrefsService.onTerminate();
     envService.onTerminate();
-    locationService.onTerminate();
+    positionService.onTerminate();
   }
 
   void _registerSingleton() {

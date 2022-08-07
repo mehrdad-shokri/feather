@@ -1,4 +1,5 @@
 import 'package:client/pages/home_page.dart';
+import 'package:client/pages/intro_page.dart';
 import 'package:client/pages/loading_page.dart';
 import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
@@ -19,6 +20,10 @@ class InitPage extends StatelessWidget {
           return StreamBuilder(
             stream: settingsBloc.isFirstVisit,
             builder: (contest, snapshot) {
+              bool? isFirstVisit = snapshot.data as bool?;
+              if (isFirstVisit != null && isFirstVisit) {
+                return const IntroPage();
+              }
               return const HomePage();
             },
           );

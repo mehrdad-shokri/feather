@@ -116,7 +116,7 @@ class FeatherAppState extends State<FeatherApp> {
               fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
               fontSize: Constants.H5_FONT_SIZE,
               color: Constants.TEXT_BLACK_COLOR,
-              fontWeight: Constants.DEMI_BOLD_FONT_WEIGHT),
+              fontWeight: Constants.BOLD_FONT_WEIGHT),
           actionTextStyle: const TextStyle(
             color: CupertinoColors.link,
             fontSize: Constants.S1_FONT_SIZE,

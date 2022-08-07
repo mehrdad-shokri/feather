@@ -19,6 +19,9 @@ class WeatherBloc extends RxBloc {
   final _weatherApi = BehaviorSubject<WeatherApi>();
   final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
   final _weatherApiUnits = BehaviorSubject<WeatherUnits>();
+  final _isUpdating = BehaviorSubject<bool>();
+
+  Stream<bool> get isUpdating => _isUpdating.stream;
 
   Stream<WeatherUnits> get units => _weatherApiUnits.stream;
 
@@ -42,7 +45,6 @@ class WeatherBloc extends RxBloc {
         ? EnumToString.fromString(
             WeatherApiProvider.values, weatherApiProviderPrefs)!
         : Constants.DEFAULT_WEATHER_API_PROVIDER;
-    print('unit here ${weatherApiUnits}');
     _weatherApiUnits.add(weatherApiUnits);
     _weatherApiProvider.add(weatherApiProvider);
     _weatherApi.add(instantiateWeatherApi(weatherApiProvider, weatherApiUnits));

@@ -12,7 +12,7 @@ class LoadingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('assets/images/logo_android.png', width: 320),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             PlatformCircularProgressIndicator(

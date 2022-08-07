@@ -1,3 +1,4 @@
+import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
@@ -7,7 +8,10 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 PlatformAppBar homePageAppBar(
         {required BuildContext context,
+        required List<WeatherApiProvider> apiProviders,
+        required Function(WeatherApiProvider) onApiProviderChanged,
         required Function(WeatherUnits) onWeatherUnitChanged,
+        required Stream<WeatherApiProvider> apiProvider,
         required Stream<WeatherUnits> weatherUnit}) =>
     PlatformAppBar(
       material: (context, _) => MaterialAppBarData(elevation: 0),
@@ -17,7 +21,17 @@ PlatformAppBar homePageAppBar(
         PlatformPopupMenu(
             options: [
               PopupMenuOption(
-                  onTap: (_) {},
+                  onTap: (_) {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) => CupertinoActionSheet(
+                              title: const Text('API provider'),
+                              actions: apiProviders
+                                  .map((e) => CupertinoActionSheetAction(
+                                      onPressed: () {}, child: Text(e.name)))
+                                  .toList(),
+                            ));
+                  },
                   material: (context, target) => MaterialPopupMenuOptionData(
                       padding: EdgeInsets.zero,
                       child: Row(

@@ -27,4 +27,10 @@ class SettingsBloc extends RxBloc {
     addFutureSubscription(_sharedPrefsService.instance
         .setString(Constants.USER_LOCALE_PREFS, locale.languageCode));
   }
+
+  void onFirstVisited() {
+    _isFirstVisit.add(false);
+    addFutureSubscription(_sharedPrefsService.instance
+        .setBool(Constants.IS_FIRST_VISIT_PREFS, false));
+  }
 }

@@ -4,6 +4,7 @@ import 'package:client/types/geo_providers.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Constants {
   Constants._();
@@ -19,9 +20,9 @@ class Constants {
   static final Color PRIMARY_COLOR_DARK = Colors.blue.shade500;
   static final Color PRIMARY_COLOR_LIGHT = Colors.blue.shade200;
 
-  static final Color SECONDARY_COLOR = Colors.pink.shade300;
-  static final Color SECONDARY_COLOR_DARK = Colors.pink.shade400;
-  static final Color SECONDARY_COLOR_LIGHT = Colors.pink.shade200;
+  static final Color SECONDARY_COLOR = Colors.yellow.shade800;
+  static final Color SECONDARY_COLOR_DARK = Colors.yellow.shade900;
+  static final Color SECONDARY_COLOR_LIGHT = Colors.yellow.shade700;
 
   static const Color ERROR_COLOR = Color.fromRGBO(237, 46, 126, 1);
   static const Color ERROR_COLOR_DARK = Color.fromRGBO(195, 0, 82, 1);
@@ -62,7 +63,6 @@ class Constants {
   static const double H1_FONT_SIZE = 34;
   static const FontWeight REGULAR_FONT_WEIGHT = FontWeight.w400;
   static const FontWeight MEDIUM_FONT_WEIGHT = FontWeight.w500;
-  static const FontWeight DEMI_BOLD_FONT_WEIGHT = FontWeight.w600;
   static const FontWeight BOLD_FONT_WEIGHT = FontWeight.bold;
   static const String APPLICATION_DEFAULT_FONT = 'Roboto';
   static const List<String> APPLICATION_FALLBACK_FONTS = ['sans-serif'];
@@ -72,6 +72,7 @@ class Constants {
   static final ShapeBorder CARD_SHAPE =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 
+  static const ToastGravity TOAST_DEFAULT_LOCATION = ToastGravity.TOP;
   static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
   static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =
       WeatherApiProvider.openWeatherMap;
