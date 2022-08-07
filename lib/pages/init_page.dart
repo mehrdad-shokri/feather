@@ -1,5 +1,7 @@
 import 'package:client/pages/home_page.dart';
 import 'package:client/pages/loading_page.dart';
+import 'package:client/rx/app_provider.dart';
+import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:flutter/widgets.dart';
 
 class InitPage extends StatelessWidget {
@@ -12,7 +14,14 @@ class InitPage extends StatelessWidget {
     return FutureBuilder(
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return const HomePage();
+          SettingsBloc settingsBloc =
+              SettingsBloc(AppProvider.getInstance().sharedPrefsService);
+          return StreamBuilder(
+            stream: settingsBloc.isFirstVisit,
+            builder: (contest, snapshot) {
+              return const HomePage();
+            },
+          );
         }
         return const LoadingPage();
       },

@@ -5,27 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends RxBloc {
-  final SharedPrefsService sharedPrefsService;
+  final SharedPrefsService _sharedPrefsService;
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
 
   Stream<Locale> get locale => _locale.stream;
 
-  SettingsBloc(this.sharedPrefsService) {
+  Stream<bool> get isFirstVisit => _isFirstVisit.stream;
+
+  SettingsBloc(this._sharedPrefsService) {
     _isFirstVisit.add(
-        sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
+        _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);
     _locale.add(Locale(
-        sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
+        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
             'en'));
   }
 
   void onLocaleChanged(Locale locale) {
     _locale.add(locale);
-    addFutureSubscription(
-        sharedPrefsService.instance
-            .setString(Constants.USER_LOCALE_PREFS, locale.languageCode),
-        () {},
-        (e) {});
+    addFutureSubscription(_sharedPrefsService.instance
+        .setString(Constants.USER_LOCALE_PREFS, locale.languageCode));
   }
 }

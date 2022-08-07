@@ -5,14 +5,14 @@ import 'package:rxdart/rxdart.dart';
 
 class PositionBloc extends RxBloc {
   final _lastPosition = BehaviorSubject<Position>();
-  final LocationService locationService;
+  final LocationService _locationService;
 
   Stream<Position> get position => _lastPosition.stream;
 
-  PositionBloc(this.locationService);
+  PositionBloc(this._locationService);
 
   void getCurrentPosition(Function onError) {
     addFutureSubscription(Geolocator.getCurrentPosition(),
-        (event) => _lastPosition.add(event), (e) {});
+        (Position event) => _lastPosition.add(event));
   }
 }

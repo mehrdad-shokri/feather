@@ -42,6 +42,7 @@ class WeatherBloc extends RxBloc {
         ? EnumToString.fromString(
             WeatherApiProvider.values, weatherApiProviderPrefs)!
         : Constants.DEFAULT_WEATHER_API_PROVIDER;
+    print('unit here ${weatherApiUnits}');
     _weatherApiUnits.add(weatherApiUnits);
     _weatherApiProvider.add(weatherApiProvider);
     _weatherApi.add(instantiateWeatherApi(weatherApiProvider, weatherApiUnits));
@@ -80,27 +81,29 @@ class WeatherBloc extends RxBloc {
   void onUnitsChanged(WeatherUnits unit) {
     _weatherApiUnits.add(unit);
     addFutureSubscription(
-        _sharedPrefsService.instance.setString(
-            Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit)),
-        () {},
-        (e) {});
+      _sharedPrefsService.instance.setString(
+          Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit)),
+    );
   }
 
   void getCurrentForecast(double lat, double lon) {
-    addFutureSubscription(_weatherApi.value.current(lat, lon), (event) {
+    addFutureSubscription(_weatherApi.value.current(lat, lon),
+        (WeatherForecast event) {
       _currentForecast.add(event);
-    }, (e) {});
+    });
   }
 
   void getHourlyForecast(double lat, double lon) {
-    addFutureSubscription(_weatherApi.value.hourlyForecast(lat, lon), (event) {
-      _hourlyForecast.add(event);
+    addFutureSubscription(_weatherApi.value.hourlyForecast(lat, lon),
+        (List<WeatherForecast>? event) {
+      if (event != null) _hourlyForecast.add(event);
     }, (e) {});
   }
 
   void getDailyForecast(double lat, double lon) {
-    addFutureSubscription(_weatherApi.value.dailyForecast(lat, lon), (event) {
-      _dailyForecast.add(event);
+    addFutureSubscription(_weatherApi.value.dailyForecast(lat, lon),
+        (List<WeatherForecast>? event) {
+      if (event != null) _dailyForecast.add(event);
     }, (e) {});
   }
 }

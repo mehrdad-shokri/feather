@@ -49,6 +49,8 @@ class Constants {
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(16, 15, 9, 1.0);
 
+  static const double ICON_MEDIUM_SIZE = 18;
+  static const double ICON_LARGE_SIZE = 32;
   static const double CAPTION_FONT_SIZE = 12;
   static const double S2_FONT_SIZE = 14;
   static const double S1_FONT_SIZE = 16;

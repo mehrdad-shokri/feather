@@ -7,13 +7,20 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/images/logo_android.png',
-              width: double.maxFinite),
-          PlatformCircularProgressIndicator()
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/logo_android.png', width: 320),
+            SizedBox(
+              height: 16,
+            ),
+            PlatformCircularProgressIndicator(
+              cupertino: (_, __) => CupertinoProgressIndicatorData(radius: 16),
+              material: (_, __) => MaterialProgressIndicatorData(),
+            )
+          ],
+        ),
       ),
     );
   }

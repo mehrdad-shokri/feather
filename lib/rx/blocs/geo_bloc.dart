@@ -16,8 +16,11 @@ class GeoBloc extends RxBloc {
   final _geoApi = BehaviorSubject<GeoApi>();
   final _lang = BehaviorSubject<String>();
   final _reverseGeoLocation = BehaviorSubject<Location>();
+  final _searchedLocations = BehaviorSubject<List<Location>>();
 
   Stream<Location> get reverseGeoLocation => _reverseGeoLocation.stream;
+
+  Stream<List<Location>> get searchedLocations => _searchedLocations.stream;
 
   GeoBloc(this.sharedPrefsService, this._envService) {
     String? geoApiProvider =
@@ -40,14 +43,16 @@ class GeoBloc extends RxBloc {
   }
 
   void reverseGeoCode(double lat, double lon) {
-    addFutureSubscription(_geoApi.value.reverseGeocode(lat, lon), (location) {
-      _reverseGeoLocation.add(location);
+    addFutureSubscription(_geoApi.value.reverseGeocode(lat, lon),
+        (Location? location) {
+      if (location != null) _reverseGeoLocation.add(location);
     }, (e) {});
   }
 
   void searchQuery(String query) {
-    addFutureSubscription(_geoApi.value.searchByQuery(query), (location) {
-      _reverseGeoLocation.add(location);
+    addFutureSubscription(_geoApi.value.searchByQuery(query),
+        (List<Location>? locations) {
+      if (locations != null) _searchedLocations.add(locations);
     }, (e) {});
   }
 
@@ -56,7 +61,7 @@ class GeoBloc extends RxBloc {
     addFutureSubscription(
         sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
             EnumToString.convertToString(geoApiProvider)),
-        () {},
+        (_) {},
         (e) {});
   }
 

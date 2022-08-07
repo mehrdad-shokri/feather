@@ -118,14 +118,14 @@ class FeatherAppState extends State<FeatherApp> {
               color: Constants.TEXT_BLACK_COLOR,
               fontWeight: Constants.DEMI_BOLD_FONT_WEIGHT),
           actionTextStyle: const TextStyle(
-            color: CupertinoColors.activeBlue,
+            color: CupertinoColors.link,
             fontSize: Constants.S1_FONT_SIZE,
             fontFamily: Constants.APPLICATION_DEFAULT_FONT,
             fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,
             fontWeight: Constants.REGULAR_FONT_WEIGHT,
           ),
           navActionTextStyle: const TextStyle(
-            color: CupertinoColors.activeBlue,
+            color: CupertinoColors.link,
             fontSize: Constants.S1_FONT_SIZE,
             fontFamily: Constants.APPLICATION_DEFAULT_FONT,
             fontFamilyFallback: Constants.APPLICATION_FALLBACK_FONTS,

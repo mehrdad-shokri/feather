@@ -22,15 +22,12 @@ class LocationBloc extends RxBloc {
   void onLocationUpdated(Location location) {
     _activeLocation.add(location);
     addFutureSubscription(
-        sharedPrefsService.instance
-            .setString(location.toJson(), Constants.LAST_CITY_PREFS),
-        () {},
-        (e) {});
+      sharedPrefsService.instance
+          .setString(location.toJson(), Constants.LAST_CITY_PREFS),
+    );
   }
 
   void setActiveLocation(Location location) {
     _activeLocation.add(location);
   }
-
-  void searchByQuery(String query, String locale) {}
 }

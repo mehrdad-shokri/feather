@@ -1,9 +1,10 @@
+import 'package:client/components/home_page_app_bar.dart';
 import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/location_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
-import 'package:client/types/weather_units.dart';
+import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -34,23 +35,35 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      appBar: PlatformAppBar(
-        leading: StreamBuilder(
-          stream: weatherBloc.units,
-          builder: (context, snapshot) {
-            WeatherUnits unit = snapshot.data as WeatherUnits;
-            return Text(unit.toString());
-          },
-        ),
+      appBar: homePageAppBar(
+        context: context,
+        weatherUnit: weatherBloc.units,
+        onWeatherUnitChanged: (unit) => weatherBloc.onUnitsChanged(unit),
       ),
+      iosContentPadding: true,
       body: Column(
-        children: const [
+        mainAxisSize: MainAxisSize.max,
+        children: [
           Flexible(
             flex: 326,
-            child: Text('main forecast'),
+            fit: FlexFit.tight,
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [
+                        HexColor.fromHex('#06c7f1'),
+                        HexColor.fromHex('#07b9e0'),
+                        HexColor.fromHex('#0648f1')
+                      ],
+                      begin: FractionalOffset(0.5, 0),
+                      end: FractionalOffset(0.5, 1.0),
+                      stops: [0.0, .31, .95],
+                      tileMode: TileMode.clamp)),
+            ),
           ),
           Flexible(
             flex: 100,
+            fit: FlexFit.tight,
             child: Text('7 days'),
           )
         ],
