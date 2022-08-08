@@ -1,10 +1,11 @@
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/weather_api.dart';
+import 'package:client/types/weather_units.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
   final String appId;
 
-  OpenWeatherMapWeatherApi(this.appId, String unit)
+  OpenWeatherMapWeatherApi(this.appId, WeatherUnits unit)
       : super('https://api.openweathermap.org/data/2.5', unit);
 
   @override
@@ -24,7 +25,8 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
         ))
             .data,
         lat,
-        lon);
+        lon,
+        unit);
   }
 
   @override
@@ -36,9 +38,10 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
         .data as Map<String, dynamic>;
     int timezone = data['city']['timezone'];
     String cityName = data['city']['name'];
+    String countryCode = data['city']['country'];
     return (data['list'] as List)
         .map((e) => WeatherForecast.fromOpenWeatherMapDailyForecastJson(
-            e, timezone, lat, lon, cityName))
+            e, timezone, lat, lon, cityName, countryCode, unit))
         .toList();
   }
 
@@ -52,13 +55,14 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
           'units': unit
         }))
         .data as Map<String, dynamic>;
-    int timezone = data['city']['coord']['timezone'];
+    int timezone = data['city']['timezone'];
     int sunrise = data['city']['sunrise'];
     int sunset = data['city']['sunset'];
     String cityName = data['city']['name'];
+    String countryCode = data['city']['country'];
     return (data['list'] as List)
-        .map((e) => WeatherForecast.fromOpenWeatherMapHourlyForecastJson(
-            e, timezone, lat, lon, cityName, sunrise, sunset))
+        .map((e) => WeatherForecast.fromOpenWeatherMapHourlyForecastJson(e,
+            timezone, lat, lon, cityName, sunrise, sunset, countryCode, unit))
         .toList();
   }
 }

@@ -6,13 +6,13 @@ import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class HomePageForecast extends StatelessWidget {
+class ForecastHeroCard extends StatelessWidget {
   final Stream<Location> location;
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<WeatherForecast> weatherForecast;
 
-  const HomePageForecast(
+  const ForecastHeroCard(
       {Key? key,
       required this.location,
       required this.onLocationChangeRequest,

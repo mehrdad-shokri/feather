@@ -14,6 +14,7 @@ class SettingsBloc extends RxBloc {
   Stream<bool> get isFirstVisit => _isFirstVisit.stream;
 
   SettingsBloc(this._sharedPrefsService) {
+    _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);

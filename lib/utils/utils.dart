@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:client/types/weather_units.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -69,3 +70,6 @@ T? firstOrNull<T>(Iterable<T> items, callback) {
     return null;
   }
 }
+
+String windSpeedUnit(WeatherUnits metric) =>
+    metric == WeatherUnits.metric ? 'km/h' : 'miles/hour';

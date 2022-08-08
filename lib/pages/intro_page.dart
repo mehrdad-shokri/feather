@@ -1,5 +1,5 @@
 import 'package:client/rx/app_provider.dart';
-import 'package:client/rx/blocs/position_bloc.dart';
+import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +14,12 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  late PositionBloc positionBloc;
+  late SettingsBloc settingsBloc;
 
   @override
   void initState() {
     super.initState();
-    positionBloc = PositionBloc(AppProvider.getInstance().positionService);
+    settingsBloc = SettingsBloc(AppProvider.getInstance().sharedPrefsService);
   }
 
   @override
@@ -73,18 +73,11 @@ class _IntroPageState extends State<IntroPage> {
                       ),
                       PlatformElevatedButton(
                         onPressed: () {
-                          positionBloc.requestPermission();
+                          settingsBloc.onFirstVisited();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/city-search', (route) => false);
                         },
-                        child: StreamBuilder(
-                          stream: positionBloc.requestingLocationPermission,
-                          builder: (context, snapshot) {
-                            bool? requesting = snapshot.data as bool?;
-                            if (requesting != null && requesting) {
-                              return PlatformCircularProgressIndicator();
-                            }
-                            return const Text('Get started');
-                          },
-                        ),
+                        child: const Text('Get started'),
                       ),
                       const SizedBox(
                         height: 16,

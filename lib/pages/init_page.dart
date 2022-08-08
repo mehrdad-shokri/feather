@@ -21,7 +21,8 @@ class InitPage extends StatelessWidget {
             stream: settingsBloc.isFirstVisit,
             builder: (contest, snapshot) {
               bool? isFirstVisit = snapshot.data as bool?;
-              if (isFirstVisit != null && isFirstVisit) {
+              if (isFirstVisit == null) return const LoadingPage();
+              if (isFirstVisit) {
                 return const IntroPage();
               }
               return const HomePage();

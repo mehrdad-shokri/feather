@@ -6,23 +6,22 @@ import 'package:client/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LocationBloc extends RxBloc {
-  final SharedPrefsService sharedPrefsService;
+  final SharedPrefsService _sharedPrefsService;
   final _activeLocation = BehaviorSubject<Location>();
+  Stream<Location> get activeLocation => _activeLocation.stream;
 
-  Stream<Location> get location => _activeLocation.stream;
-
-  LocationBloc(this.sharedPrefsService) {
+  LocationBloc(this._sharedPrefsService) {
     String? lastCityPrefs =
-        sharedPrefsService.instance.getString(Constants.LAST_CITY_PREFS);
+        _sharedPrefsService.instance.getString(Constants.LAST_CITY_PREFS);
     if (strNotEmpty(lastCityPrefs)) {
-      _activeLocation.add(Location.fromJson(lastCityPrefs!));
+      _activeLocation.add(Location.fromPrefsJson(lastCityPrefs!));
     }
   }
 
   void onLocationUpdated(Location location) {
     _activeLocation.add(location);
     addFutureSubscription(
-      sharedPrefsService.instance
+      _sharedPrefsService.instance
           .setString(location.toJson(), Constants.LAST_CITY_PREFS),
     );
   }

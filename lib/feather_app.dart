@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:client/pages/city_search_page.dart';
 import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
 import 'package:client/rx/app_provider.dart';
@@ -86,6 +87,9 @@ class FeatherAppState extends State<FeatherApp> {
                 builder: (context) => NextDaysPage(
                       arguments: settings.arguments as NextDaysPageArguments,
                     ));
+          case '/city-search':
+            return platformPageRoute(
+                context: context, builder: (context) => const CitySearchPage());
           default:
             return null;
         }
@@ -161,8 +165,7 @@ class FeatherAppState extends State<FeatherApp> {
               toggleableActiveColor: Constants.SECONDARY_COLOR,
               primarySwatch: Colors.blue,
               primaryColor: Constants.PRIMARY_COLOR,
-              accentColor: Constants.SECONDARY_COLOR,
-              // canvasColor: Constants.BACKGROUND_COLOR,
+              canvasColor: Constants.BACKGROUND_COLOR,
               scaffoldBackgroundColor: Constants.BACKGROUND_COLOR_DARK,
               fontFamily: Constants.APPLICATION_DEFAULT_FONT,
               errorColor: Constants.ERROR_COLOR,
@@ -205,8 +208,7 @@ class FeatherAppState extends State<FeatherApp> {
           theme: ThemeData(
               primarySwatch: Colors.blue,
               primaryColor: Constants.PRIMARY_COLOR,
-              accentColor: Constants.SECONDARY_COLOR,
-              // canvasColor: Constants.BACKGROUND_COLOR,
+              canvasColor: Constants.BACKGROUND_COLOR,
               fontFamily: Constants.APPLICATION_DEFAULT_FONT,
               errorColor: Constants.ERROR_COLOR,
               toggleableActiveColor: Constants.SECONDARY_COLOR,

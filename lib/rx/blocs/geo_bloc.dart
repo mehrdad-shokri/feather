@@ -10,7 +10,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GeoBloc extends RxBloc {
-  final SharedPrefsService sharedPrefsService;
+  final SharedPrefsService _sharedPrefsService;
   final EnvService _envService;
   final _geoApiProvider = BehaviorSubject<GeoApiProviders>();
   final _geoApi = BehaviorSubject<GeoApi>();
@@ -22,11 +22,11 @@ class GeoBloc extends RxBloc {
 
   Stream<List<Location>> get searchedLocations => _searchedLocations.stream;
 
-  GeoBloc(this.sharedPrefsService, this._envService) {
-    String? geoApiProvider =
-        sharedPrefsService.instance.getString(Constants.GEO_API_PROVIDER_PREFS);
+  GeoBloc(this._sharedPrefsService, this._envService) {
+    String? geoApiProvider = _sharedPrefsService.instance
+        .getString(Constants.GEO_API_PROVIDER_PREFS);
     String? lang =
-        sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
+        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
             'en';
     GeoApiProviders provider = geoApiProvider != null
         ? EnumToString.fromString(GeoApiProviders.values, geoApiProvider)!
@@ -34,12 +34,12 @@ class GeoBloc extends RxBloc {
     _geoApiProvider.add(provider);
     _lang.add(lang);
     _lang.listen((value) {
-      instantiateGeoApi(_geoApiProvider.value, value);
+      _instantiateGeoApi(_geoApiProvider.value, value);
     });
     _geoApiProvider.listen((value) {
-      _geoApi.add(instantiateGeoApi(value, _lang.value));
+      _geoApi.add(_instantiateGeoApi(value, _lang.value));
     });
-    instantiateGeoApi(_geoApiProvider.value, _lang.value);
+    _instantiateGeoApi(_geoApiProvider.value, _lang.value);
   }
 
   void reverseGeoCode(double lat, double lon) {
@@ -59,17 +59,22 @@ class GeoBloc extends RxBloc {
   void onGeoApiProviderChanged(GeoApiProviders geoApiProvider) {
     _geoApiProvider.add(geoApiProvider);
     addFutureSubscription(
-        sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
+        _sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
             EnumToString.convertToString(geoApiProvider)),
         (_) {},
         (e) {});
+  }
+
+  void getPopularCities() {
+    _searchedLocations.add(
+        Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList());
   }
 
   void onLangChanged(String lang) {
     _lang.add(lang);
   }
 
-  GeoApi instantiateGeoApi(GeoApiProviders provider, String lang) {
+  GeoApi _instantiateGeoApi(GeoApiProviders provider, String lang) {
     switch (provider) {
       case GeoApiProviders.openWeatherMap:
         return OpenWeatherMapGeoApi(

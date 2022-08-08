@@ -1,5 +1,6 @@
-import 'package:client/components/home_page_app_bar.dart';
-import 'package:client/components/home_page_forecast.dart';
+import 'package:client/components/forecast_hero_appbar.dart';
+import 'package:client/components/forecast_hero_card.dart';
+import 'package:client/models/location.dart';
 import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/location_bloc.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      appBar: homePageAppBar(
+      appBar: forecastHeroAppBar(
           context: context,
           weatherUnit: weatherBloc.units,
           onWeatherUnitChanged: (unit) => weatherBloc.onUnitsChanged(unit),
@@ -45,25 +46,31 @@ class _HomePageState extends State<HomePage> {
           apiProvider: weatherBloc.apiProvider,
           apiProviders: WeatherApiProvider.values),
       iosContentPadding: true,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Flexible(
-            flex: 326,
-            fit: FlexFit.tight,
-            child: HomePageForecast(
-              location: locationBloc.location,
-              onLocationChangeRequest: () {},
-              isUpdating: weatherBloc.isUpdating,
-              weatherForecast: weatherBloc.currentForecast,
-            ),
-          ),
-          const Flexible(
-            flex: 100,
-            fit: FlexFit.tight,
-            child: Text('7 days'),
-          )
-        ],
+      body: StreamBuilder(
+        stream: locationBloc.activeLocation,
+        builder: (context, snapshot) {
+          Location? location = snapshot.data as Location?;
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Flexible(
+                flex: 326,
+                fit: FlexFit.tight,
+                child: ForecastHeroCard(
+                  location: locationBloc.activeLocation,
+                  onLocationChangeRequest: () {},
+                  isUpdating: weatherBloc.isUpdating,
+                  weatherForecast: weatherBloc.currentForecast,
+                ),
+              ),
+              const Flexible(
+                flex: 100,
+                fit: FlexFit.tight,
+                child: Text('7 days'),
+              )
+            ],
+          );
+        },
       ),
     );
   }

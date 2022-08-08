@@ -189,6 +189,22 @@ class Feather {
       IconData(0xe845, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData person_pin_circle =
       IconData(0xe846, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData add_location =
+      IconData(0xe847, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData edit_location =
+      IconData(0xe848, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_on =
+      IconData(0xe849, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_off =
+      IconData(0xe84a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_disabled =
+      IconData(0xe84b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData my_location =
+      IconData(0xe84c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_searching =
+      IconData(0xe84d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_city =
+      IconData(0xe84e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData location =
       IconData(0xf031, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData sliders =

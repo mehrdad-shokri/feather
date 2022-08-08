@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:client/models/weather_forecast.dart';
+import 'package:client/types/weather_units.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,8 +11,8 @@ void main() {
       Map<String, dynamic> json = jsonDecode(
           File('test/fixtures/open_weather_map_current_forecast.json')
               .readAsStringSync()) as Map<String, dynamic>;
-      WeatherForecast forecast =
-          WeatherForecast.fromOpenWeatherMapCurrentJson(json, 35, 139);
+      WeatherForecast forecast = WeatherForecast.fromOpenWeatherMapCurrentJson(
+          json, 35, 139, WeatherUnits.metric);
       expect(forecast.temp, equals(26.84));
       expect(forecast.lat, equals(35));
       expect(forecast.lon, equals(139));
@@ -30,6 +31,8 @@ void main() {
       expect(forecast.date.month, equals(DateTime.now().toUtc().month));
       expect(forecast.date.year, equals(DateTime.now().toUtc().year));
       expect(forecast.cityName, equals('Shuzenji'));
+      expect(forecast.countryCode, equals('jp'));
+      expect(forecast.unit, equals(WeatherUnits.metric));
       expect(
           forecast.sunrise,
           equals(
@@ -47,7 +50,9 @@ void main() {
       Map<String, dynamic> data = (json['list'] as List).first;
       WeatherForecast forecast =
           WeatherForecast.fromOpenWeatherMapDailyForecastJson(
-              data, 32400, 35, 139, 'Shuzenji');
+              data, 32400, 35, 139, 'Shuzenji', 'jp', WeatherUnits.metric);
+      expect(forecast.unit, equals(WeatherUnits.metric));
+      expect(forecast.countryCode, equals('jp'));
       expect(forecast.temp, equals(null));
       expect(forecast.tempFeelsLike, equals(null));
       expect(forecast.lat, equals(35));
@@ -95,8 +100,18 @@ void main() {
       Map<String, dynamic> data = (json['list'] as List).first;
       WeatherForecast forecast =
           WeatherForecast.fromOpenWeatherMapHourlyForecastJson(
-              data, 32400, 35, 139, 'Shuzenji', 1659470065, 1659519956);
+              data,
+              32400,
+              35,
+              139,
+              'Shuzenji',
+              1659470065,
+              1659519956,
+              'jp',
+              WeatherUnits.metric);
       expect(forecast.temp, equals(26.29));
+      expect(forecast.unit, equals(WeatherUnits.metric));
+      expect(forecast.countryCode, equals('jp'));
       expect(forecast.tempFeelsLike, equals(26.29));
       expect(forecast.lat, equals(35));
       expect(forecast.lon, equals(139));

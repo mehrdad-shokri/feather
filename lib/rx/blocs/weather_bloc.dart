@@ -1,4 +1,6 @@
+import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
+import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/managers/weather_api.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
@@ -14,6 +16,7 @@ class WeatherBloc extends RxBloc {
   final SharedPrefsService _sharedPrefsService;
   final EnvService _envService;
   final _currentForecast = BehaviorSubject<WeatherForecast>();
+  final _citiesWeatherForecast = BehaviorSubject<List<WeatherForecast>>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _weatherApi = BehaviorSubject<WeatherApi>();
@@ -29,11 +32,14 @@ class WeatherBloc extends RxBloc {
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 
+  Stream<List<WeatherForecast>> get citiesWeatherForecast =>
+      _citiesWeatherForecast.stream;
+
   Stream<List<WeatherForecast>> get dailyForecast => _dailyForecast.stream;
 
   Stream<List<WeatherForecast>> get hourlyForecast => _hourlyForecast.stream;
 
-  WeatherBloc(this._sharedPrefsService, this._envService) {
+  WeatherBloc(this._sharedPrefsService, this._envService, {GeoBloc? geoBloc}) {
     String? weatherApiProviderPrefs = _sharedPrefsService.instance
         .getString(Constants.WEATHER_API_PROVIDER_PREFS);
     String? weatherUnitsPrefs =
@@ -47,26 +53,32 @@ class WeatherBloc extends RxBloc {
         : Constants.DEFAULT_WEATHER_API_PROVIDER;
     _weatherApiUnits.add(weatherApiUnits);
     _weatherApiProvider.add(weatherApiProvider);
-    _weatherApi.add(instantiateWeatherApi(weatherApiProvider, weatherApiUnits));
+    _weatherApi
+        .add(_instantiateWeatherApi(weatherApiProvider, weatherApiUnits));
     _weatherApiProvider.listen((value) {
-      _weatherApi.add(instantiateWeatherApi(value, _weatherApiUnits.value));
+      _weatherApi.add(_instantiateWeatherApi(value, _weatherApiUnits.value));
     });
     _weatherApiUnits.listen((value) {
-      _weatherApi.add(instantiateWeatherApi(_weatherApiProvider.value, value));
+      _weatherApi.add(_instantiateWeatherApi(_weatherApiProvider.value, value));
     });
+    if (geoBloc != null) {
+      geoBloc.searchedLocations.listen((event) {
+        getCitiesForecast(event);
+      });
+    }
   }
 
-  WeatherApi instantiateWeatherApi(
+  WeatherApi _instantiateWeatherApi(
       WeatherApiProvider provider, WeatherUnits unit) {
     switch (provider) {
       case WeatherApiProvider.openWeatherMap:
         return OpenWeatherMapWeatherApi(
             _envService.envs[Constants.OPEN_WEATHER_MAP_API_KEY_ENV] ?? '',
-            EnumToString.convertToString(unit));
+            unit);
       default:
         return OpenWeatherMapWeatherApi(
             _envService.envs[Constants.OPEN_WEATHER_MAP_API_KEY_ENV] ?? '',
-            EnumToString.convertToString(unit));
+            unit);
     }
   }
 
@@ -107,5 +119,19 @@ class WeatherBloc extends RxBloc {
         (List<WeatherForecast>? event) {
       if (event != null) _dailyForecast.add(event);
     }, (e) {});
+  }
+
+  void getCitiesForecast(List<Location> locations) {
+    List<WeatherForecast> forecasts = [];
+    addFutureSubscription((() async {
+      await Future.forEach(locations, (Location element) async {
+        WeatherForecast forecast =
+            await _weatherApi.value.current(element.lat, element.lon);
+        forecasts.add(forecast);
+      });
+      return forecasts;
+    })(),
+        (List<WeatherForecast> forecasts) =>
+            _citiesWeatherForecast.add(forecasts));
   }
 }

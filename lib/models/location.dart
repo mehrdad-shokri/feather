@@ -11,10 +11,10 @@ class Location {
       {required this.lat,
       required this.lon,
       required this.cityName,
-      required this.state,
-      required this.country});
+      required this.country,
+      this.state});
 
-  factory Location.fromJson(String lastCityPrefs) {
+  factory Location.fromPrefsJson(String lastCityPrefs) {
     Map<String, dynamic> locationJson = json.decode(lastCityPrefs);
     return Location(
         lat: locationJson['lat'],
@@ -53,4 +53,10 @@ class Location {
               data['name'],
           country: data['country'],
           state: data['state']);
+
+  factory Location.fromAsset(Map<String, dynamic> data) => Location(
+      lat: double.parse(data['lat']),
+      lon: double.parse(data['lng']),
+      cityName: data['name'],
+      country: data['country']);
 }

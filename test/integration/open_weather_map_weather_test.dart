@@ -1,6 +1,7 @@
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
+import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -37,13 +38,14 @@ void main() {
         double lat = lats[i];
         double lon = lons[i];
         OpenWeatherMapWeatherApi openWeatherMap =
-            OpenWeatherMapWeatherApi(openWeatherMapApiKey, 'metric');
+            OpenWeatherMapWeatherApi(openWeatherMapApiKey, WeatherUnits.metric);
         WeatherForecast forecast = await openWeatherMap.current(lat, lon);
         expect(forecast.lat, equals(lat));
         expect(forecast.lon, equals(lon));
         expect(forecast.temp, isNot(null));
         expect(forecast.tempFeelsLike, isNot(equals(null)));
         expect(forecast.cityName, isNot(null));
+        expect(forecast.countryCode, isNot(null));
         expect(forecast.humidityPercent, greaterThanOrEqualTo(0));
         expect(forecast.visibility, greaterThanOrEqualTo(0));
         expect(forecast.cloudsPercent, greaterThanOrEqualTo(0));
@@ -60,9 +62,9 @@ void main() {
     test('It gets daily forecast', () async {
       for (int i = 0; i < lats.length; i++) {
         double lat = lats[i];
-        double lon = lats[i];
+        double lon = lons[i];
         OpenWeatherMapWeatherApi openWeatherMap =
-            OpenWeatherMapWeatherApi(openWeatherMapApiKey, 'metric');
+            OpenWeatherMapWeatherApi(openWeatherMapApiKey, WeatherUnits.metric);
         List<WeatherForecast> forecasts =
             await openWeatherMap.dailyForecast(lat, lon);
         expect(forecasts.length, greaterThan(0));
@@ -84,6 +86,44 @@ void main() {
         expect(forecasts.first.nightTemp, isNot(equals(null)));
         expect(forecasts.first.nightFeelsLikeTemp, isNot(equals(null)));
         expect(forecasts.first.cityName, isNot(null));
+        expect(forecasts.first.countryCode, isNot(null));
+        expect(forecasts.first.pressureSeaLevel, isNot(null));
+        expect(forecasts.first.pop, isNot(null));
+        expect(forecasts.first.timezone, isNot(null));
+        expect(forecasts.first.sunrise, isNot(null));
+        expect(forecasts.first.sunset, isNot(null));
+        expect(forecasts.first.weatherTitle, isNot(null));
+        expect(forecasts.first.weatherDescription, isNot(null));
+      }
+    });
+    test('It gets hourly forecast', () async {
+      for (int i = 0; i < lats.length; i++) {
+        double lat = lats[i];
+        double lon = lons[i];
+        OpenWeatherMapWeatherApi openWeatherMap =
+            OpenWeatherMapWeatherApi(openWeatherMapApiKey, WeatherUnits.metric);
+        List<WeatherForecast> forecasts =
+            await openWeatherMap.hourlyForecast(lat, lon);
+        expect(forecasts.length, greaterThan(0));
+        expect(forecasts.first.windGust, greaterThan(0));
+        expect(forecasts.first.windSpeed, greaterThan(0));
+        expect(forecasts.first.windDegree, greaterThan(0));
+        expect(forecasts.first.humidityPercent, greaterThan(0));
+        expect(forecasts.first.cloudsPercent, greaterThanOrEqualTo(0));
+        expect(forecasts.first.lat, lat);
+        expect(forecasts.first.lon, lon);
+        expect(forecasts.first.temp, isNot(null));
+        expect(forecasts.first.tempFeelsLike, isNot(null));
+        expect(forecasts.first.mornTemp, equals(null));
+        expect(forecasts.first.mornFeelsLikeTemp, equals(null));
+        expect(forecasts.first.dayTemp, equals(null));
+        expect(forecasts.first.dayFeelsLikeTemp, equals(null));
+        expect(forecasts.first.eveTemp, equals(null));
+        expect(forecasts.first.eveFeelsLikeTemp, equals(null));
+        expect(forecasts.first.nightTemp, equals(null));
+        expect(forecasts.first.nightFeelsLikeTemp, equals(null));
+        expect(forecasts.first.cityName, isNot(null));
+        expect(forecasts.first.countryCode, isNot(null));
         expect(forecasts.first.pressureSeaLevel, isNot(null));
         expect(forecasts.first.pop, isNot(null));
         expect(forecasts.first.timezone, isNot(null));

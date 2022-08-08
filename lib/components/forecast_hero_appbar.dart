@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-PlatformAppBar homePageAppBar(
+PlatformAppBar forecastHeroAppBar(
         {required BuildContext context,
         required List<WeatherApiProvider> apiProviders,
         required Function(WeatherApiProvider) onApiProviderChanged,

@@ -1,9 +1,10 @@
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/managers/api_client.dart';
+import 'package:client/types/weather_units.dart';
 
 abstract class WeatherApi {
   final ApiClient apiClient;
-  final String unit;
+  final WeatherUnits unit;
 
   WeatherApi(String baseUrl, this.unit) : apiClient = ApiClient(baseUrl);
 

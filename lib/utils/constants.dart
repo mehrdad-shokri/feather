@@ -50,7 +50,8 @@ class Constants {
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(16, 15, 9, 1.0);
 
-  static const double ICON_MEDIUM_SIZE = 18;
+  static const double ICON_SMALL_SIZE = 18;
+  static const double ICON_MEDIUM_SIZE = 24;
   static const double ICON_LARGE_SIZE = 32;
   static const double CAPTION_FONT_SIZE = 12;
   static const double S2_FONT_SIZE = 14;
@@ -81,4 +82,37 @@ class Constants {
       GeoApiProviders.openWeatherMap;
 
   static const String OPEN_WEATHER_MAP_API_KEY_ENV = 'OPEN_WEATHER_MAP_API_KEY';
+
+  static const List<Map<String, dynamic>> POPULAR_CITIES = [
+    {
+      "country": "GB",
+      "name": "City of London",
+      "lat": "51.51279",
+      "lng": "-0.09184"
+    },
+    {"country": "FR", "name": "Paris", "lat": "48.85341", "lng": "2.3488"},
+    {"country": "DE", "name": "Berlin", "lat": "52.52003", "lng": "13.4050"},
+    {"country": "ES", "name": "Barcelona", "lat": "41.38879", "lng": "2.15899"},
+    {"country": "NL", "name": "Amsterdam", "lat": "52.37403", "lng": "4.88969"},
+    {
+      "country": "US",
+      "name": "New York City",
+      "lat": "40.71427",
+      "lng": "-74.00597"
+    },
+    {
+      "country": "US",
+      "name": "San Francisco",
+      "lat": "37.77493",
+      "lng": "-122.41942"
+    },
+    {"country": "JP", "name": "Tokyo", "lat": "35.6895", "lng": "139.69171"},
+    {"country": "CN", "name": "Beijing", "lat": "39.9075", "lng": "116.39723"},
+    {
+      "country": "SE",
+      "name": "Stockholm",
+      "lat": "59.32938",
+      "lng": "18.06871"
+    },
+  ];
 }
