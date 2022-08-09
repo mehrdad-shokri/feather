@@ -22,9 +22,9 @@ void main() {
       expect(forecast.pressureSeaLevel, equals(1004));
       expect(forecast.humidityPercent, equals(86));
       expect(forecast.visibility, equals(10000));
-      expect(forecast.windSpeed, equals(5.47));
+      expect(forecast.windSpeed, equals(5.47 * 3.6));
       expect(forecast.windDegree, equals(55));
-      expect(forecast.windGust, equals(9.73));
+      expect(forecast.windGust, equals(9.73 * 3.6));
       expect(forecast.cloudsPercent, equals(94));
       expect(forecast.timezone, equals(32400));
       expect(forecast.date.day, equals(DateTime.now().toUtc().day));

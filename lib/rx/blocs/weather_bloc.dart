@@ -10,13 +10,16 @@ import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WeatherBloc extends RxBloc {
   final SharedPrefsService _sharedPrefsService;
   final EnvService _envService;
   final _currentForecast = BehaviorSubject<WeatherForecast>();
-  final _citiesWeatherForecast = BehaviorSubject<List<WeatherForecast>>();
+  final _searchedCitiesForecasts = BehaviorSubject<List<WeatherForecast>>();
+  final _loadingCitiesForecasts = BehaviorSubject<bool>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _weatherApi = BehaviorSubject<WeatherApi>();
@@ -32,8 +35,10 @@ class WeatherBloc extends RxBloc {
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 
+  Stream<bool> get loadingCitiesForecasts => _loadingCitiesForecasts.stream;
+
   Stream<List<WeatherForecast>> get citiesWeatherForecast =>
-      _citiesWeatherForecast.stream;
+      _searchedCitiesForecasts.stream;
 
   Stream<List<WeatherForecast>> get dailyForecast => _dailyForecast.stream;
 
@@ -124,14 +129,26 @@ class WeatherBloc extends RxBloc {
   void getCitiesForecast(List<Location> locations) {
     List<WeatherForecast> forecasts = [];
     addFutureSubscription((() async {
+      _loadingCitiesForecasts.add(true);
       await Future.forEach(locations, (Location element) async {
         WeatherForecast forecast =
             await _weatherApi.value.current(element.lat, element.lon);
         forecasts.add(forecast);
       });
       return forecasts;
-    })(),
-        (List<WeatherForecast> forecasts) =>
-            _citiesWeatherForecast.add(forecasts));
+    })(), (List<WeatherForecast> forecasts) {
+      _loadingCitiesForecasts.add(false);
+      _searchedCitiesForecasts.add(forecasts);
+    }, (e) {
+      Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: Constants.TOAST_DEFAULT_LOCATION,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Constants.ERROR_COLOR,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      _loadingCitiesForecasts.add(false);
+    });
   }
 }
