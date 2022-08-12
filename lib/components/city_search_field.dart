@@ -7,14 +7,18 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class SearchField extends StatelessWidget {
   final Function onCityByLocationRequest;
-  final Function(String query) onSearchCity;
+  final Function(String? query) onSearchCity;
+  final Function(String? query) onAutoCompleteCity;
   final Stream<List<Location>> cities;
+  final Stream<bool> loadingCurrentCity;
 
   const SearchField(
       {Key? key,
       required this.onCityByLocationRequest,
       required this.onSearchCity,
-      required this.cities})
+      required this.cities,
+      required this.loadingCurrentCity,
+      required this.onAutoCompleteCity})
       : super(key: key);
 
   @override
@@ -32,27 +36,39 @@ class SearchField extends StatelessWidget {
           children: [
             Expanded(
                 child: PlatformWidget(
-              cupertino: (_, __) => const CupertinoSearchTextField(
+              cupertino: (_, __) => CupertinoSearchTextField(
                 placeholder: 'Search',
+                onChanged: onAutoCompleteCity,
+                onSubmitted: onSearchCity,
+                suffixIcon: Icon(Feather.location),
               ),
               material: (_, __) => TextField(
                 expands: true,
                 textInputAction: TextInputAction.search,
               ),
             )),
-            PlatformIconButton(
-              padding: EdgeInsets.zero,
-              cupertino: (_, __) => CupertinoIconButtonData(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  minSize: Constants.ICON_MEDIUM_SIZE),
-              icon: Icon(
-                Feather.my_location,
-                color: Constants.PRIMARY_COLOR,
-                size: Constants.ICON_MEDIUM_SIZE,
-              ),
-              onPressed: () {
-                onCityByLocationRequest();
+            StreamBuilder(
+              stream: loadingCurrentCity,
+              builder: (context, snapshot) {
+                bool? loading = snapshot.data as bool?;
+                if (loading != null && loading) {
+                  return PlatformCircularProgressIndicator();
+                }
+                return PlatformIconButton(
+                  padding: EdgeInsets.zero,
+                  cupertino: (_, __) => CupertinoIconButtonData(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      minSize: Constants.ICON_MEDIUM_SIZE),
+                  icon: Icon(
+                    Feather.my_location,
+                    color: Constants.PRIMARY_COLOR,
+                    size: Constants.ICON_MEDIUM_SIZE,
+                  ),
+                  onPressed: () {
+                    onCityByLocationRequest();
+                  },
+                );
               },
             )
           ],

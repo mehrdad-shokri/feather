@@ -1,11 +1,11 @@
 import 'package:client/components/city_card.dart';
 import 'package:client/components/city_search_field.dart';
 import 'package:client/models/weather_forecast.dart';
-import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/location_bloc.dart';
 import 'package:client/rx/blocs/position_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
+import 'package:client/rx/services/service_provider.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -30,7 +30,7 @@ class _CitySearchPageState extends State<CitySearchPage>
   @override
   void initState() {
     super.initState();
-    AppProvider provider = AppProvider.getInstance();
+    ServiceProvider provider = ServiceProvider.getInstance();
     geoBloc = GeoBloc(provider.sharedPrefsService, provider.envService);
     positionBloc = PositionBloc(provider.positionService);
     locationBloc = LocationBloc(provider.sharedPrefsService);
@@ -63,7 +63,14 @@ class _CitySearchPageState extends State<CitySearchPage>
             SearchField(
               cities: geoBloc.searchedLocations,
               onCityByLocationRequest: () {
-                positionBloc.getCurrentPosition((e) {
+                locationBloc.onLoadingCurrentLocation();
+                positionBloc.getCurrentPosition((position) {
+                  geoBloc.reverseGeoCode(position.latitude, position.longitude,
+                      (location) {
+                    locationBloc.onLocationUpdated(location);
+                    Navigator.pop(context);
+                  });
+                }, (e) {
                   Fluttertoast.showToast(
                       msg: e.toString(),
                       toastLength: Toast.LENGTH_SHORT,
@@ -74,7 +81,9 @@ class _CitySearchPageState extends State<CitySearchPage>
                       fontSize: 16.0);
                 });
               },
+              loadingCurrentCity: locationBloc.updatingCurrentLocation,
               onSearchCity: (query) => geoBloc.searchQuery(query),
+              onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
             ),
             Expanded(
               child: Padding(

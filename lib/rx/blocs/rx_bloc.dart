@@ -15,6 +15,7 @@ abstract class RxBloc {
     }))
         .onError((e, callstack) {
       if (onError != null) onError(e);
+      print(callstack);
     });
   }
 }

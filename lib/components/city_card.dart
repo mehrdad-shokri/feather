@@ -85,10 +85,12 @@ class CityCard extends StatelessWidget {
                                   const SizedBox(
                                     width: 4,
                                   ),
+/*
                                   Image.asset(
                                       'icons/flags/png/${weatherForecast.countryCode}.png',
                                       width: 32,
                                       package: 'country_icons')
+*/
                                 ],
                               )
                           ]),

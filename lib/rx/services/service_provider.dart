@@ -1,16 +1,18 @@
+import 'package:client/models/location.dart';
 import 'package:client/rx/services/connectivity_service.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/position_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:get_it/get_it.dart';
 
-class AppProvider {
+class ServiceProvider {
   late ConnectivityService connectivityService;
   late PositionService positionService;
   late SharedPrefsService sharedPrefsService;
   late EnvService envService;
+  Location? activeLocation;
 
-  AppProvider() {
+  ServiceProvider() {
     connectivityService = ConnectivityService();
     positionService = PositionService();
     sharedPrefsService = SharedPrefsService();
@@ -33,9 +35,14 @@ class AppProvider {
   }
 
   void _registerSingleton() {
-    GetIt.I.registerSingleton<AppProvider>(this, instanceName: 'appProvider');
+    GetIt.I
+        .registerSingleton<ServiceProvider>(this, instanceName: 'appProvider');
   }
 
-  static AppProvider getInstance() =>
-      GetIt.I.get<AppProvider>(instanceName: 'appProvider');
+  static ServiceProvider getInstance() =>
+      GetIt.I.get<ServiceProvider>(instanceName: 'appProvider');
+
+  void setActiveLocation(Location location) {
+    activeLocation = location;
+  }
 }

@@ -129,10 +129,10 @@ class WeatherForecast {
         cityName: data['name'],
         countryCode: data['sys']['country'].toString().toLowerCase(),
         cloudsPercent: data['clouds']['all'],
-        rainVolume1h: data['rain'] != null
+        rainVolume1h: data['rain']?['1h'] != null
             ? double.parse(data['rain']['1h'].toString())
             : null,
-        rainVolume3h: data['rain'] != null
+        rainVolume3h: data['rain']?['3h'] != null
             ? double.parse(data['rain']['3h'].toString())
             : null,
         snowVolume1h: data['snow']?['1h'] != null

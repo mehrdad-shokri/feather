@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:client/pages/city_search_page.dart';
 import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
-import 'package:client/rx/app_provider.dart';
+import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/next_days_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/utils.dart';
@@ -21,7 +21,7 @@ class FeatherApp extends StatefulWidget {
 
 class FeatherAppState extends State<FeatherApp> {
   late Future<void> appInitFuture;
-  late AppProvider appProvider;
+  late ServiceProvider appProvider;
   late Locale locale;
   late Brightness brightness;
   late ThemeMode theme;
@@ -37,7 +37,7 @@ class FeatherAppState extends State<FeatherApp> {
   }
 
   Future<void> bootstrapApp() async {
-    appProvider = AppProvider();
+    appProvider = ServiceProvider();
     try {
       await appProvider.onCreate();
     } catch (e) {

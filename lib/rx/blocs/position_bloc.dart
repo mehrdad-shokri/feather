@@ -24,9 +24,13 @@ class PositionBloc extends RxBloc {
     _locationPermission.add(_positionService.hasPermission);
   }
 
-  void getCurrentPosition(Function(Exception) onError) {
+  void getCurrentPosition(
+      Function(Position) onData, Function(Exception) onError) {
     addFutureSubscription(_positionService.getCurrentPosition(),
-        (Position event) => _lastPosition.add(event), onError);
+        (Position event) {
+      _lastPosition.add(event);
+      onData(event);
+    }, onError);
   }
 
   void requestPermission() {

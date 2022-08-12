@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/managers/geo_api.dart';
@@ -42,18 +44,21 @@ class GeoBloc extends RxBloc {
     _instantiateGeoApi(_geoApiProvider.value, _lang.value);
   }
 
-  void reverseGeoCode(double lat, double lon) {
+  void reverseGeoCode(double lat, double lon, Function onData) {
     addFutureSubscription(_geoApi.value.reverseGeocode(lat, lon),
         (Location? location) {
       if (location != null) _reverseGeoLocation.add(location);
+      onData(location);
     }, (e) {});
   }
 
-  void searchQuery(String query) {
-    addFutureSubscription(_geoApi.value.searchByQuery(query),
-        (List<Location>? locations) {
-      if (locations != null) _searchedLocations.add(locations);
-    }, (e) {});
+  void searchQuery(String? query) {
+    if (query != null && query.length >= 3) {
+      addFutureSubscription(_geoApi.value.searchByQuery(query),
+          (List<Location>? locations) {
+        if (locations != null) _searchedLocations.add(locations);
+      }, (e) {});
+    }
   }
 
   void onGeoApiProviderChanged(GeoApiProviders geoApiProvider) {

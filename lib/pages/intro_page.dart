@@ -1,5 +1,5 @@
-import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
+import 'package:client/rx/services/service_provider.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,9 @@ class _IntroPageState extends State<IntroPage> {
   @override
   void initState() {
     super.initState();
-    settingsBloc = SettingsBloc(AppProvider.getInstance().sharedPrefsService);
+    print('init state');
+    settingsBloc =
+        SettingsBloc(ServiceProvider.getInstance().sharedPrefsService);
   }
 
   @override
@@ -75,7 +77,7 @@ class _IntroPageState extends State<IntroPage> {
                         onPressed: () {
                           settingsBloc.onFirstVisited();
                           Navigator.pushNamedAndRemoveUntil(
-                              context, '/city-search', (route) => false);
+                              context, '/city-search', (route) => true);
                         },
                         child: const Text('Get started'),
                       ),
@@ -89,5 +91,11 @@ class _IntroPageState extends State<IntroPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('dispose');
   }
 }

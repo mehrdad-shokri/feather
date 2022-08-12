@@ -1,11 +1,11 @@
 import 'package:client/components/forecast_hero_appbar.dart';
 import 'package:client/components/forecast_hero_card.dart';
 import 'package:client/models/location.dart';
-import 'package:client/rx/app_provider.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/location_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
+import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    AppProvider appProvider = AppProvider.getInstance();
+    ServiceProvider appProvider = ServiceProvider.getInstance();
     locationBloc = LocationBloc(appProvider.sharedPrefsService);
     geoBloc = GeoBloc(appProvider.sharedPrefsService, appProvider.envService);
     weatherBloc =

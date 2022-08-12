@@ -9,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class Constants {
   Constants._();
 
-  static const String LAST_CITY_PREFS = 'last_city';
+  static const String ACTIVE_CITY_PREFS = 'last_city';
   static const String USER_LOCALE_PREFS = 'user_locale';
   static const String IS_FIRST_VISIT_PREFS = 'is_first_visit';
   static const String WEATHER_API_PROVIDER_PREFS = 'weather_api_provider';
