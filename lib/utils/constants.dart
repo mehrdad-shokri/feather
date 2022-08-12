@@ -69,7 +69,7 @@ class Constants {
   static const List<String> APPLICATION_FALLBACK_FONTS = ['sans-serif'];
   static const EdgeInsets PAGE_PADDING = EdgeInsets.symmetric(horizontal: 16);
   static const EdgeInsets CARD_INNER_PADDING =
-      EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
   static final ShapeBorder CARD_SHAPE =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 

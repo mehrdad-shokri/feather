@@ -27,7 +27,7 @@ class CityCard extends StatelessWidget {
             PlatformElevatedButton(
               color: Colors.white,
               onPressed: () {},
-              padding: const EdgeInsets.all(16),
+              padding: Constants.CARD_INNER_PADDING,
               material: (_, __) => MaterialElevatedButtonData(
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -41,57 +41,70 @@ class CityCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
+                      Flexible(
+                        flex: 3,
+                        child: Text(weatherForecast.cityName ?? '',
+                            softWrap: false,
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                                color: textColor(context),
+                                fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                                fontSize: Constants.S1_FONT_SIZE)),
+                      ),
+                      const Spacer(
+                        flex: 1,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  if (strNotEmpty(weatherForecast.countryCode))
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                            'icons/flags/png/${weatherForecast.countryCode}.png',
+                            width: 24,
+                            height: 16,
+                            package: 'country_icons'),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(weatherForecast.countryCode!.toUpperCase(),
+                            style: TextStyle(
+                                color: secondaryTextColor(context),
+                                fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                                fontSize: Constants.CAPTION_FONT_SIZE)),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
                       Text(
                         weatherForecast.temp?.toString() ?? '',
                         style: TextStyle(
                             color: textColor(context),
-                            fontSize: Constants.S1_FONT_SIZE,
+                            fontSize: Constants.S2_FONT_SIZE,
                             fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                       ),
                       Icon(
                         Feather.celcius,
                         color: secondaryTextColor(context),
                         size: 24,
+                      ),
+                      Spacer(),
+                      Text(
+                        weatherForecast.weatherTitle,
+                        style: TextStyle(
+                            fontSize: Constants.S2_FONT_SIZE,
+                            fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                            color: textColor(context)),
                       )
                     ],
                   ),
-                  Text(
-                    weatherForecast.weatherTitle,
-                    style: TextStyle(
-                        fontSize: Constants.S2_FONT_SIZE,
-                        fontWeight: Constants.REGULAR_FONT_WEIGHT,
-                        color: textColor(context)),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(weatherForecast.cityName ?? '',
-                      style: TextStyle(
-                          color: textColor(context),
-                          fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                          fontSize: Constants.S2_FONT_SIZE)),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  if (strNotEmpty(weatherForecast.countryCode))
-                    Row(
-                      children: [
-                        Text(weatherForecast.countryCode!,
-                            style: TextStyle(
-                                color: secondaryTextColor(context),
-                                fontWeight: Constants.REGULAR_FONT_WEIGHT,
-                                fontSize: Constants.S2_FONT_SIZE)),
-                        const SizedBox(
-                          width: 4,
-                        ),
-/*
-                                  Image.asset(
-                                      'icons/flags/png/${weatherForecast.countryCode}.png',
-                                      width: 32,
-                                      package: 'country_icons')
-*/
-                      ],
-                    ),
                   Spacer(),
                   Row(
                     children: [
@@ -100,6 +113,7 @@ class CityCard extends StatelessWidget {
                           SvgPicture.asset(
                             'assets/svg/drop.svg',
                             width: 16,
+                            height: 16,
                             fit: BoxFit.contain,
                             color: Colors.blue.shade400,
                           ),
@@ -115,12 +129,13 @@ class CityCard extends StatelessWidget {
                           )
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         children: [
                           SvgPicture.asset(
                             'assets/svg/windspeed.svg',
                             height: 16,
+                            width: 16,
                             fit: BoxFit.contain,
                             color: Colors.grey.shade600,
                           ),
@@ -128,28 +143,28 @@ class CityCard extends StatelessWidget {
                             width: 4,
                           ),
                           Text(
-                            '${weatherForecast.windSpeed.toStringAsFixed(2)}${windSpeedUnit(weatherForecast.unit)}',
+                            '${weatherForecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(weatherForecast.unit)}',
                             style: TextStyle(
                                 color: textColor(context),
                                 fontSize: Constants.CAPTION_FONT_SIZE,
                                 fontWeight: Constants.REGULAR_FONT_WEIGHT),
                           )
                         ],
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                Lottie.asset(
-                    'assets/lottie/${weatherForecast.lottieAnimation}.json',
-                    alignment: Alignment.center,
-                    width: 64,
-                    height: 64,
-                    fit: BoxFit.contain),
-              ],
+            Positioned(
+              top: -8,
+              right: -8,
+              child: Lottie.asset(
+                  'assets/lottie/${weatherForecast.lottieAnimation}.json',
+                  alignment: Alignment.center,
+                  width: 72,
+                  height: 72,
+                  fit: BoxFit.contain),
             )
           ],
         ));
