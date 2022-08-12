@@ -302,7 +302,7 @@ class WeatherForecast {
       case 502:
       case 503:
       case 504:
-        if (isSameOrAfterDate(
+        if (isSameOrAfterTime(
             DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
           return 'rain_night';
         }
@@ -319,7 +319,7 @@ class WeatherForecast {
       case 620:
       case 621:
       case 622:
-        if (isSameOrAfterDate(
+        if (isSameOrAfterTime(
             DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
           return 'snow_night';
         }
@@ -335,7 +335,7 @@ class WeatherForecast {
       case 781:
         return 'mist';
       case 800:
-        if (isSameOrAfterDate(
+        if (isSameOrAfterTime(
             DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
           return 'clear';
         }
@@ -343,7 +343,7 @@ class WeatherForecast {
       case 741:
         return 'fog';
       case 801:
-        if (isSameOrAfterDate(
+        if (isSameOrAfterTime(
             DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
           return 'cloud_night';
         }

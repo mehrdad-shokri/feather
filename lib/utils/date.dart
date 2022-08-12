@@ -48,3 +48,5 @@ int diffInDays(DateTime source, DateTime dest) {
 int diffInMinutes(TimeOfDay source, TimeOfDay dest) {
   return (dest.hour * 60 + dest.minute) - (source.hour * 60 + source.minute);
 }
+
+bool isSameOrAfterTime(DateTime a, DateTime b) => a.difference(b).inSeconds > 0;

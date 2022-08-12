@@ -42,7 +42,7 @@ class CityCard extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(
-                        flex: 3,
+                        flex: 4,
                         child: Text(weatherForecast.cityName ?? '',
                             softWrap: false,
                             overflow: TextOverflow.fade,
