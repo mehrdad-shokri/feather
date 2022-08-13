@@ -1,7 +1,7 @@
+import 'package:client/components/temperature_icon.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
-import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -79,33 +79,24 @@ class CityCard extends StatelessWidget {
                       ],
                     ),
                   const SizedBox(
-                    height: 16,
+                    height: 8,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        weatherForecast.temp?.toString() ?? '',
-                        style: TextStyle(
-                            color: textColor(context),
-                            fontSize: Constants.S2_FONT_SIZE,
-                            fontWeight: Constants.MEDIUM_FONT_WEIGHT),
-                      ),
-                      Icon(
-                        Feather.celcius,
-                        color: secondaryTextColor(context),
-                        size: 24,
-                      ),
-                      Spacer(),
-                      Text(
-                        weatherForecast.weatherTitle,
-                        style: TextStyle(
-                            fontSize: Constants.S2_FONT_SIZE,
-                            fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                            color: textColor(context)),
-                      )
-                    ],
+                  if (weatherForecast.temp != null) ...[
+                    TemperatureIcon(
+                        unit: weatherForecast.unit,
+                        temperature: weatherForecast.temp!.toString()),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                  ],
+                  Text(
+                    weatherForecast.weatherTitle,
+                    style: TextStyle(
+                        fontSize: Constants.S2_FONT_SIZE,
+                        fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                        color: secondaryTextColor(context)),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Row(
                     children: [
                       Row(
@@ -157,8 +148,8 @@ class CityCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: -8,
-              right: -8,
+              top: 4,
+              right: 4,
               child: Lottie.asset(
                   'assets/lottie/${weatherForecast.lottieAnimation}.json',
                   alignment: Alignment.center,

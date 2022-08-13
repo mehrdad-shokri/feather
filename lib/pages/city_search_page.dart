@@ -47,7 +47,7 @@ class _CitySearchPageState extends State<CitySearchPage>
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text('Select city'),
+        title: const Text('Choose a city'),
         cupertino: (_, __) =>
             CupertinoNavigationBarData(border: const Border()),
       ),
