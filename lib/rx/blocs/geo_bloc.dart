@@ -58,12 +58,14 @@ class GeoBloc extends RxBloc {
     if (strEmpty(query)) {
       getPopularCities();
     } else if (query!.length >= 3) {
-      print('query ${query}');
-      if (_citySearchDebounce?.isActive ?? false) _citySearchDebounce?.cancel();
+      if (_citySearchDebounce?.isActive ?? false) {
+        print('canceling');
+        _citySearchDebounce?.cancel();
+      }
       _citySearchDebounce = Timer(const Duration(milliseconds: 250), () {
+        print('searching');
         addFutureSubscription(_geoApi.value.searchByQuery(query),
             (List<Location>? locations) {
-          print('response ${query} ${locations?.first.cityName}');
           if (locations != null) _searchedLocations.add(locations);
         }, (e) {});
       });

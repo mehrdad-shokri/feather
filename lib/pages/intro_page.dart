@@ -19,7 +19,6 @@ class _IntroPageState extends State<IntroPage> {
   @override
   void initState() {
     super.initState();
-    print('init state');
     settingsBloc =
         SettingsBloc(ServiceProvider.getInstance().sharedPrefsService);
   }
@@ -96,6 +95,6 @@ class _IntroPageState extends State<IntroPage> {
   @override
   void dispose() {
     super.dispose();
-    print('dispose');
+    settingsBloc.dispose();
   }
 }

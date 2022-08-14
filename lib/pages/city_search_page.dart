@@ -97,23 +97,28 @@ class _CitySearchPageState extends State<CitySearchPage>
                         List<WeatherForecast>? forecasts =
                             snapshot.data as List<WeatherForecast>?;
                         if (forecasts == null) return Container();
-                        return GridView.builder(
-                          itemCount: forecasts.length,
-                          primary: true,
-                          shrinkWrap: false,
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisSpacing: 16,
-                                  mainAxisSpacing: 16,
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1),
-                          itemBuilder: (context, index) {
-                            return CityCard(
-                                weatherForecast: forecasts.elementAt(index),
-                                shouldAddMargin: index <= 1);
-                          },
-                        );
+                        return RefreshIndicator(
+                            child: GridView.builder(
+                              itemCount: forecasts.length,
+                              primary: true,
+                              shrinkWrap: false,
+                              padding: EdgeInsets.zero,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisSpacing: 16,
+                                      mainAxisSpacing: 16,
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 1),
+                              itemBuilder: (context, index) {
+                                return CityCard(
+                                    weatherForecast: forecasts.elementAt(index),
+                                    shouldAddMargin: index <= 1);
+                              },
+                            ),
+                            onRefresh: () async {
+                              return Future.delayed(Duration(seconds: 3));
+                              // geoBloc.getPopularCities();
+                            });
                       },
                     ),
                     StreamBuilder(
