@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.6"
+  dio_logging_interceptor:
+    dependency: "direct main"
+    description:
+      name: dio_logging_interceptor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   enum_to_string:
     dependency: "direct main"
     description:

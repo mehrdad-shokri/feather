@@ -33,6 +33,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+2
   fluttertoast: ^8.0.9
   country_icons: ^2.0.2
+  dio_logging_interceptor: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

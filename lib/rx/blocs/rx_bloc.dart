@@ -15,7 +15,7 @@ abstract class RxBloc {
         .add(Stream.fromFuture(future)
             .debounceTime(debounceTime ?? const Duration())
             .listen((event) {
-      if (onData != null) onData(event!);
+      if (onData != null) onData(event);
     }))
         .onError((e, callstack) {
       if (onError != null) onError(e);
