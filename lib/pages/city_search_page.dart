@@ -26,8 +26,6 @@ class _CitySearchPageState extends State<CitySearchPage>
   late PositionBloc positionBloc;
   late LocationBloc locationBloc;
   late WeatherBloc weatherBloc;
-  late AnimationController controller;
-  late Animation<Offset> offset;
 
   @override
   void initState() {
@@ -39,10 +37,6 @@ class _CitySearchPageState extends State<CitySearchPage>
     weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService,
         geoBloc: geoBloc);
     geoBloc.loadPopularCities();
-    controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 250));
-    offset = Tween<Offset>(begin: const Offset(0, -20), end: const Offset(0, 1))
-        .animate(controller);
   }
 
   @override
@@ -131,9 +125,11 @@ class _CitySearchPageState extends State<CitySearchPage>
                                 childAspectRatio: 1),
                         delegate: SliverChildBuilderDelegate(
                             (context, index) => CityCard(
-                                weatherForecast: forecasts.elementAt(index),
-                                key: Key('$index'),
-                                shouldAddMargin: index <= 1),
+                                  weatherForecast: forecasts.elementAt(index),
+                                  key: Key('$index'),
+                                  shouldAddMargin: index <= 1,
+                                  onPress: () {},
+                                ),
                             childCount: forecasts.length),
                       ),
                     );

@@ -11,9 +11,13 @@ import 'package:lottie/lottie.dart';
 class CityCard extends StatelessWidget {
   final WeatherForecast weatherForecast;
   final bool shouldAddMargin;
+  final VoidCallback onPress;
 
   const CityCard(
-      {Key? key, required this.weatherForecast, required this.shouldAddMargin})
+      {Key? key,
+      required this.weatherForecast,
+      required this.shouldAddMargin,
+      required this.onPress})
       : super(key: key);
 
   @override
@@ -22,7 +26,7 @@ class CityCard extends StatelessWidget {
         margin: shouldAddMargin ? const EdgeInsets.only(top: 16) : null,
         child: PlatformElevatedButton(
             color: Colors.white,
-            onPressed: () {},
+            onPressed: onPress,
             padding: Constants.CARD_INNER_PADDING,
             material: (_, __) => MaterialElevatedButtonData(
                     style: ButtonStyle(
