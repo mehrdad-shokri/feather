@@ -46,133 +46,88 @@ class _CitySearchPageState extends State<CitySearchPage>
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      iosContentPadding: false,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: const Text('Choose a city'),
-            flexibleSpace: SearchField(
-              cities: geoBloc.searchedLocations,
-              onGetCurrentPosition: () {
-                locationBloc.onLoadingCurrentLocation();
-                positionBloc.getCurrentPosition((position) {
-                  geoBloc.reverseGeoCode(position.latitude, position.longitude,
-                      (location) {
-                    locationBloc.onLocationUpdated(location);
+        appBar: PlatformAppBar(
+          title: const Text('Choose a city'),
+          cupertino: (_, __) =>
+              CupertinoNavigationBarData(border: const Border()),
+        ),
+        iosContentPadding: true,
+        body: SafeArea(
+            bottom: true,
+            top: false,
+            left: false,
+            right: false,
+            child: Column(mainAxisSize: MainAxisSize.max, children: [
+              SearchField(
+                cities: geoBloc.searchedLocations,
+                onGetCurrentPosition: () {
+                  locationBloc.onLoadingCurrentLocation();
+                  positionBloc.getCurrentPosition((position) {
+                    geoBloc.reverseGeoCode(
+                        position.latitude, position.longitude, (location) {
+                      locationBloc.onLocationUpdated(location);
+                    });
+                  }, (e) {
+                    Fluttertoast.showToast(
+                        msg: e.toString(),
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: Constants.TOAST_DEFAULT_LOCATION,
+                        timeInSecForIosWeb: 3,
+                        backgroundColor: Constants.ERROR_COLOR,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
                   });
-                }, (e) {
-                  Fluttertoast.showToast(
-                      msg: e.toString(),
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: Constants.TOAST_DEFAULT_LOCATION,
-                      timeInSecForIosWeb: 3,
-                      backgroundColor: Constants.ERROR_COLOR,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                });
-              },
-              loadingCurrentCity: locationBloc.updatingCurrentLocation,
-              onSearchCity: (query) => geoBloc.searchQuery(query),
-              onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
-            ),
-          ),
-          StreamBuilder(
-            stream: weatherBloc.citiesWeatherForecast,
-            builder: (context, snapshot) {
-              List<WeatherForecast>? forecasts =
-                  snapshot.data as List<WeatherForecast>?;
-              return forecasts == null
-                  ? SliverToBoxAdapter(
-                      child: Container(),
-                    )
-                  : SliverGrid(
-                      delegate: SliverChildBuilderDelegate((context, index) =>
-                          CityCard(
+                },
+                loadingCurrentCity: locationBloc.updatingCurrentLocation,
+                onSearchCity: (query) => geoBloc.searchQuery(query),
+                onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
+              ),
+              Expanded(
+                  child: Stack(
+                alignment: Alignment.topCenter,
+                fit: StackFit.loose,
+                children: [
+                  StreamBuilder(
+                    stream: weatherBloc.citiesWeatherForecast,
+                    builder: (context, snapshot) {
+                      List<WeatherForecast>? forecasts =
+                          snapshot.data as List<WeatherForecast>?;
+                      if (forecasts == null) return Container();
+                      return GridView.builder(
+                          shrinkWrap: false,
+                          itemCount: forecasts.length,
+                          primary: true,
+                          padding: Constants.PAGE_PADDING,
+                          itemBuilder: (context, index) => CityCard(
                               weatherForecast: forecasts.elementAt(index),
                               key: Key('$index'),
-                              shouldAddMargin: index <= 1)),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              crossAxisCount: 2,
-                              childAspectRatio: 1));
-            },
-          ),
-        ],
-      ),
-    );
+                              shouldAddMargin: index <= 1),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1));
+                    },
+                  ),
+                  StreamBuilder(
+                    stream: weatherBloc.loadingCitiesForecasts,
+                    builder: (context, snapshot) {
+                      bool? loading = snapshot.data as bool?;
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        reverseDuration: const Duration(milliseconds: 500),
+                        child: loading != null && loading
+                            ? Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: PlatformCircularProgressIndicator(),
+                              )
+                            : Container(),
+                      );
+                    },
+                  )
+                ],
+              ))
+            ])));
   }
 }
-/*
-Column(
-mainAxisSize: MainAxisSize.max,
-children: [
-Expanded(
-child: Padding(
-padding: Constants.PAGE_PADDING,
-child: Stack(
-alignment: Alignment.topCenter,
-fit: StackFit.loose,
-children: [
-StreamBuilder(
-stream: weatherBloc.citiesWeatherForecast,
-builder: (context, snapshot) {
-List<WeatherForecast>? forecasts =
-snapshot.data as List<WeatherForecast>?;
-return RefreshIndicator(
-child: GridView.builder(
-itemCount: forecasts.length,
-primary: true,
-shrinkWrap: false,
-padding: EdgeInsets.zero,
-gridDelegate:
-const SliverGridDelegateWithFixedCrossAxisCount(
-crossAxisSpacing: 16,
-mainAxisSpacing: 16,
-crossAxisCount: 2,
-childAspectRatio: 1),
-itemBuilder: (context, index) {
-return CityCard(
-weatherForecast:
-forecasts.elementAt(index),
-key: Key('${index}'),
-shouldAddMargin: index <= 1);
-},
-),
-onRefresh: () async {
-return Future.delayed(Duration(seconds: 3));
-// geoBloc.getPopularCities();
-});
-},
-),
-StreamBuilder(
-stream: weatherBloc.loadingCitiesForecasts,
-builder: (context, snapshot) {
-bool? loading = snapshot.data as bool?;
-if (loading != null && loading) {
-controller.forward();
-} else {
-controller.reverse();
-}
-return AnimatedSwitcher(
-duration: const Duration(milliseconds: 500),
-reverseDuration:
-const Duration(milliseconds: 500),
-child: loading != null && loading
-? Container(
-margin: const EdgeInsets.symmetric(
-vertical: 8),
-child:
-PlatformCircularProgressIndicator(),
-)
-    : null,
-);
-},
-)
-],
-),
-),
-),
-],
-)*/

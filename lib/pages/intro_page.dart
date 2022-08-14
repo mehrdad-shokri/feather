@@ -40,7 +40,7 @@ class _IntroPageState extends State<IntroPage> {
               Flexible(
                 flex: 2,
                 fit: FlexFit.tight,
-                child: Lottie.asset('assets/lottie/sunny.json',
+                child: Image.asset('assets/images/logo_android.png',
                     width: double.maxFinite),
               ),
               const SizedBox(

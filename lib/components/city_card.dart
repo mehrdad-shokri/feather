@@ -100,13 +100,14 @@ class CityCard extends StatelessWidget {
                     Row(
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
                               'assets/svg/humidity.svg',
                               width: Constants.ICON_SMALL_SIZE,
                               height: Constants.ICON_SMALL_SIZE,
                               fit: BoxFit.contain,
-                              color: Colors.blue.shade500,
+                              color: Colors.blue.shade400,
                             ),
                             const SizedBox(
                               width: 4,
@@ -114,7 +115,7 @@ class CityCard extends StatelessWidget {
                             Text(
                               '${weatherForecast.humidityPercent}%',
                               style: TextStyle(
-                                  color: secondaryTextColor(context),
+                                  color: textColor(context),
                                   fontSize: Constants.S2_FONT_SIZE,
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT),
                             )
@@ -122,6 +123,7 @@ class CityCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
                               'assets/svg/wind.svg',
