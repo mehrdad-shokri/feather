@@ -62,13 +62,12 @@ class _CitySearchPageState extends State<CitySearchPage>
           children: [
             SearchField(
               cities: geoBloc.searchedLocations,
-              onCityByLocationRequest: () {
+              onGetCurrentPosition: () {
                 locationBloc.onLoadingCurrentLocation();
                 positionBloc.getCurrentPosition((position) {
                   geoBloc.reverseGeoCode(position.latitude, position.longitude,
                       (location) {
                     locationBloc.onLocationUpdated(location);
-                    Navigator.pop(context);
                   });
                 }, (e) {
                   Fluttertoast.showToast(

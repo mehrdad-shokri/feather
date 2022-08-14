@@ -49,8 +49,10 @@ class Location {
       Location(
           lat: data['lat'],
           lon: data['lon'],
-          cityName: (data['local_names'] as Map<String, dynamic>)[lang] ??
-              data['name'],
+          cityName:
+              data['local_names'] != null && data['local_names'][lang] != null
+                  ? (data['local_names'] as Map<String, dynamic>)[lang]
+                  : data['name'] ?? '',
           country: data['country'],
           state: data['state']);
 

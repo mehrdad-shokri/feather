@@ -8,13 +8,16 @@ abstract class RxBloc {
   }
 
   void addFutureSubscription<T>(Future<T> future,
-      [Function(T)? onData, void Function(Exception e)? onError]) {
+      [Function(T)? onData,
+      void Function(Exception e)? onError,
+      Duration? debounceTime]) {
     _compositeSubscription
-        .add(Stream.fromFuture(future).listen((event) {
+        .add(Stream.fromFuture(future).deb.listen((event) {
       if (onData != null) onData(event!);
     }))
         .onError((e, callstack) {
-      if (onError != null) onError(e);
+      // if (onError != null) onError(e);
+      print(e);
       print(callstack);
     });
   }

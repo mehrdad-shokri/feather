@@ -32,38 +32,30 @@ class CityCard extends StatelessWidget {
             cupertino: (_, __) => CupertinoElevatedButtonData(
                 borderRadius: BorderRadius.circular(16)),
             child: Stack(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.topRight,
               fit: StackFit.loose,
+              clipBehavior: Clip.none,
               children: [
                 Positioned(
-                  child: Lottie.asset(
-                      'assets/lottie/${weatherForecast.lottieAnimation}.json',
-                      alignment: Alignment.center,
-                      width: 72,
-                      height: 72,
-                      fit: BoxFit.contain),
-                ),
+                    top: 16,
+                    right: -8,
+                    child: Lottie.asset(
+                        'assets/lottie/${weatherForecast.lottieAnimation}.json',
+                        alignment: Alignment.center,
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.contain)),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 4,
-                          child: Text(weatherForecast.cityName ?? '',
-                              softWrap: false,
-                              overflow: TextOverflow.fade,
-                              style: TextStyle(
-                                  color: textColor(context),
-                                  fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                                  fontSize: Constants.S1_FONT_SIZE)),
-                        ),
-                        const Spacer(
-                          flex: 1,
-                        ),
-                      ],
-                    ),
+                    Text(weatherForecast.cityName ?? '',
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        style: TextStyle(
+                            color: textColor(context),
+                            fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                            fontSize: Constants.H6_FONT_SIZE)),
                     const SizedBox(
                       height: 4,
                     ),
@@ -81,12 +73,14 @@ class CityCard extends StatelessWidget {
                           ),
                           Text(weatherForecast.countryCode!.toUpperCase(),
                               style: TextStyle(
-                                  color: secondaryTextColor(context),
+                                  color: placeholderColor(context),
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,
                                   fontSize: Constants.CAPTION_FONT_SIZE)),
                         ],
                       ),
-                    const Spacer(),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     if (weatherForecast.temp != null) ...[
                       TemperatureIcon(
                           unit: weatherForecast.unit,
@@ -121,7 +115,7 @@ class CityCard extends StatelessWidget {
                               style: TextStyle(
                                   color: textColor(context),
                                   fontSize: Constants.CAPTION_FONT_SIZE,
-                                  fontWeight: Constants.REGULAR_FONT_WEIGHT),
+                                  fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                             )
                           ],
                         ),
@@ -143,14 +137,11 @@ class CityCard extends StatelessWidget {
                               style: TextStyle(
                                   color: textColor(context),
                                   fontSize: Constants.CAPTION_FONT_SIZE,
-                                  fontWeight: Constants.REGULAR_FONT_WEIGHT),
+                                  fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                             )
                           ],
                         ),
                       ],
-                    ),
-                    SizedBox(
-                      height: 4,
                     ),
                   ],
                 ),

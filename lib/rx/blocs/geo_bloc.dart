@@ -8,6 +8,7 @@ import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/geo_providers.dart';
 import 'package:client/utils/constants.dart';
+import 'package:client/utils/utils.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,6 +20,7 @@ class GeoBloc extends RxBloc {
   final _lang = BehaviorSubject<String>();
   final _reverseGeoLocation = BehaviorSubject<Location>();
   final _searchedLocations = BehaviorSubject<List<Location>>();
+  Timer? _citySearchDebounce;
 
   Stream<Location> get reverseGeoLocation => _reverseGeoLocation.stream;
 
@@ -53,11 +55,18 @@ class GeoBloc extends RxBloc {
   }
 
   void searchQuery(String? query) {
-    if (query != null && query.length >= 3) {
-      addFutureSubscription(_geoApi.value.searchByQuery(query),
-          (List<Location>? locations) {
-        if (locations != null) _searchedLocations.add(locations);
-      }, (e) {});
+    if (strEmpty(query)) {
+      getPopularCities();
+    } else if (query!.length >= 3) {
+      print('query ${query}');
+      if (_citySearchDebounce?.isActive ?? false) _citySearchDebounce?.cancel();
+      _citySearchDebounce = Timer(const Duration(milliseconds: 250), () {
+        addFutureSubscription(_geoApi.value.searchByQuery(query),
+            (List<Location>? locations) {
+          print('response ${query} ${locations?.first.cityName}');
+          if (locations != null) _searchedLocations.add(locations);
+        }, (e) {});
+      });
     }
   }
 

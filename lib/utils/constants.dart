@@ -69,7 +69,7 @@ class Constants {
   static const List<String> APPLICATION_FALLBACK_FONTS = ['sans-serif'];
   static const EdgeInsets PAGE_PADDING = EdgeInsets.symmetric(horizontal: 16);
   static const EdgeInsets CARD_INNER_PADDING =
-      EdgeInsets.symmetric(horizontal: 8, vertical: 8);
+      EdgeInsets.symmetric(horizontal: 12, vertical: 12);
   static final ShapeBorder CARD_SHAPE =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 
@@ -84,12 +84,7 @@ class Constants {
   static const String OPEN_WEATHER_MAP_API_KEY_ENV = 'OPEN_WEATHER_MAP_API_KEY';
 
   static const List<Map<String, dynamic>> POPULAR_CITIES = [
-    {
-      "country": "GB",
-      "name": "City of London",
-      "lat": "51.51279",
-      "lng": "-0.09184"
-    },
+    {"country": "GB", "name": "London", "lat": "51.51279", "lng": "-0.09184"},
     {"country": "FR", "name": "Paris", "lat": "48.85341", "lng": "2.3488"},
     {"country": "DE", "name": "Berlin", "lat": "52.52003", "lng": "13.4050"},
     {"country": "ES", "name": "Barcelona", "lat": "41.38879", "lng": "2.15899"},

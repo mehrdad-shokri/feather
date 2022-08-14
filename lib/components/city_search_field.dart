@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class SearchField extends StatelessWidget {
-  final Function onCityByLocationRequest;
+  final Function onGetCurrentPosition;
   final Function(String? query) onSearchCity;
   final Function(String? query) onAutoCompleteCity;
   final Stream<List<Location>> cities;
@@ -14,7 +14,7 @@ class SearchField extends StatelessWidget {
 
   const SearchField(
       {Key? key,
-      required this.onCityByLocationRequest,
+      required this.onGetCurrentPosition,
       required this.onSearchCity,
       required this.cities,
       required this.loadingCurrentCity,
@@ -40,7 +40,6 @@ class SearchField extends StatelessWidget {
                 placeholder: 'Search',
                 onChanged: onAutoCompleteCity,
                 onSubmitted: onSearchCity,
-                suffixIcon: Icon(Feather.location),
               ),
               material: (_, __) => TextField(
                 expands: true,
@@ -66,7 +65,7 @@ class SearchField extends StatelessWidget {
                     size: Constants.ICON_MEDIUM_SIZE,
                   ),
                   onPressed: () {
-                    onCityByLocationRequest();
+                    onGetCurrentPosition();
                   },
                 );
               },
