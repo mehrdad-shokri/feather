@@ -20,11 +20,14 @@ class GeoBloc extends RxBloc {
   final _lang = BehaviorSubject<String>();
   final _reverseGeoLocation = BehaviorSubject<Location>();
   final _searchedLocations = BehaviorSubject<List<Location>>();
+  final _searchingLocations = BehaviorSubject<bool>();
   Timer? _citySearchDebounce;
 
   Stream<Location> get reverseGeoLocation => _reverseGeoLocation.stream;
 
   Stream<List<Location>> get searchedLocations => _searchedLocations.stream;
+
+  Stream<bool> get searchingLocations => _searchingLocations.stream;
 
   GeoBloc(this._sharedPrefsService, this._envService) {
     String? geoApiProvider = _sharedPrefsService.instance
@@ -55,23 +58,25 @@ class GeoBloc extends RxBloc {
   }
 
   void searchQuery(String? query) {
-    if (strEmpty(query)) {
-      print('get popular cities');
-      getPopularCities();
-    } else if (query!.length >= 3) {
-      if (_citySearchDebounce?.isActive ?? false) {
-        print('canceling');
-        _citySearchDebounce?.cancel();
-      }
-      _citySearchDebounce = Timer(const Duration(milliseconds: 250), () {
-        print('searching ${query}');
-        addFutureSubscription(_geoApi.value.searchByQuery(query),
-            (List<Location>? locations) {
-          print('locations result ${query} ${locations?.length}');
-          if (locations != null) _searchedLocations.add(locations);
-        }, (e) {});
-      });
+    if (_citySearchDebounce?.isActive ?? false) {
+      _citySearchDebounce?.cancel();
     }
+    _citySearchDebounce = Timer(const Duration(milliseconds: 500), () {
+      _searchingLocations.add(true);
+      print('searching ${query}');
+      if (strEmpty(query) || query!.length < 3) {
+        loadPopularCities();
+      } else {
+        addFutureSubscription(_geoApi.value.searchByQuery(query),
+            (List<Location> locations) {
+          print('response $query ${locations.length}');
+          _searchingLocations.add(false);
+          _searchedLocations.add(locations);
+        }, (e) {
+          _searchingLocations.add(false);
+        });
+      }
+    });
   }
 
   void onGeoApiProviderChanged(GeoApiProviders geoApiProvider) {
@@ -83,7 +88,7 @@ class GeoBloc extends RxBloc {
         (e) {});
   }
 
-  void getPopularCities() {
+  void loadPopularCities() {
     _searchedLocations.add(
         Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList());
   }

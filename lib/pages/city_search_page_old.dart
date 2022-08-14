@@ -36,7 +36,7 @@ class _CitySearchPageState extends State<CitySearchPage>
     locationBloc = LocationBloc(provider.sharedPrefsService);
     weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService,
         geoBloc: geoBloc);
-    geoBloc.getPopularCities();
+    geoBloc.loadPopularCities();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 250));
     offset = Tween<Offset>(begin: const Offset(0, -20), end: const Offset(0, 1))

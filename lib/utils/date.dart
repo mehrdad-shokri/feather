@@ -49,4 +49,12 @@ int diffInMinutes(TimeOfDay source, TimeOfDay dest) {
   return (dest.hour * 60 + dest.minute) - (source.hour * 60 + source.minute);
 }
 
-bool isSameOrAfterTime(DateTime a, DateTime b) => a.difference(b).inSeconds > 0;
+bool isSameOrAfterTime(DateTime a, DateTime b) =>
+    a.difference(b).inSeconds >= 0;
+
+bool isSameOrBeforeTime(DateTime a, DateTime b) =>
+    a.difference(b).inSeconds <= 0;
+
+bool isNight(DateTime sunrise, DateTime sunset) =>
+    isSameOrAfterTime(DateTime.now().toUtc(), sunset) ||
+    isSameOrAfterTime(sunrise, DateTime.now().toUtc());

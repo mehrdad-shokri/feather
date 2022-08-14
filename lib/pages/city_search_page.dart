@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CitySearchPage extends StatefulWidget {
   const CitySearchPage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _CitySearchPageState extends State<CitySearchPage>
     locationBloc = LocationBloc(provider.sharedPrefsService);
     weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService,
         geoBloc: geoBloc);
-    geoBloc.getPopularCities();
+    geoBloc.loadPopularCities();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 250));
     offset = Tween<Offset>(begin: const Offset(0, -20), end: const Offset(0, 1))
@@ -87,13 +88,14 @@ class _CitySearchPageState extends State<CitySearchPage>
                   refreshIndicatorExtent: 16,
                 ),
                 StreamBuilder(
-                  stream: weatherBloc.loadingCitiesForecasts,
+                  stream: geoBloc.searchingLocations
+                      .mergeWith([weatherBloc.loadingCitiesForecasts]),
                   builder: (context, snapshot) {
                     bool? loading = snapshot.data as bool?;
                     return SliverToBoxAdapter(
                         child: AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 500),
-                      reverseDuration: const Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 250),
+                      reverseDuration: const Duration(milliseconds: 250),
                       crossFadeState: loading != null && loading
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,

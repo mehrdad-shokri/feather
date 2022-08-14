@@ -67,7 +67,9 @@ class WeatherBloc extends RxBloc {
       _weatherApi.add(_instantiateWeatherApi(_weatherApiProvider.value, value));
     });
     if (geoBloc != null) {
-      geoBloc.searchedLocations.listen((event) {
+      geoBloc.searchedLocations
+          .debounceTime(const Duration(milliseconds: 200))
+          .listen((event) {
         getCitiesForecast(event);
       });
     }
@@ -127,9 +129,9 @@ class WeatherBloc extends RxBloc {
   }
 
   void getCitiesForecast(List<Location> locations) {
-    List<WeatherForecast> forecasts = [];
     addFutureSubscription((() async {
       _loadingCitiesForecasts.add(true);
+      List<WeatherForecast> forecasts = [];
       await Future.forEach(locations, (Location element) async {
         WeatherForecast forecast =
             await _weatherApi.value.current(element.lat, element.lon);

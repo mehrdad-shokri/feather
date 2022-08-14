@@ -138,7 +138,7 @@ class CityCard extends StatelessWidget {
                             Text(
                               '${weatherForecast.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(weatherForecast.unit)}',
                               style: TextStyle(
-                                  color: secondaryTextColor(context),
+                                  color: textColor(context),
                                   fontSize: Constants.S2_FONT_SIZE,
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT),
                             )

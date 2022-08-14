@@ -99,9 +99,10 @@ class WeatherForecast {
         minTemp: double.parse(data['main']['temp_min'].toString()),
         weatherTitle: (data['weather'] as List).first['main'],
         weatherDescription: (data['weather'] as List).first['description'],
-        lottieAnimation: _openweathermapWeatherCodeToLottieAnimation(
+        lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
             (data['weather'] as List).first['id'],
-            data['timezone'],
+            DateTime.fromMillisecondsSinceEpoch(data['sys']['sunrise'] * 1000,
+                isUtc: true),
             DateTime.fromMillisecondsSinceEpoch(data['sys']['sunset'] * 1000,
                 isUtc: true)),
         weatherCode: (data['weather'] as List).first['id'],
@@ -160,9 +161,10 @@ class WeatherForecast {
           minTemp: double.parse(data['temp']['min'].toString()),
           weatherTitle: (data['weather'] as List).first['main'],
           weatherCode: (data['weather'] as List).first['id'],
-          lottieAnimation: _openweathermapWeatherCodeToLottieAnimation(
+          lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
               (data['weather'] as List).first['id'],
-              timezone,
+              DateTime.fromMillisecondsSinceEpoch(data['sunrise'] * 1000,
+                  isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(data['sunset'] * 1000,
                   isUtc: true)),
           weatherDescription: (data['weather'] as List).first['description'],
@@ -225,9 +227,9 @@ class WeatherForecast {
           weatherTitle: (data['weather'] as List).first['main'],
           weatherDescription: (data['weather'] as List).first['description'],
           weatherCode: (data['weather'] as List).first['id'],
-          lottieAnimation: _openweathermapWeatherCodeToLottieAnimation(
+          lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
               (data['weather'] as List).first['id'],
-              timezone,
+              DateTime.fromMillisecondsSinceEpoch(sunrise * 1000, isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(sunset * 1000, isUtc: true)),
           tempFeelsLike: double.parse(data['main']['feels_like'].toString()),
           humidityPercent: data['main']['humidity'],
@@ -268,8 +270,8 @@ class WeatherForecast {
           date: DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
               isUtc: true));
 
-  static String _openweathermapWeatherCodeToLottieAnimation(
-      int weatherCode, int timezone, DateTime sunset) {
+  static String _openWeatherMapWeatherCodeToLottieAnimation(
+      int weatherCode, DateTime sunrise, DateTime sunset) {
     switch (weatherCode) {
       case 200:
       case 201:
@@ -302,8 +304,7 @@ class WeatherForecast {
       case 502:
       case 503:
       case 504:
-        if (isSameOrAfterTime(
-            DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
+        if (isNight(sunrise, sunset)) {
           return 'rain_night';
         }
         return 'rain_day';
@@ -319,8 +320,7 @@ class WeatherForecast {
       case 620:
       case 621:
       case 622:
-        if (isSameOrAfterTime(
-            DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
+        if (isNight(sunrise, sunset)) {
           return 'snow_night';
         }
         return 'snow_day';
@@ -335,16 +335,14 @@ class WeatherForecast {
       case 781:
         return 'mist';
       case 800:
-        if (isSameOrAfterTime(
-            DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
+        if (isNight(sunrise, sunset)) {
           return 'clear';
         }
         return 'sunny';
       case 741:
         return 'fog';
       case 801:
-        if (isSameOrAfterTime(
-            DateTime.now().toUtc().add(Duration(seconds: timezone)), sunset)) {
+        if (isNight(sunrise, sunset)) {
           return 'cloud_night';
         }
         return 'cloud_day';
