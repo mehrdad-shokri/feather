@@ -10,5 +10,5 @@ abstract class GeoApi {
 
   Future<Location?> reverseGeocode(double lat, double lon);
 
-  Future<List<Location>?> searchByQuery(String query);
+  Future<List<Location>> searchByQuery(String query);
 }

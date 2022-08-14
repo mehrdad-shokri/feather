@@ -47,7 +47,7 @@ class _CitySearchPageState extends State<CitySearchPage>
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-        iosContentPadding: false,
+        iosContentPadding: true,
         body: SafeArea(
             bottom: false,
             top: false,
@@ -81,7 +81,32 @@ class _CitySearchPageState extends State<CitySearchPage>
                     onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
                   ),
                   middle: const Text('Choose a city'),
-                  border: const Border(),
+                ),
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {},
+                  refreshIndicatorExtent: 16,
+                ),
+                StreamBuilder(
+                  stream: weatherBloc.loadingCitiesForecasts,
+                  builder: (context, snapshot) {
+                    bool? loading = snapshot.data as bool?;
+                    return SliverToBoxAdapter(
+                        child: AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 500),
+                      reverseDuration: const Duration(milliseconds: 500),
+                      crossFadeState: loading != null && loading
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      firstChild: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 8),
+                        child: const CupertinoActivityIndicator(),
+                      ),
+                      secondChild: Container(
+                        height: 0,
+                      ),
+                    ));
+                  },
                 ),
                 StreamBuilder(
                   stream: weatherBloc.citiesWeatherForecast,
@@ -112,6 +137,11 @@ class _CitySearchPageState extends State<CitySearchPage>
                     );
                   },
                 ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 24,
+                  ),
+                )
               ],
             )));
   }

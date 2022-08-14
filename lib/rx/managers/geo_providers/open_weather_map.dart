@@ -26,7 +26,7 @@ class OpenWeatherMapGeoApi extends GeoApi {
   }
 
   @override
-  Future<List<Location>?> searchByQuery(String query) async {
+  Future<List<Location>> searchByQuery(String query) async {
     List data = (await apiClient.instance.get(
       '/direct',
       queryParameters: {'appid': appId, 'q': query, 'limit': 10},
@@ -37,6 +37,6 @@ class OpenWeatherMapGeoApi extends GeoApi {
           .map((e) => Location.fromOpenWeatherMapGeocode(data.first, lang))
           .toList();
     }
-    return null;
+    return [];
   }
 }
