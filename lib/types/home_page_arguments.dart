@@ -1,7 +1,7 @@
 import 'package:client/models/location.dart';
 
-class NextDaysPageArguments {
+class HomePageArguments {
   final Location location;
 
-  NextDaysPageArguments(this.location);
+  HomePageArguments(this.location);
 }

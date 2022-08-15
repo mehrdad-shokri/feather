@@ -1,11 +1,13 @@
 import 'package:client/components/city_card.dart';
 import 'package:client/components/city_search_field.dart';
+import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
-import 'package:client/rx/blocs/location_bloc.dart';
 import 'package:client/rx/blocs/position_bloc.dart';
+import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/types/home_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +26,8 @@ class _CitySearchPageState extends State<CitySearchPage>
     with SingleTickerProviderStateMixin {
   late GeoBloc geoBloc;
   late PositionBloc positionBloc;
-  late LocationBloc locationBloc;
   late WeatherBloc weatherBloc;
+  late SettingsBloc settingsBloc;
 
   @override
   void initState() {
@@ -33,10 +35,17 @@ class _CitySearchPageState extends State<CitySearchPage>
     ServiceProvider provider = ServiceProvider.getInstance();
     geoBloc = GeoBloc(provider.sharedPrefsService, provider.envService);
     positionBloc = PositionBloc(provider.positionService);
-    locationBloc = LocationBloc(provider.sharedPrefsService);
     weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService,
         geoBloc: geoBloc);
     geoBloc.loadPopularCities();
+    settingsBloc = SettingsBloc(provider.sharedPrefsService);
+  }
+
+  void onLocationUpdated(Location location) {
+    settingsBloc.onLocationChanged(location);
+    settingsBloc.onFirstVisited();
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true,
+        arguments: HomePageArguments(location));
   }
 
   @override
@@ -54,11 +63,10 @@ class _CitySearchPageState extends State<CitySearchPage>
                   largeTitle: SearchField(
                     cities: geoBloc.searchedLocations,
                     onGetCurrentPosition: () {
-                      locationBloc.onLoadingCurrentLocation();
                       positionBloc.getCurrentPosition((position) {
                         geoBloc.reverseGeoCode(
                             position.latitude, position.longitude, (location) {
-                          locationBloc.onLocationUpdated(location);
+                          onLocationUpdated(location);
                         });
                       }, (e) {
                         Fluttertoast.showToast(
@@ -128,7 +136,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                                   weatherForecast: forecasts.elementAt(index),
                                   key: Key('$index'),
                                   shouldAddMargin: index <= 1,
-                                  onPress: () {},
+                                  onPress: () {onLocationUpdated(forecasts.elementAt(index))},
                                 ),
                             childCount: forecasts.length),
                       ),
@@ -142,5 +150,14 @@ class _CitySearchPageState extends State<CitySearchPage>
                 )
               ],
             )));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    geoBloc.dispose();
+    weatherBloc.dispose();
+    settingsBloc.dispose();
+    positionBloc.dispose();
   }
 }

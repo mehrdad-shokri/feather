@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:client/models/weather_forecast.dart';
+
 class Location {
   final double lat;
   final double lon;
   final String cityName;
   final String country;
   final String? state;
+  WeatherForecast? forecast;
 
   Location(
       {required this.lat,
@@ -24,7 +27,7 @@ class Location {
         country: locationJson['country']);
   }
 
-  String toJson() {
+  String toPrefsJson() {
     return json.encode({
       'lat': lat,
       'lon': lon,
@@ -61,4 +64,11 @@ class Location {
       lon: double.parse(data['lng']),
       cityName: data['name'],
       country: data['country']);
+
+  factory Location.fromWeatherForecast(WeatherForecast forecast) => Location(
+      lat: forecast.lat,
+      lon: forecast.lon,
+      cityName: forecast.cityName ?? '',
+      country: forecast.countryCode ?? '',
+      state: null);
 }
