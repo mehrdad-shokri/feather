@@ -43,7 +43,7 @@ class _CitySearchPageState extends State<CitySearchPage>
   void onLocationUpdated(Location location) {
     settingsBloc.onLocationChanged(location);
     settingsBloc.onFirstVisited();
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true);
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => true);
   }
 
   @override
@@ -132,8 +132,6 @@ class _CitySearchPageState extends State<CitySearchPage>
                                 childAspectRatio: 1),
                         delegate: SliverChildBuilderDelegate(
                             (context, index) => CityCard(
-                                  weatherForecast:
-                                      locations.elementAt(index).forecast,
                                   location: locations.elementAt(index),
                                   key: Key('$index'),
                                   shouldAddMargin: index <= 1,

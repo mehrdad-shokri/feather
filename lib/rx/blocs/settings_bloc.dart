@@ -75,7 +75,7 @@ class SettingsBloc extends RxBloc {
   void onFirstVisited() {
     _isFirstVisit.add(false);
     addFutureSubscription(_sharedPrefsService.instance
-        .setBool(Constants.IS_FIRST_VISIT_PREFS, false));
+        .setBool(Constants.IS_FIRST_VISIT_PREFS, true));
   }
 
   void onLocationChanged(Location location) {

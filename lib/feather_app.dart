@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:client/pages/city_search_page.dart';
+import 'package:client/pages/home_page.dart';
 import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
 import 'package:client/rx/services/service_provider.dart';
@@ -80,6 +81,9 @@ class FeatherAppState extends State<FeatherApp> {
                 builder: (context) => InitPage(
                       future: appInitFuture,
                     ));
+          case '/home':
+            return platformPageRoute(
+                context: context, builder: (context) => const HomePage());
           case '/7days':
             return platformPageRoute(
                 context: context, builder: (context) => const NextDaysPage());
