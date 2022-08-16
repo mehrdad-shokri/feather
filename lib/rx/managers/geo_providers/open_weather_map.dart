@@ -29,7 +29,7 @@ class OpenWeatherMapGeoApi extends GeoApi {
   Future<List<Location>> searchByQuery(String query) async {
     List data = (await apiClient.instance.get(
       '/direct',
-      queryParameters: {'appid': appId, 'q': query, 'limit': 10},
+      queryParameters: {'appid': appId, 'q': query, 'limit': 100},
     ))
         .data as List;
     if (data.isNotEmpty) {

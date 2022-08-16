@@ -6,6 +6,7 @@ import 'package:client/rx/blocs/position_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class _CitySearchPageState extends State<CitySearchPage>
             child: CustomScrollView(
               slivers: [
                 CupertinoSliverNavigationBar(
+                  padding: EdgeInsetsDirectional.zero,
                   largeTitle: SearchField(
                     cities: geoBloc.searchedLocations,
                     onGetCurrentPosition: () {
@@ -82,6 +84,9 @@ class _CitySearchPageState extends State<CitySearchPage>
                     onSearchCity: (query) => geoBloc.searchQuery(query),
                     onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
                   ),
+                  border: Border(
+                      bottom:
+                          BorderSide(color: dividerColor(context), width: 1)),
                   middle: const Text('Choose a city'),
                 ),
                 CupertinoSliverRefreshControl(

@@ -24,7 +24,7 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.only(right: 16, bottom: 8),
         decoration: BoxDecoration(
           color: CupertinoTheme.of(context).barBackgroundColor,
         ),
@@ -41,6 +41,8 @@ class SearchField extends StatelessWidget {
               material: (_, __) => TextField(
                 expands: true,
                 textInputAction: TextInputAction.search,
+                onSubmitted: onSearchCity,
+                onChanged: onAutoCompleteCity,
               ),
             )),
             StreamBuilder(

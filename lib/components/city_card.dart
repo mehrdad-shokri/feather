@@ -45,8 +45,8 @@ class CityCard extends StatelessWidget {
               children: [
                 if (location.forecast != null)
                   Positioned(
-                    top: 16,
-                    right: -8,
+                    top: 40,
+                    right: 0,
                     child: Lottie.asset(
                         'assets/lottie/${location.forecast!.lottieAnimation}.json',
                         alignment: Alignment.center,
@@ -63,10 +63,11 @@ class CityCard extends StatelessWidget {
                         Expanded(
                             child: TextScroll(
                           location.cityName,
-                          mode: TextScrollMode.endless,
-                          velocity: Velocity(pixelsPerSecond: Offset(150, 0)),
-                          delayBefore: Duration(milliseconds: 1000),
-                          numberOfReps: 5,
+                          mode: TextScrollMode.bouncing,
+                          velocity:
+                              const Velocity(pixelsPerSecond: Offset(20, 0)),
+                          delayBefore: const Duration(milliseconds: 2500),
+                          pauseBetween: const Duration(milliseconds: 1500),
                           style: TextStyle(
                               color: textColor(context),
                               fontWeight: Constants.MEDIUM_FONT_WEIGHT,
@@ -76,12 +77,6 @@ class CityCard extends StatelessWidget {
                         ))
                       ],
                     ),
-                    // Text(location.cityName,
-                    //     softWrap: true,
-                    //     style: TextStyle(
-                    //         color: textColor(context),
-                    //         fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                    //         fontSize: Constants.H6_FONT_SIZE)),
                     const SizedBox(
                       height: 4,
                     ),
@@ -103,13 +98,15 @@ class CityCard extends StatelessWidget {
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,
                                   fontSize: Constants.CAPTION_FONT_SIZE)),
                           if (strNotEmpty(location.state))
-                            Text(
+                            Expanded(
+                                child: Text(
                               ', ${location.state!}',
+                              overflow: TextOverflow.fade,
                               style: TextStyle(
                                   color: placeholderColor(context),
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,
                                   fontSize: Constants.CAPTION_FONT_SIZE),
-                            )
+                            ))
                         ],
                       ),
                     Expanded(
