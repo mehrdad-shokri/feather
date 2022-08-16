@@ -55,7 +55,7 @@ class GeoBloc extends RxBloc {
     if (_citySearchDebounce?.isActive ?? false) {
       _citySearchDebounce?.cancel();
     }
-    _citySearchDebounce = Timer(const Duration(milliseconds: 500), () {
+    _citySearchDebounce = Timer(const Duration(milliseconds: 1000), () {
       _searchingLocations.add(true);
       print('searching ${query}');
       if (strEmpty(query) || query!.length < 3) {

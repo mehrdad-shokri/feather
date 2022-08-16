@@ -8,6 +8,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 class CityCard extends StatelessWidget {
   final Location location;
@@ -57,13 +58,30 @@ class CityCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(location.cityName,
-                        softWrap: false,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(
-                            color: textColor(context),
-                            fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                            fontSize: Constants.H6_FONT_SIZE)),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: TextScroll(
+                          location.cityName,
+                          mode: TextScrollMode.endless,
+                          velocity: Velocity(pixelsPerSecond: Offset(150, 0)),
+                          delayBefore: Duration(milliseconds: 1000),
+                          numberOfReps: 5,
+                          style: TextStyle(
+                              color: textColor(context),
+                              fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                              fontSize: Constants.H6_FONT_SIZE),
+                          textAlign: TextAlign.center,
+                          selectable: false,
+                        ))
+                      ],
+                    ),
+                    // Text(location.cityName,
+                    //     softWrap: true,
+                    //     style: TextStyle(
+                    //         color: textColor(context),
+                    //         fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                    //         fontSize: Constants.H6_FONT_SIZE)),
                     const SizedBox(
                       height: 4,
                     ),
@@ -84,6 +102,14 @@ class CityCard extends StatelessWidget {
                                   color: placeholderColor(context),
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,
                                   fontSize: Constants.CAPTION_FONT_SIZE)),
+                          if (strNotEmpty(location.state))
+                            Text(
+                              ', ${location.state!}',
+                              style: TextStyle(
+                                  color: placeholderColor(context),
+                                  fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                                  fontSize: Constants.CAPTION_FONT_SIZE),
+                            )
                         ],
                       ),
                     Expanded(

@@ -34,6 +34,7 @@ dependencies:
   fluttertoast: ^8.0.9
   country_icons: ^2.0.2
   dio_logging_interceptor: ^1.0.1
+  text_scroll: ^0.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
