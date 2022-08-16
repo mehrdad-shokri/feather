@@ -4,7 +4,6 @@ import 'package:client/pages/intro_page.dart';
 import 'package:client/pages/loading_page.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
-import 'package:client/types/home_page_arguments.dart';
 import 'package:flutter/widgets.dart';
 
 class InitPage extends StatelessWidget {
@@ -18,9 +17,7 @@ class InitPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           SettingsBloc settingsBloc =
-          SettingsBloc(ServiceProvider
-              .getInstance()
-              .sharedPrefsService);
+              SettingsBloc(ServiceProvider.getInstance().sharedPrefsService);
           return StreamBuilder(
             stream: settingsBloc.isFirstVisit,
             builder: (contest, snapshot) {
@@ -29,14 +26,16 @@ class InitPage extends StatelessWidget {
               if (isFirstVisit) {
                 return const IntroPage();
               }
-              return StreamBuilder(stream: settingsBloc.activeLocation,
+              return StreamBuilder(
+                stream: settingsBloc.activeLocation,
                 builder: (context, snapshot) {
                   Location? location = snapshot.data as Location?;
                   if (location == null) {
                     return const IntroPage();
                   }
-                  return HomePage(HomePageArguments(location));
-                },)
+                  return const HomePage();
+                },
+              );
             },
           );
         }

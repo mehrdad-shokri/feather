@@ -1,4 +1,5 @@
 import 'package:client/components/temperature_icon.dart';
+import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
@@ -9,13 +10,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class CityCard extends StatelessWidget {
-  final WeatherForecast weatherForecast;
+  final WeatherForecast? weatherForecast;
+  final Location location;
   final bool shouldAddMargin;
   final VoidCallback onPress;
 
   const CityCard(
       {Key? key,
       required this.weatherForecast,
+      required this.location,
       required this.shouldAddMargin,
       required this.onPress})
       : super(key: key);
@@ -24,6 +27,7 @@ class CityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: shouldAddMargin ? const EdgeInsets.only(top: 16) : null,
+        key: key,
         child: PlatformElevatedButton(
             color: Colors.white,
             onPressed: onPress,
@@ -40,20 +44,21 @@ class CityCard extends StatelessWidget {
               fit: StackFit.loose,
               clipBehavior: Clip.none,
               children: [
-                Positioned(
-                    top: 16,
-                    right: -8,
-                    child: Lottie.asset(
-                        'assets/lottie/${weatherForecast.lottieAnimation}.json',
-                        alignment: Alignment.center,
-                        width: 72,
-                        height: 72,
-                        fit: BoxFit.contain)),
+                if (weatherForecast != null)
+                  Positioned(
+                      top: 16,
+                      right: -8,
+                      child: Lottie.asset(
+                          'assets/lottie/${weatherForecast!.lottieAnimation}.json',
+                          alignment: Alignment.center,
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.contain)),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(weatherForecast.cityName ?? '',
+                    Text(location.cityName,
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         style: TextStyle(
@@ -63,93 +68,96 @@ class CityCard extends StatelessWidget {
                     const SizedBox(
                       height: 4,
                     ),
-                    if (strNotEmpty(weatherForecast.countryCode))
+                    if (weatherForecast != null &&
+                        strNotEmpty(weatherForecast!.countryCode))
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Image.asset(
-                              'icons/flags/png/${weatherForecast.countryCode}.png',
+                              'icons/flags/png/${weatherForecast!.countryCode}.png',
                               width: 24,
                               height: 16,
                               package: 'country_icons'),
                           const SizedBox(
                             width: 4,
                           ),
-                          Text(weatherForecast.countryCode!.toUpperCase(),
+                          Text(weatherForecast!.countryCode!.toUpperCase(),
                               style: TextStyle(
                                   color: placeholderColor(context),
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,
                                   fontSize: Constants.CAPTION_FONT_SIZE)),
                         ],
                       ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    if (weatherForecast.temp != null) ...[
-                      TemperatureIcon(
-                          unit: weatherForecast.unit,
-                          temperature: weatherForecast.temp!.toString()),
+                    if (weatherForecast != null) ...[
                       const SizedBox(
-                        height: 4,
+                        height: 16,
                       ),
-                    ],
-                    Text(
-                      weatherForecast.weatherTitle,
-                      style: TextStyle(
-                          fontSize: Constants.S2_FONT_SIZE,
-                          fontWeight: Constants.REGULAR_FONT_WEIGHT,
-                          color: secondaryTextColor(context)),
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/svg/humidity.svg',
-                              width: Constants.ICON_SMALL_SIZE,
-                              height: Constants.ICON_SMALL_SIZE,
-                              fit: BoxFit.contain,
-                              color: Colors.blue.shade400,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              '${weatherForecast.humidityPercent}%',
-                              style: TextStyle(
-                                  color: textColor(context),
-                                  fontSize: Constants.S2_FONT_SIZE,
-                                  fontWeight: Constants.REGULAR_FONT_WEIGHT),
-                            )
-                          ],
-                        ),
-                        const Spacer(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/svg/wind.svg',
-                              height: Constants.ICON_SMALL_SIZE,
-                              width: Constants.ICON_SMALL_SIZE,
-                              fit: BoxFit.contain,
-                              color: Colors.grey.shade500,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              '${weatherForecast.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(weatherForecast.unit)}',
-                              style: TextStyle(
-                                  color: textColor(context),
-                                  fontSize: Constants.S2_FONT_SIZE,
-                                  fontWeight: Constants.REGULAR_FONT_WEIGHT),
-                            )
-                          ],
+                      if (weatherForecast!.temp != null) ...[
+                        TemperatureIcon(
+                            unit: weatherForecast!.unit,
+                            temperature: weatherForecast!.temp!.toString()),
+                        const SizedBox(
+                          height: 4,
                         ),
                       ],
-                    ),
+                      Text(
+                        weatherForecast!.weatherTitle,
+                        style: TextStyle(
+                            fontSize: Constants.S2_FONT_SIZE,
+                            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                            color: secondaryTextColor(context)),
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/svg/humidity.svg',
+                                width: Constants.ICON_SMALL_SIZE,
+                                height: Constants.ICON_SMALL_SIZE,
+                                fit: BoxFit.contain,
+                                color: Colors.blue.shade400,
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                '${weatherForecast!.humidityPercent}%',
+                                style: TextStyle(
+                                    color: textColor(context),
+                                    fontSize: Constants.S2_FONT_SIZE,
+                                    fontWeight: Constants.REGULAR_FONT_WEIGHT),
+                              )
+                            ],
+                          ),
+                          const Spacer(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/svg/wind.svg',
+                                height: Constants.ICON_SMALL_SIZE,
+                                width: Constants.ICON_SMALL_SIZE,
+                                fit: BoxFit.contain,
+                                color: Colors.grey.shade500,
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                '${weatherForecast!.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(weatherForecast!.unit)}',
+                                style: TextStyle(
+                                    color: textColor(context),
+                                    fontSize: Constants.S2_FONT_SIZE,
+                                    fontWeight: Constants.REGULAR_FONT_WEIGHT),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ]
                   ],
                 ),
               ],

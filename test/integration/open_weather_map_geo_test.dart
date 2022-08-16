@@ -76,7 +76,6 @@ void main() {
           OpenWeatherMapGeoApi(openWeatherMapApiKey, 'fa');
       List<Location>? locations = await openWeatherMap.searchByQuery('لندن');
       expect(locations, isNot(null));
-      if (locations == null) throw Error();
       expect(locations.length, greaterThan(1));
       expect(locations.first.cityName, equalsIgnoringCase('لندن'));
       expect(locations.first.lat, equals(londonLat));
@@ -87,7 +86,6 @@ void main() {
           OpenWeatherMapGeoApi(openWeatherMapApiKey, 'en');
       List<Location>? locations = await openWeatherMap.searchByQuery('London');
       expect(locations, isNot(null));
-      if (locations == null) throw Error();
       expect(locations.length, greaterThan(1));
       expect(locations.first.cityName, equalsIgnoringCase('London'));
       expect(locations.first.country, equalsIgnoringCase('GB'));

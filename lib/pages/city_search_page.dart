@@ -1,13 +1,11 @@
 import 'package:client/components/city_card.dart';
 import 'package:client/components/city_search_field.dart';
 import 'package:client/models/location.dart';
-import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/position_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
-import 'package:client/types/home_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,19 +31,19 @@ class _CitySearchPageState extends State<CitySearchPage>
   void initState() {
     super.initState();
     ServiceProvider provider = ServiceProvider.getInstance();
-    geoBloc = GeoBloc(provider.sharedPrefsService, provider.envService);
-    positionBloc = PositionBloc(provider.positionService);
-    weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService,
-        geoBloc: geoBloc);
-    geoBloc.loadPopularCities();
     settingsBloc = SettingsBloc(provider.sharedPrefsService);
+    weatherBloc = WeatherBloc(settingsBloc.weatherApiProvider,
+        settingsBloc.weatherUnit, provider.envService);
+    geoBloc = GeoBloc(settingsBloc.locale, settingsBloc.geoApiProvider,
+        provider.envService, weatherBloc);
+    positionBloc = PositionBloc(provider.positionService);
+    geoBloc.loadLocationsFromAsset();
   }
 
   void onLocationUpdated(Location location) {
     settingsBloc.onLocationChanged(location);
     settingsBloc.onFirstVisited();
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true,
-        arguments: HomePageArguments(location));
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true);
   }
 
   @override
@@ -79,7 +77,8 @@ class _CitySearchPageState extends State<CitySearchPage>
                             fontSize: 16.0);
                       });
                     },
-                    loadingCurrentCity: locationBloc.updatingCurrentLocation,
+                    loadingCurrentPosition:
+                        positionBloc.requestingCurrentLocation,
                     onSearchCity: (query) => geoBloc.searchQuery(query),
                     onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
                   ),
@@ -113,11 +112,11 @@ class _CitySearchPageState extends State<CitySearchPage>
                   },
                 ),
                 StreamBuilder(
-                  stream: weatherBloc.citiesWeatherForecast,
+                  stream: geoBloc.searchedLocations,
                   builder: (context, snapshot) {
-                    List<WeatherForecast>? forecasts =
-                        snapshot.data as List<WeatherForecast>?;
-                    if (forecasts == null) {
+                    List<Location>? locations =
+                        snapshot.data as List<Location>?;
+                    if (locations == null) {
                       return SliverToBoxAdapter(
                         child: Container(),
                       );
@@ -133,12 +132,17 @@ class _CitySearchPageState extends State<CitySearchPage>
                                 childAspectRatio: 1),
                         delegate: SliverChildBuilderDelegate(
                             (context, index) => CityCard(
-                                  weatherForecast: forecasts.elementAt(index),
+                                  weatherForecast:
+                                      locations.elementAt(index).forecast,
+                                  location: locations.elementAt(index),
                                   key: Key('$index'),
                                   shouldAddMargin: index <= 1,
-                                  onPress: () {onLocationUpdated(forecasts.elementAt(index))},
+                                  onPress: () {
+                                    onLocationUpdated(
+                                        locations.elementAt(index));
+                                  },
                                 ),
-                            childCount: forecasts.length),
+                            childCount: locations.length),
                       ),
                     );
                   },

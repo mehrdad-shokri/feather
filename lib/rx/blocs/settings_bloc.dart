@@ -1,6 +1,7 @@
 import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
+import 'package:client/types/geo_providers.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
@@ -13,15 +14,23 @@ class SettingsBloc extends RxBloc {
   final SharedPrefsService _sharedPrefsService;
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
-  final _activeLocation = BehaviorSubject<Location?>();
-  late final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
-  late final _weatherApiUnits = BehaviorSubject<WeatherUnits>();
+  final _activeLocation = BehaviorSubject<Location>();
+  final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
+  final _weatherApiUnit = BehaviorSubject<WeatherUnits>();
+  final _geoApiProvider = BehaviorSubject<GeoApiProvider>();
 
   Stream<Locale> get locale => _locale.stream;
 
   Stream<bool> get isFirstVisit => _isFirstVisit.stream;
 
-  Stream<Location?> get activeLocation => _activeLocation.stream;
+  Stream<Location> get activeLocation => _activeLocation.stream;
+
+  Stream<WeatherUnits> get weatherUnit => _weatherApiUnit.stream;
+
+  Stream<GeoApiProvider> get geoApiProvider => _geoApiProvider.stream;
+
+  Stream<WeatherApiProvider> get weatherApiProvider =>
+      _weatherApiProvider.stream;
 
   SettingsBloc(this._sharedPrefsService) {
     _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
@@ -40,7 +49,6 @@ class SettingsBloc extends RxBloc {
         .getString(Constants.WEATHER_API_PROVIDER_PREFS);
     String? weatherUnitsPrefs =
         _sharedPrefsService.instance.getString(Constants.WEATHER_UNITS_PREFS);
-
     WeatherUnits weatherApiUnits = weatherUnitsPrefs != null
         ? EnumToString.fromString(WeatherUnits.values, weatherUnitsPrefs)!
         : Constants.DEFAULT_WEATHER_API_UNITS;
@@ -48,9 +56,14 @@ class SettingsBloc extends RxBloc {
         ? EnumToString.fromString(
             WeatherApiProvider.values, weatherApiProviderPrefs)!
         : Constants.DEFAULT_WEATHER_API_PROVIDER;
-
-    _weatherApiUnits.add(weatherApiUnits);
+    _weatherApiUnit.add(weatherApiUnits);
     _weatherApiProvider.add(weatherApiProvider);
+    String? geoApiProvider = _sharedPrefsService.instance
+        .getString(Constants.GEO_API_PROVIDER_PREFS);
+    GeoApiProvider provider = geoApiProvider != null
+        ? EnumToString.fromString(GeoApiProvider.values, geoApiProvider)!
+        : Constants.DEFAULT_GEO_API_PROVIDER;
+    _geoApiProvider.add(provider);
   }
 
   void onLocaleChanged(Locale locale) {
@@ -82,10 +95,19 @@ class SettingsBloc extends RxBloc {
   }
 
   void onUnitsChanged(WeatherUnits unit) {
-    _weatherApiUnits.add(unit);
+    _weatherApiUnit.add(unit);
     addFutureSubscription(
       _sharedPrefsService.instance.setString(
           Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit)),
     );
+  }
+
+  void onGeoApiProviderChanged(GeoApiProvider geoApiProvider) {
+    _geoApiProvider.add(geoApiProvider);
+    addFutureSubscription(
+        _sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
+            EnumToString.convertToString(geoApiProvider)),
+        (_) {},
+        (e) {});
   }
 }

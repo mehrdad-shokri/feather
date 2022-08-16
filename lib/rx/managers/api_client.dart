@@ -18,8 +18,8 @@ class ApiClient {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.acceptHeader: 'application/json'
       },
-    ))
-      ..interceptors
-          .add(DioLoggingInterceptor(level: Level.body, compact: true));
+    ));
+    // ..interceptors
+    //     .add(DioLoggingInterceptor(level: Level.body, compact: true));
   }
 }

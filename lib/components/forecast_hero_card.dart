@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ForecastHeroCard extends StatelessWidget {
-  final Location location;
+  final Stream<Location> location;
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<WeatherForecast> weatherForecast;
@@ -43,7 +43,13 @@ class ForecastHeroCard extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text(location.cityName)
+              StreamBuilder(
+                stream: location,
+                builder: (context, snapshot) {
+                  Location? location = snapshot.data as Location?;
+                  return Text(location?.cityName ?? '');
+                },
+              )
             ],
           ),
           const SizedBox(

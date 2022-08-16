@@ -4,7 +4,6 @@ import 'package:client/pages/city_search_page.dart';
 import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
 import 'package:client/rx/services/service_provider.dart';
-import 'package:client/types/next_days_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -83,10 +82,7 @@ class FeatherAppState extends State<FeatherApp> {
                     ));
           case '/7days':
             return platformPageRoute(
-                context: context,
-                builder: (context) => NextDaysPage(
-                      arguments: settings.arguments as NextDaysPageArguments,
-                    ));
+                context: context, builder: (context) => const NextDaysPage());
           case '/city-search':
             return platformPageRoute(
                 context: context, builder: (context) => const CitySearchPage());

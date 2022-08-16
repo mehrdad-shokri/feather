@@ -74,12 +74,13 @@ class Constants {
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 
   static const ToastGravity TOAST_DEFAULT_LOCATION = ToastGravity.TOP;
+  static const Locale DEFAULT_LOCALE = Locale('en');
   static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
   static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =
       WeatherApiProvider.openWeatherMap;
 
-  static const GeoApiProviders DEFAULT_GEO_API_PROVIDER =
-      GeoApiProviders.openWeatherMap;
+  static const GeoApiProvider DEFAULT_GEO_API_PROVIDER =
+      GeoApiProvider.openWeatherMap;
 
   static const String OPEN_WEATHER_MAP_API_KEY_ENV = 'OPEN_WEATHER_MAP_API_KEY';
 

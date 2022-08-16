@@ -71,4 +71,11 @@ class Location {
       cityName: forecast.cityName ?? '',
       country: forecast.countryCode ?? '',
       state: null);
+
+  @override
+  bool operator ==(Object other) =>
+      other is Location && lat == other.lat && lon == other.lon;
+
+  @override
+  int get hashCode => (lat * lon).toInt();
 }

@@ -1,8 +1,8 @@
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
-import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/managers/weather_api.dart';
+import 'package:client/rx/managers/weather_providers/mock.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/types/weather_providers.dart';
@@ -19,8 +19,10 @@ class WeatherBloc extends RxBloc {
   final _loadingCitiesForecasts = BehaviorSubject<bool>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
-  late final WeatherApi _weatherApi;
   final _isUpdating = BehaviorSubject<bool>();
+  WeatherApiProvider _weatherApiProvider = WeatherApiProvider.openWeatherMap;
+  WeatherUnits _weatherUnit = WeatherUnits.metric;
+  WeatherApi _weatherApi = MockWeatherApi();
 
   Stream<bool> get isUpdating => _isUpdating.stream;
 
@@ -36,11 +38,19 @@ class WeatherBloc extends RxBloc {
   Stream<List<WeatherForecast>> get hourlyForecast => _hourlyForecast.stream;
 
   WeatherBloc(
-    WeatherApiProvider weatherApiProvider,
-    WeatherUnits weatherUnits,
+    Stream<WeatherApiProvider> weatherApiProvider,
+    Stream<WeatherUnits> weatherUnits,
     this._envService,
   ) {
-    _weatherApi = _instantiateWeatherApi(weatherApiProvider, weatherUnits);
+    _weatherApi = _instantiateWeatherApi(_weatherApiProvider, _weatherUnit);
+    weatherApiProvider.listen((event) {
+      _weatherApiProvider = event;
+      _instantiateWeatherApi(event, _weatherUnit);
+    });
+    weatherUnits.listen((event) {
+      _weatherUnit = event;
+      _instantiateWeatherApi(_weatherApiProvider, event);
+    });
   }
 
   WeatherApi _instantiateWeatherApi(
@@ -57,10 +67,18 @@ class WeatherBloc extends RxBloc {
     }
   }
 
-  void getCurrentForecast(double lat, double lon) {
-    addFutureSubscription(_weatherApi.current(lat, lon),
+  void activeLocationForecast(Location location) {
+    addFutureSubscription(_weatherApi.current(location.lat, location.lon),
         (WeatherForecast event) {
       _currentForecast.add(event);
+    });
+  }
+
+  void getCurrentForecast(double lat, double lon, Function? onData) {
+    addFutureSubscription(_weatherApi.current(lat, lon),
+        (WeatherForecast event) {
+      print('respones for ${lat} $lon');
+      if (onData != null) onData(event);
     });
   }
 

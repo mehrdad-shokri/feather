@@ -34,7 +34,7 @@ class OpenWeatherMapGeoApi extends GeoApi {
         .data as List;
     if (data.isNotEmpty) {
       return data
-          .map((e) => Location.fromOpenWeatherMapGeocode(data.first, lang))
+          .map((e) => Location.fromOpenWeatherMapGeocode(e, lang))
           .toList();
     }
     return [];

@@ -10,14 +10,14 @@ class SearchField extends StatelessWidget {
   final Function(String? query) onSearchCity;
   final Function(String? query) onAutoCompleteCity;
   final Stream<List<Location>> cities;
-  final Stream<bool> loadingCurrentCity;
+  final Stream<bool> loadingCurrentPosition;
 
   const SearchField(
       {Key? key,
       required this.onGetCurrentPosition,
       required this.onSearchCity,
       required this.cities,
-      required this.loadingCurrentCity,
+      required this.loadingCurrentPosition,
       required this.onAutoCompleteCity})
       : super(key: key);
 
@@ -44,7 +44,7 @@ class SearchField extends StatelessWidget {
               ),
             )),
             StreamBuilder(
-              stream: loadingCurrentCity,
+              stream: loadingCurrentPosition,
               builder: (context, snapshot) {
                 bool? loading = snapshot.data as bool?;
                 if (loading != null && loading) {

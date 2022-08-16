@@ -1,1 +1,1 @@
-enum GeoApiProviders { openWeatherMap }
+enum GeoApiProvider { openWeatherMap }

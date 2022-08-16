@@ -2,26 +2,27 @@ import 'dart:async';
 
 import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
+import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/managers/geo_api.dart';
+import 'package:client/rx/managers/geo_providers/mock.dart';
 import 'package:client/rx/managers/geo_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
-import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/geo_providers.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/utils.dart';
-import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GeoBloc extends RxBloc {
-  final SharedPrefsService _sharedPrefsService;
   final EnvService _envService;
-  final _geoApiProvider = BehaviorSubject<GeoApiProviders>();
-  final _geoApi = BehaviorSubject<GeoApi>();
-  final _lang = BehaviorSubject<String>();
   final _reverseGeoLocation = BehaviorSubject<Location>();
   final _searchedLocations = BehaviorSubject<List<Location>>();
   final _searchingLocations = BehaviorSubject<bool>();
+  final WeatherBloc weatherBloc;
   Timer? _citySearchDebounce;
+  GeoApi _geoApi = MockGeoApi();
+  GeoApiProvider _geoApiProvider = Constants.DEFAULT_GEO_API_PROVIDER;
+  String _lang = Constants.DEFAULT_LOCALE.languageCode;
 
   Stream<Location> get reverseGeoLocation => _reverseGeoLocation.stream;
 
@@ -29,28 +30,21 @@ class GeoBloc extends RxBloc {
 
   Stream<bool> get searchingLocations => _searchingLocations.stream;
 
-  GeoBloc(this._sharedPrefsService, this._envService) {
-    String? geoApiProvider = _sharedPrefsService.instance
-        .getString(Constants.GEO_API_PROVIDER_PREFS);
-    String? lang =
-        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
-            'en';
-    GeoApiProviders provider = geoApiProvider != null
-        ? EnumToString.fromString(GeoApiProviders.values, geoApiProvider)!
-        : Constants.DEFAULT_GEO_API_PROVIDER;
-    _geoApiProvider.add(provider);
-    _lang.add(lang);
-    _lang.listen((value) {
-      _instantiateGeoApi(_geoApiProvider.value, value);
+  GeoBloc(Stream<Locale> locale, Stream<GeoApiProvider> provider,
+      this._envService, this.weatherBloc) {
+    // _geoApi = _instantiateGeoApi(_geoApiProvider, _lang);
+    locale.listen((event) {
+      _lang = event.languageCode;
+      _geoApi = _instantiateGeoApi(_geoApiProvider, event.languageCode);
     });
-    _geoApiProvider.listen((value) {
-      _geoApi.add(_instantiateGeoApi(value, _lang.value));
+    provider.listen((event) {
+      _geoApiProvider = event;
+      _geoApi = _instantiateGeoApi(event, _lang);
     });
-    _instantiateGeoApi(_geoApiProvider.value, _lang.value);
   }
 
   void reverseGeoCode(double lat, double lon, Function onData) {
-    addFutureSubscription(_geoApi.value.reverseGeocode(lat, lon),
+    addFutureSubscription(_geoApi.reverseGeocode(lat, lon),
         (Location? location) {
       if (location != null) _reverseGeoLocation.add(location);
       onData(location);
@@ -65,13 +59,21 @@ class GeoBloc extends RxBloc {
       _searchingLocations.add(true);
       print('searching ${query}');
       if (strEmpty(query) || query!.length < 3) {
-        loadPopularCities();
+        loadLocationsFromAsset();
       } else {
-        addFutureSubscription(_geoApi.value.searchByQuery(query),
-            (List<Location> locations) {
-          print('response $query ${locations.length}');
+        addFutureSubscription(_geoApi.searchByQuery(query),
+            (List<Location> event) {
           _searchingLocations.add(false);
-          _searchedLocations.add(locations);
+          _searchedLocations.add(event);
+          List<Location> locations = event;
+          for (Location element in locations) {
+            weatherBloc.getCurrentForecast(element.lat, element.lon,
+                (forecast) {
+              element.forecast = forecast;
+              locations[locations.indexWhere((l) => l == element)] = element;
+              _searchedLocations.add(locations);
+            });
+          }
         }, (e) {
           _searchingLocations.add(false);
         });
@@ -79,27 +81,24 @@ class GeoBloc extends RxBloc {
     });
   }
 
-  void onGeoApiProviderChanged(GeoApiProviders geoApiProvider) {
-    _geoApiProvider.add(geoApiProvider);
-    addFutureSubscription(
-        _sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
-            EnumToString.convertToString(geoApiProvider)),
-        (_) {},
-        (e) {});
+  void loadLocationsFromAsset() {
+    _searchingLocations.add(true);
+    List<Location> locations =
+        Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList();
+    _searchedLocations.add(locations);
+    for (Location element in locations) {
+      weatherBloc.getCurrentForecast(element.lat, element.lon, (forecast) {
+        element.forecast = forecast;
+        locations[locations.indexWhere((l) => l == element)] = element;
+        _searchedLocations.add(locations);
+      });
+    }
+    _searchingLocations.add(false);
   }
 
-  void loadPopularCities() {
-    _searchedLocations.add(
-        Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList());
-  }
-
-  void onLangChanged(String lang) {
-    _lang.add(lang);
-  }
-
-  GeoApi _instantiateGeoApi(GeoApiProviders provider, String lang) {
+  GeoApi _instantiateGeoApi(GeoApiProvider provider, String lang) {
     switch (provider) {
-      case GeoApiProviders.openWeatherMap:
+      case GeoApiProvider.openWeatherMap:
         return OpenWeatherMapGeoApi(
             _envService.envs[Constants.OPEN_WEATHER_MAP_API_KEY_ENV] ?? '',
             lang);

@@ -9,6 +9,7 @@ import 'package:rxdart/rxdart.dart';
 class PositionBloc extends RxBloc {
   final _lastPosition = BehaviorSubject<Position>();
   final _locationPermission = BehaviorSubject<LocationPermission>();
+  final _requestingCurrentLocation = BehaviorSubject<bool>();
   final _requestingLocationPermission = BehaviorSubject<bool>();
   final PositionService _positionService;
 
@@ -16,6 +17,9 @@ class PositionBloc extends RxBloc {
 
   Stream<bool> get requestingLocationPermission =>
       _requestingLocationPermission.stream;
+
+  Stream<bool> get requestingCurrentLocation =>
+      _requestingCurrentLocation.stream;
 
   Stream<LocationPermission> get locationPermission =>
       _locationPermission.stream;
@@ -26,11 +30,16 @@ class PositionBloc extends RxBloc {
 
   void getCurrentPosition(
       Function(Position) onData, Function(Exception) onError) {
+    _requestingCurrentLocation.add(false);
     addFutureSubscription(_positionService.getCurrentPosition(),
         (Position event) {
+      _requestingCurrentLocation.add(false);
       _lastPosition.add(event);
       onData(event);
-    }, onError);
+    }, (e) {
+      _requestingCurrentLocation.add(false);
+      onError(e);
+    });
   }
 
   void requestPermission() {
