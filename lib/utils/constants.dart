@@ -73,7 +73,7 @@ class Constants {
   static final ShapeBorder CARD_SHAPE =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 
-  static const ToastGravity TOAST_DEFAULT_LOCATION = ToastGravity.TOP;
+  static const ToastGravity TOAST_DEFAULT_LOCATION = ToastGravity.BOTTOM;
   static const Locale DEFAULT_LOCALE = Locale('en');
   static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
   static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =

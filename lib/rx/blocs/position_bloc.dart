@@ -65,4 +65,8 @@ class PositionBloc extends RxBloc {
     addFutureSubscription(_positionService.checkPermission(),
         (LocationPermission permission) => _locationPermission.add(permission));
   }
+
+  void openAppSettings() {
+    _positionService.openAppSettings();
+  }
 }

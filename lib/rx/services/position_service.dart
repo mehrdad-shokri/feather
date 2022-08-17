@@ -21,6 +21,10 @@ class PositionService extends RxService {
     return Geolocator.checkPermission();
   }
 
+  Future<void> openAppSettings() {
+    return Geolocator.openAppSettings();
+  }
+
   @override
   Future<void> onTerminate() async {}
 }

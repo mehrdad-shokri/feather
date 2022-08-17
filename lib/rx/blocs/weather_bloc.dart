@@ -8,15 +8,13 @@ import 'package:client/rx/services/env_service.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WeatherBloc extends RxBloc {
   final EnvService _envService;
   final _currentForecast = BehaviorSubject<WeatherForecast>();
-  final _searchedCitiesForecasts = BehaviorSubject<List<WeatherForecast>>();
-  final _loadingCitiesForecasts = BehaviorSubject<bool>();
+  // final _searchedCitiesForecasts = BehaviorSubject<List<WeatherForecast>>();
+  // final _loadingCitiesForecasts = BehaviorSubject<bool>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _isUpdating = BehaviorSubject<bool>();
@@ -28,10 +26,10 @@ class WeatherBloc extends RxBloc {
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 
-  Stream<bool> get loadingCitiesForecasts => _loadingCitiesForecasts.stream;
+  // Stream<bool> get loadingCitiesForecasts => _loadingCitiesForecasts.stream;
 
-  Stream<List<WeatherForecast>> get citiesWeatherForecast =>
-      _searchedCitiesForecasts.stream;
+  // Stream<List<WeatherForecast>> get citiesWeatherForecast =>
+  //     _searchedCitiesForecasts.stream;
 
   Stream<List<WeatherForecast>> get dailyForecast => _dailyForecast.stream;
 
@@ -77,7 +75,6 @@ class WeatherBloc extends RxBloc {
   void getCurrentForecast(double lat, double lon, Function? onData) {
     addFutureSubscription(_weatherApi.current(lat, lon),
         (WeatherForecast event) {
-      print('respones for ${lat} $lon');
       if (onData != null) onData(event);
     });
   }
@@ -96,6 +93,7 @@ class WeatherBloc extends RxBloc {
     }, (e) {});
   }
 
+/*
   void getCitiesForecast(List<Location> locations) {
     addFutureSubscription((() async {
       _loadingCitiesForecasts.add(true);
@@ -121,4 +119,5 @@ class WeatherBloc extends RxBloc {
       _loadingCitiesForecasts.add(false);
     });
   }
+*/
 }

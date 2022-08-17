@@ -8,10 +8,12 @@ import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
+import 'package:client/utils/hex_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CitySearchPage extends StatefulWidget {
@@ -23,10 +25,12 @@ class CitySearchPage extends StatefulWidget {
 
 class _CitySearchPageState extends State<CitySearchPage>
     with SingleTickerProviderStateMixin {
+  String? searchedPhrase;
   late GeoBloc geoBloc;
   late PositionBloc positionBloc;
   late WeatherBloc weatherBloc;
   late SettingsBloc settingsBloc;
+  late FToast fToast;
 
   @override
   void initState() {
@@ -39,6 +43,8 @@ class _CitySearchPageState extends State<CitySearchPage>
         provider.envService, weatherBloc);
     positionBloc = PositionBloc(provider.positionService);
     geoBloc.loadLocationsFromAsset();
+    fToast = FToast();
+    fToast.init(context);
   }
 
   void onLocationUpdated(Location location) {
@@ -81,21 +87,29 @@ class _CitySearchPageState extends State<CitySearchPage>
                     },
                     loadingCurrentPosition:
                         positionBloc.requestingCurrentLocation,
-                    onSearchCity: (query) => geoBloc.searchQuery(query),
-                    onAutoCompleteCity: (query) => geoBloc.searchQuery(query),
+                    onSearchCity: (query) {
+                      setState(() {
+                        searchedPhrase = query;
+                        geoBloc.searchQuery(query);
+                      });
+                    },
+                    onAutoCompleteCity: (query) {
+                      searchedPhrase = query;
+                      geoBloc.searchQuery(query);
+                    },
                   ),
                   border: Border(
                       bottom:
                           BorderSide(color: dividerColor(context), width: 1)),
                   middle: const Text('Choose a city'),
                 ),
-                CupertinoSliverRefreshControl(
-                  onRefresh: () async {},
-                  refreshIndicatorExtent: 16,
+                PlatformWidget(
+                  cupertino: (_, __) => CupertinoSliverRefreshControl(
+                    onRefresh: () async {},
+                  ),
                 ),
                 StreamBuilder(
-                  stream: geoBloc.searchingLocations
-                      .mergeWith([weatherBloc.loadingCitiesForecasts]),
+                  stream: geoBloc.searchingLocations,
                   builder: (context, snapshot) {
                     bool? loading = snapshot.data as bool?;
                     return SliverToBoxAdapter(
@@ -108,7 +122,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                       firstChild: Container(
                         alignment: Alignment.center,
                         margin: const EdgeInsets.only(top: 8),
-                        child: const CupertinoActivityIndicator(),
+                        child: PlatformCircularProgressIndicator(),
                       ),
                       secondChild: Container(
                         height: 0,
@@ -124,6 +138,46 @@ class _CitySearchPageState extends State<CitySearchPage>
                     if (locations == null) {
                       return SliverToBoxAdapter(
                         child: Container(),
+                      );
+                    }
+                    if (locations.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 64, horizontal: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Lottie.asset('assets/lottie/astronaut.json',
+                                  alignment: Alignment.center,
+                                  width: 240,
+                                  fit: BoxFit.contain),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Text(
+                                'City not found',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: Constants.H6_FONT_SIZE,
+                                    fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                                    color: textColor(context)),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'Make sure it\'s been founded by the time you search it, you know...',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: secondaryTextColor(context),
+                                  fontSize: Constants.S1_FONT_SIZE,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }
                     return SliverPadding(
