@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:client/components/forecast_hero_appbar.dart';
 import 'package:client/components/forecast_hero_card.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   late SettingsBloc settingsBloc;
   late WeatherBloc weatherBloc;
   late GeoBloc geoBloc;
+  AppLocalizations? appLocalizations;
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    appLocalizations ??= AppLocalizations.of(context);
     return PlatformScaffold(
       appBar: forecastHeroAppBar(
           context: context,
@@ -48,7 +51,8 @@ class _HomePageState extends State<HomePage> {
           onApiProviderChanged: (provider) =>
               settingsBloc.onWeatherApiProviderChanged(provider),
           apiProvider: settingsBloc.weatherApiProvider,
-          apiProviders: WeatherApiProvider.values),
+          apiProviders: WeatherApiProvider.values,
+          t: appLocalizations!),
       iosContentPadding: true,
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -58,7 +62,9 @@ class _HomePageState extends State<HomePage> {
             fit: FlexFit.tight,
             child: ForecastHeroCard(
               location: settingsBloc.activeLocation,
-              onLocationChangeRequest: () {},
+              onLocationChangeRequest: () {
+                Navigator.pushNamed(context, '/search');
+              },
               isUpdating: weatherBloc.isUpdating,
               weatherForecast: weatherBloc.currentForecast,
             ),

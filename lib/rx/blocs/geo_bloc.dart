@@ -19,7 +19,7 @@ class GeoBloc extends RxBloc {
   final _reversingLocation = BehaviorSubject<bool>();
   final _searchedLocations = BehaviorSubject<List<Location>>();
   final _searchingLocations = BehaviorSubject<bool>();
-  final WeatherBloc weatherBloc;
+  final WeatherBloc? weatherBloc;
   Timer? _citySearchDebounce;
   GeoApiProvider _geoApiProvider = Constants.DEFAULT_GEO_API_PROVIDER;
   String _lang = Constants.DEFAULT_LOCALE.languageCode;
@@ -29,6 +29,7 @@ class GeoBloc extends RxBloc {
   Stream<List<Location>> get searchedLocations => _searchedLocations.stream;
 
   Stream<bool> get searchingLocations => _searchingLocations.stream;
+
   Stream<bool> get reversingLocation => _reversingLocation.stream;
 
   GeoBloc(Stream<Locale> locale, Stream<GeoApiProvider> provider,
@@ -67,8 +68,8 @@ class GeoBloc extends RxBloc {
           _searchedLocations.add(event);
           List<Location> locations = event;
           for (Location element in locations) {
-            weatherBloc.getCurrentForecast(element.lat, element.lon,
-                (forecast) {
+            weatherBloc?.getCurrentForecast(element.lat, element.lon,
+                onData: (forecast) {
               element.forecast = forecast;
               locations[locations.indexWhere((l) => l == element)] = element;
               _searchedLocations.add(locations);
@@ -87,7 +88,8 @@ class GeoBloc extends RxBloc {
         Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList();
     _searchedLocations.add(locations);
     for (Location element in locations) {
-      weatherBloc.getCurrentForecast(element.lat, element.lon, (forecast) {
+      weatherBloc?.getCurrentForecast(element.lat, element.lon,
+          onData: (forecast) {
         element.forecast = forecast;
         locations[locations.indexWhere((l) => l == element)] = element;
         _searchedLocations.add(locations);

@@ -37,6 +37,7 @@ class SearchField extends StatelessWidget {
                 placeholder: 'Search',
                 onChanged: onAutoCompleteCity,
                 onSubmitted: onSearchCity,
+                autocorrect: false,
               ),
               material: (_, __) => TextField(
                 expands: true,
@@ -49,23 +50,34 @@ class SearchField extends StatelessWidget {
               stream: loadingCurrentPosition,
               builder: (context, snapshot) {
                 bool? loading = snapshot.data as bool?;
-                if (loading != null && loading) {
-                  return PlatformCircularProgressIndicator();
-                }
-                return PlatformIconButton(
+                return Container(
+                  width: 32,
+                  alignment: Alignment.center,
                   padding: EdgeInsets.zero,
-                  cupertino: (_, __) => CupertinoIconButtonData(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      minSize: Constants.ICON_MEDIUM_SIZE),
-                  icon: Icon(
-                    Feather.my_location,
-                    color: Constants.PRIMARY_COLOR,
-                    size: Constants.ICON_MEDIUM_SIZE,
+                  margin: EdgeInsets.zero,
+                  child: AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 250),
+                    alignment: Alignment.center,
+                    crossFadeState: (loading != null && loading)
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
+                    secondChild: PlatformCircularProgressIndicator(),
+                    firstChild: PlatformIconButton(
+                      padding: EdgeInsets.zero,
+                      cupertino: (_, __) => CupertinoIconButtonData(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          minSize: Constants.ICON_MEDIUM_SIZE),
+                      icon: Icon(
+                        Feather.my_location,
+                        color: Constants.PRIMARY_COLOR,
+                        size: Constants.ICON_MEDIUM_SIZE,
+                      ),
+                      onPressed: () {
+                        onGetCurrentPosition();
+                      },
+                    ),
                   ),
-                  onPressed: () {
-                    onGetCurrentPosition();
-                  },
                 );
               },
             )

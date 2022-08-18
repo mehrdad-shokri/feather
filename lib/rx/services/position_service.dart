@@ -2,8 +2,6 @@ import 'package:client/rx/services/rx_service.dart';
 import 'package:geolocator/geolocator.dart';
 
 class PositionService extends RxService {
-  late LocationPermission hasPermission;
-
   @override
   Future<void> onCreate() async {}
 

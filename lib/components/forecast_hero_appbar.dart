@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:client/utils/constants.dart';
+import 'package:client/utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
@@ -12,86 +17,61 @@ PlatformAppBar forecastHeroAppBar(
         required Function(WeatherApiProvider) onApiProviderChanged,
         required Function(WeatherUnits) onWeatherUnitChanged,
         required Stream<WeatherApiProvider> apiProvider,
-        required Stream<WeatherUnits> weatherUnit}) =>
+        required Stream<WeatherUnits> weatherUnit,
+        required AppLocalizations t}) =>
     PlatformAppBar(
       material: (context, _) => MaterialAppBarData(elevation: 0),
-      cupertino: (context, _) =>
-          CupertinoNavigationBarData(border: const Border()),
+      cupertino: (context, _) => CupertinoNavigationBarData(
+          border: const Border(),
+          padding: const EdgeInsetsDirectional.only(start: 16, end: 16)),
       trailingActions: [
         PlatformPopupMenu(
             options: [
               PopupMenuOption(
                   onTap: (_) {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (context) => CupertinoActionSheet(
-                              title: const Text('API provider'),
-                              actions: apiProviders
-                                  .map((e) => CupertinoActionSheetAction(
-                                      onPressed: () {}, child: Text(e.name)))
-                                  .toList(),
-                            ));
+                    if (isCupertino(context)) {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => CupertinoActionSheet(
+                                title: Text(t.dataSource),
+                                actions: apiProviders
+                                    .map((e) => CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          onApiProviderChanged(e);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                            translateWeatherProvider(e, t))))
+                                    .toList(),
+                              ));
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(t.dataSource),
+                                content: Column(
+                                  children: apiProviders
+                                      .map((e) => TextButton(
+                                          onPressed: () {
+                                            onApiProviderChanged(e);
+                                          },
+                                          child: Text(
+                                              translateWeatherProvider(e, t))))
+                                      .toList(),
+                                ),
+                              ));
+                    }
                   },
                   material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.api,
-                            size: 24,
-                            color: Colors.grey.shade500,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          const Text('API provider'),
-                        ],
-                      )),
-                  cupertino: (context, target) => CupertinoPopupMenuOptionData(
-                          child: Row(
-                        children: const [
-                          Icon(
-                            Icons.api,
-                            size: 24,
-                            color: CupertinoColors.link,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('API provider'),
-                        ],
-                      ))),
+                      padding: EdgeInsets.zero, child: Text(t.dataSource)),
+                  cupertino: (context, target) =>
+                      CupertinoPopupMenuOptionData(child: Text(t.dataSource))),
               PopupMenuOption(
                   onTap: (_) {},
                   material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info,
-                            size: 24,
-                            color: Colors.grey.shade500,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          const Text('About'),
-                        ],
-                      )),
-                  cupertino: (context, target) => CupertinoPopupMenuOptionData(
-                          child: Row(
-                        children: const [
-                          Icon(
-                            Icons.info,
-                            size: 24,
-                            color: CupertinoColors.link,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('About'),
-                        ],
-                      )))
+                      padding: EdgeInsets.zero, child: Text(t.about)),
+                  cupertino: (context, target) =>
+                      CupertinoPopupMenuOptionData(child: Text(t.about)))
             ],
             icon: const Icon(
               Icons.more_vert,
@@ -104,38 +84,29 @@ PlatformAppBar forecastHeroAppBar(
         builder: (context, snapshot) {
           WeatherUnits? unit = snapshot.data as WeatherUnits?;
           return PlatformPopupMenu(
+              material: (_, __) => MaterialPopupMenuData(),
+              cupertino: (_, __) => CupertinoPopupMenuData(
+                    title: Text(t.units),
+                  ),
               options: [
                 PopupMenuOption(
                     onTap: (_) {
                       onWeatherUnitChanged(WeatherUnits.metric);
                     },
-                    material: (context, target) => MaterialPopupMenuOptionData(
-                            child: const Icon(
-                          Feather.celcius,
-                          size: 40,
-                        )),
+                    label: t.metric,
+                    material: (context, target) =>
+                        MaterialPopupMenuOptionData(child: Text(t.metric)),
                     cupertino: (context, target) =>
-                        CupertinoPopupMenuOptionData(
-                            child: const Icon(
-                          Feather.celcius,
-                          size: 40,
-                        ))),
+                        CupertinoPopupMenuOptionData(child: Text(t.metric))),
                 PopupMenuOption(
                     onTap: (_) {
                       onWeatherUnitChanged(WeatherUnits.imperial);
                     },
-                    label: 'celcius',
-                    material: (context, target) => MaterialPopupMenuOptionData(
-                            child: const Icon(
-                          Feather.fahrenheit,
-                          size: 40,
-                        )),
+                    label: t.imperial,
+                    material: (context, target) =>
+                        MaterialPopupMenuOptionData(child: Text(t.imperial)),
                     cupertino: (context, target) =>
-                        CupertinoPopupMenuOptionData(
-                            child: const Icon(
-                          Feather.fahrenheit,
-                          size: 40,
-                        )))
+                        CupertinoPopupMenuOptionData(child: Text(t.imperial)))
               ],
               icon: Icon(
                 unit == WeatherUnits.metric

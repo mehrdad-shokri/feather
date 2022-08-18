@@ -95,7 +95,7 @@ class FeatherAppState extends State<FeatherApp> {
           case '/7days':
             return platformPageRoute(
                 context: context, builder: (context) => const NextDaysPage());
-          case '/city-search':
+          case '/search':
             return platformPageRoute(
                 context: context, builder: (context) => const CitySearchPage());
           default:

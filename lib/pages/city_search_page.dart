@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CitySearchPage extends StatefulWidget {
   const CitySearchPage({Key? key}) : super(key: key);
@@ -88,8 +89,9 @@ class _CitySearchPageState extends State<CitySearchPage>
                           onPermissionDenied: () {},
                           onPermissionDeniedForever: () {});
                     },
-                    loadingCurrentPosition:
-                        positionBloc.requestingCurrentLocation,
+                    loadingCurrentPosition: positionBloc
+                        .requestingCurrentLocation
+                        .mergeWith([positionBloc.requestingLocationPermission]),
                     onSearchCity: (query) {
                       setState(() {
                         searchedPhrase = query;

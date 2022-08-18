@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,10 +14,6 @@ String languageCodeFromLocaleName(String localeName) =>
     localeName.split('_').first;
 
 String countryFromLocaleName(String localeName) => localeName.split('_').last;
-
-bool isAndroid(TargetPlatform platform) => platform == TargetPlatform.android;
-
-bool isIos(TargetPlatform platform) => platform == TargetPlatform.iOS;
 
 bool strNotEmpty(String? str) {
   return !strEmpty(str);
@@ -73,3 +74,13 @@ T? firstOrNull<T>(Iterable<T> items, callback) {
 
 String windSpeedUnit(WeatherUnits metric) =>
     metric == WeatherUnits.metric ? 'km/h' : 'miles/hour';
+
+String translateWeatherProvider(
+    WeatherApiProvider provider, AppLocalizations t) {
+  switch (provider) {
+    case WeatherApiProvider.openWeatherMap:
+      return t.openWeatherMap;
+    default:
+      return '';
+  }
+}

@@ -36,7 +36,7 @@ class SettingsBloc extends RxBloc {
   Stream<Brightness> get themeMode => _themeMode.stream;
 
   SettingsBloc(this._sharedPrefsService) {
-    _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
+    // _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);
@@ -86,7 +86,7 @@ class SettingsBloc extends RxBloc {
   void onFirstVisited() {
     _isFirstVisit.add(false);
     addFutureSubscription(_sharedPrefsService.instance
-        .setBool(Constants.IS_FIRST_VISIT_PREFS, true));
+        .setBool(Constants.IS_FIRST_VISIT_PREFS, false));
   }
 
   void onLocationChanged(Location location) {
@@ -97,28 +97,21 @@ class SettingsBloc extends RxBloc {
 
   void onWeatherApiProviderChanged(WeatherApiProvider provider) {
     _weatherApiProvider.add(provider);
-    addFutureSubscription(
-        _sharedPrefsService.instance.setString(
-            Constants.WEATHER_API_PROVIDER_PREFS,
-            EnumToString.convertToString(provider)),
-        (data) {},
-        (e) {});
+    addFutureSubscription(_sharedPrefsService.instance.setString(
+        Constants.WEATHER_API_PROVIDER_PREFS,
+        EnumToString.convertToString(provider)));
   }
 
   void onUnitsChanged(WeatherUnits unit) {
     _weatherApiUnit.add(unit);
-    addFutureSubscription(
-      _sharedPrefsService.instance.setString(
-          Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit)),
-    );
+    _sharedPrefsService.instance.setString(
+        Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit));
   }
 
   void onGeoApiProviderChanged(GeoApiProvider geoApiProvider) {
     _geoApiProvider.add(geoApiProvider);
-    addFutureSubscription(
-        _sharedPrefsService.instance.setString(Constants.GEO_API_PROVIDER_PREFS,
-            EnumToString.convertToString(geoApiProvider)),
-        (_) {},
-        (e) {});
+    addFutureSubscription(_sharedPrefsService.instance.setString(
+        Constants.GEO_API_PROVIDER_PREFS,
+        EnumToString.convertToString(geoApiProvider)));
   }
 }

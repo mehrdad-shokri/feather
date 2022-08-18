@@ -75,7 +75,7 @@ class _IntroPageState extends State<IntroPage> {
                         onPressed: () {
                           settingsBloc.onFirstVisited();
                           Navigator.pushNamedAndRemoveUntil(
-                              context, '/city-search', (route) => true);
+                              context, '/search', (route) => true);
                         },
                         child: const Text('Get started'),
                       ),

@@ -31,7 +31,7 @@ class InitPage extends StatelessWidget {
                 builder: (context, snapshot) {
                   Location? location = snapshot.data as Location?;
                   if (location == null) {
-                    return const IntroPage();
+                    return const LoadingPage();
                   }
                   return const HomePage();
                 },

@@ -22,7 +22,6 @@ class PositionBloc extends RxBloc {
       _locationPermission.stream;
 
   PositionBloc(this._positionService) {
-    _locationPermission.add(_positionService.hasPermission);
     checkPermission();
   }
 

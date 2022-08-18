@@ -14,14 +14,18 @@ class WeatherBloc extends RxBloc {
 
   final EnvService _envService;
   final _currentForecast = BehaviorSubject<WeatherForecast>();
+  final _updatingCurrentForecast = BehaviorSubject<bool>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
+  final _updatingDailyForecast = BehaviorSubject<bool>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
+  final _updatingHourlyForecast = BehaviorSubject<bool>();
   final _isUpdating = BehaviorSubject<bool>();
   WeatherApiProvider _weatherApiProvider =
       Constants.DEFAULT_WEATHER_API_PROVIDER;
   WeatherUnits _weatherUnit = Constants.DEFAULT_WEATHER_API_UNITS;
 
-  Stream<bool> get isUpdating => _isUpdating.stream;
+  Stream<bool> get isUpdating => _updatingCurrentForecast.stream
+      .mergeWith([_updatingHourlyForecast.stream]);
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 
@@ -59,17 +63,14 @@ class WeatherBloc extends RxBloc {
     }
   }
 
-  void activeLocationForecast(Location location) {
-    addFutureSubscription(_weatherApi.current(location.lat, location.lon),
-        (WeatherForecast event) {
-      _currentForecast.add(event);
-    });
-  }
-
-  void getCurrentForecast(double lat, double lon, Function? onData) {
+  void getCurrentForecast(double lat, double lon, {Function? onData}) {
+    _updatingCurrentForecast.add(true);
     addFutureSubscription(_weatherApi.current(lat, lon),
         (WeatherForecast event) {
+      _updatingCurrentForecast.add(false);
       if (onData != null) onData(event);
+    }, (e) {
+      _updatingCurrentForecast.add(false);
     });
   }
 

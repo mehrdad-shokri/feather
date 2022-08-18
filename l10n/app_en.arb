@@ -6,5 +6,41 @@
     "description": "App title",
     "type": "text",
     "placeholders": {}
+  },
+  "units": "Units",
+  "@units": {
+    "description": "Weather units",
+    "type": "text",
+    "placeholders": {}
+  },
+  "metric": "metric",
+  "@metric": {
+    "description": "metric",
+    "type": "text",
+    "placeholders": {}
+  },
+  "imperial": "imperial",
+  "@imperial": {
+    "description": "imperial",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dataSource": "Data Source",
+  "@dataSource": {
+    "description": "Data Source",
+    "type": "text",
+    "placeholders": {}
+  },
+  "about": "About",
+  "@about": {
+    "description": "about",
+    "type": "text",
+    "placeholders": {}
+  },
+  "openWeatherMap": "OpenWeather",
+  "@openWeatherMap": {
+    "description": "OpenWeather",
+    "type": "text",
+    "placeholders": {}
   }
 }

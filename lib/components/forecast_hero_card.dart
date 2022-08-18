@@ -4,6 +4,7 @@ import 'package:client/utils/constants.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ForecastHeroCard extends StatelessWidget {
@@ -24,6 +25,7 @@ class ForecastHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: Constants.PAGE_PADDING,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [
@@ -37,20 +39,37 @@ class ForecastHeroCard extends StatelessWidget {
               tileMode: TileMode.clamp)),
       child: Column(
         children: [
-          Row(
-            children: [
-              const Icon(Feather.pin_drop),
-              const SizedBox(
-                width: 8,
-              ),
-              StreamBuilder(
-                stream: location,
-                builder: (context, snapshot) {
-                  Location? location = snapshot.data as Location?;
-                  return Text(location?.cityName ?? '');
-                },
-              )
-            ],
+          PlatformTextButton(
+            onPressed: () {
+              onLocationChangeRequest();
+            },
+            padding: EdgeInsets.zero,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Feather.location,
+                  size: Constants.ICON_MEDIUM_SIZE,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                StreamBuilder(
+                  stream: location,
+                  builder: (context, snapshot) {
+                    Location? location = snapshot.data as Location?;
+                    return Text(
+                      location?.cityName ?? '',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                          fontSize: Constants.H6_FONT_SIZE),
+                    );
+                  },
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 8,
