@@ -4,6 +4,7 @@ import 'package:client/pages/intro_page.dart';
 import 'package:client/pages/loading_page.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/types/home_page_arguments.dart';
 import 'package:flutter/widgets.dart';
 
 class InitPage extends StatelessWidget {
@@ -33,7 +34,7 @@ class InitPage extends StatelessWidget {
                   if (location == null) {
                     return const LoadingPage();
                   }
-                  return const HomePage();
+                  return HomePage(HomePageArguments(location));
                 },
               );
             },

@@ -23,7 +23,7 @@ PlatformAppBar forecastHeroAppBar(
       material: (context, _) => MaterialAppBarData(elevation: 0),
       cupertino: (context, _) => CupertinoNavigationBarData(
           border: const Border(),
-          padding: const EdgeInsetsDirectional.only(start: 16, end: 16)),
+          padding: const EdgeInsetsDirectional.only(start: 0, end: 8)),
       trailingActions: [
         PlatformPopupMenu(
             options: [

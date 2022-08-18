@@ -1,24 +1,34 @@
+import 'package:client/components/weather_forecast_icon.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
+import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
+import 'package:client/utils/date.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
+import 'package:client/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class ForecastHeroCard extends StatelessWidget {
   final Stream<Location> location;
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<WeatherForecast> weatherForecast;
+  final Stream<WeatherUnits> weatherUnit;
+  final AppLocalizations t;
 
   const ForecastHeroCard(
       {Key? key,
       required this.location,
       required this.onLocationChangeRequest,
       required this.isUpdating,
-      required this.weatherForecast})
+      required this.weatherForecast,
+      required this.weatherUnit,
+      required this.t})
       : super(key: key);
 
   @override
@@ -46,6 +56,7 @@ class ForecastHeroCard extends StatelessWidget {
             padding: EdgeInsets.zero,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(
                   Feather.location,
@@ -78,28 +89,147 @@ class ForecastHeroCard extends StatelessWidget {
             stream: isUpdating,
             builder: (context, snapshot) {
               bool? updating = snapshot.data as bool?;
-              if (updating != null && updating) {
-                return Container(
-                  padding: const EdgeInsets.all(2),
-                  child: Row(
+              return AnimatedCrossFade(
+                  firstChild: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      LoadingAnimationWidget.inkDrop(
-                          color: Colors.white, size: 16),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      const Text(
-                        'Loading',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                            fontSize: Constants.CAPTION_FONT_SIZE),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                            color: Constants.SUCCESS_COLOR_DARK.withAlpha(150),
+                            borderRadius: BorderRadius.circular(16)),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            LoadingAnimationWidget.inkDrop(
+                                color: Colors.white, size: 16),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            const Text(
+                              'Loading',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                                  fontSize: Constants.CAPTION_FONT_SIZE),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
-                );
-              }
-              return Container();
+                  secondChild: Container(),
+                  crossFadeState: (updating != null && updating)
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  duration: const Duration(milliseconds: 250));
+            },
+          ),
+          StreamBuilder(
+            stream: weatherForecast,
+            builder: (context, snapshot) {
+              WeatherForecast? forecast = snapshot.data as WeatherForecast?;
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: forecast == null
+                    ? Container()
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                              'assets/lottie/${forecast.lottieAnimation}.json',
+                              alignment: Alignment.center,
+                              width: 200,
+                              fit: BoxFit.contain),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Stack(
+                            alignment: Alignment.topRight,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Text(
+                                '${forecast.tempFeelsLike}',
+                                style: const TextStyle(
+                                    fontSize: Constants.H2_FONT_SIZE,
+                                    color: Colors.white,
+                                    fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                              ),
+                              StreamBuilder(
+                                stream: weatherUnit,
+                                builder: (context, snapshot) {
+                                  WeatherUnits? unit =
+                                      snapshot.data as WeatherUnits?;
+                                  return Positioned(
+                                    top: -8,
+                                    right: -16,
+                                    child: Icon(
+                                      unit == WeatherUnits.metric
+                                          ? Feather.celcius
+                                          : Feather.fahrenheit,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(forecast.weatherTitle,
+                              style: TextStyle(
+                                  color: Constants.SECONDARY_COLOR_LIGHT,
+                                  fontSize: Constants.H2_FONT_SIZE,
+                                  fontWeight: Constants.MEDIUM_FONT_WEIGHT)),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            formatDate(DateTime.now()
+                                .toUtc()
+                                .add(Duration(seconds: forecast.timezone))),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                                fontSize: Constants.S1_FONT_SIZE),
+                          ),
+                          const Divider(
+                            color: Colors.white,
+                            indent: 16,
+                            endIndent: 16,
+                            height: 8,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              WeatherForecastIcon(
+                                assetDir: 'assets/svg/wind.svg',
+                                value:
+                                    '${forecast.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                title: t.wind,
+                              ),
+                              WeatherForecastIcon(
+                                assetDir: 'assets/svg/wind.svg',
+                                value:
+                                    '${forecast.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                title: t.humidity,
+                              ),
+                              WeatherForecastIcon(
+                                assetDir: 'assets/svg/wind.svg',
+                                value:
+                                    '${forecast.chn.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                title: t.chanceOfRain,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+              );
             },
           )
         ],

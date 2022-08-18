@@ -6,6 +6,7 @@ import 'package:client/rx/blocs/position_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/types/home_page_arguments.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,7 +50,8 @@ class _CitySearchPageState extends State<CitySearchPage>
   void onLocationUpdated(Location location) {
     settingsBloc.onLocationChanged(location);
     settingsBloc.onFirstVisited();
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => true);
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => true,
+        arguments: HomePageArguments(location));
   }
 
   @override

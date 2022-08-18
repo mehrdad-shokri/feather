@@ -1,16 +1,18 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:client/components/forecast_hero_appbar.dart';
 import 'package:client/components/forecast_hero_card.dart';
-import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/types/home_page_arguments.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final HomePageArguments arguments;
+
+  const HomePage(this.arguments, {Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -19,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late SettingsBloc settingsBloc;
   late WeatherBloc weatherBloc;
-  late GeoBloc geoBloc;
   AppLocalizations? appLocalizations;
 
   @override
@@ -29,8 +30,9 @@ class _HomePageState extends State<HomePage> {
     settingsBloc = SettingsBloc(appProvider.sharedPrefsService);
     weatherBloc = WeatherBloc(settingsBloc.weatherApiProvider,
         settingsBloc.weatherUnit, appProvider.envService);
-    geoBloc = GeoBloc(settingsBloc.locale, settingsBloc.geoApiProvider,
-        appProvider.envService, weatherBloc);
+    weatherBloc.getCurrentForecast(
+        widget.arguments.location.lat, widget.arguments.location.lon,
+        initialForecast: widget.arguments.location.forecast);
   }
 
   @override
@@ -61,13 +63,14 @@ class _HomePageState extends State<HomePage> {
             flex: 326,
             fit: FlexFit.tight,
             child: ForecastHeroCard(
-              location: settingsBloc.activeLocation,
-              onLocationChangeRequest: () {
-                Navigator.pushNamed(context, '/search');
-              },
-              isUpdating: weatherBloc.isUpdating,
-              weatherForecast: weatherBloc.currentForecast,
-            ),
+                location: settingsBloc.activeLocation,
+                onLocationChangeRequest: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+                isUpdating: weatherBloc.isUpdating,
+                weatherForecast: weatherBloc.currentForecast,
+                weatherUnit: settingsBloc.weatherUnit
+            t:appLocalizations!),
           ),
           const Flexible(
             flex: 100,

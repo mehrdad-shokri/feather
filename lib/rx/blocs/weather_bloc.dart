@@ -33,11 +33,8 @@ class WeatherBloc extends RxBloc {
 
   Stream<List<WeatherForecast>> get hourlyForecast => _hourlyForecast.stream;
 
-  WeatherBloc(
-    Stream<WeatherApiProvider> weatherApiProvider,
-    Stream<WeatherUnits> weatherUnits,
-    this._envService,
-  ) {
+  WeatherBloc(Stream<WeatherApiProvider> weatherApiProvider,
+      Stream<WeatherUnits> weatherUnits, this._envService) {
     _weatherApi = _instantiateWeatherApi(_weatherApiProvider, _weatherUnit);
     weatherApiProvider.listen((event) {
       _weatherApiProvider = event;
@@ -63,13 +60,20 @@ class WeatherBloc extends RxBloc {
     }
   }
 
-  void getCurrentForecast(double lat, double lon, {Function? onData}) {
+  void getCurrentForecast(double lat, double lon,
+      {Function? onData, WeatherForecast? initialForecast}) {
+    if (initialForecast != null) {
+      _currentForecast.add(initialForecast);
+    }
     _updatingCurrentForecast.add(true);
     addFutureSubscription(_weatherApi.current(lat, lon),
         (WeatherForecast event) {
       _updatingCurrentForecast.add(false);
+      _currentForecast.add(event);
       if (onData != null) onData(event);
     }, (e) {
+      print('error');
+      print(e);
       _updatingCurrentForecast.add(false);
     });
   }

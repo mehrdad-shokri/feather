@@ -42,5 +42,23 @@
     "description": "OpenWeather",
     "type": "text",
     "placeholders": {}
+  },
+  "wind": "Wind",
+  "@wind": {
+    "description": "Wind",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chanceOfRain": "Chance of rain",
+  "@chanceOfRain": {
+    "description": "Change of rain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "humidity": "Humidity",
+  "@humidity": {
+    "description": "Humidity",
+    "type": "text",
+    "placeholders": {}
   }
 }

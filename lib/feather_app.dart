@@ -4,6 +4,7 @@ import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
+import 'package:client/types/home_page_arguments.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,9 @@ class FeatherAppState extends State<FeatherApp> {
                     ));
           case '/home':
             return platformPageRoute(
-                context: context, builder: (context) => const HomePage());
+                context: context,
+                builder: (context) =>
+                    HomePage(settings.arguments as HomePageArguments));
           case '/7days':
             return platformPageRoute(
                 context: context, builder: (context) => const NextDaysPage());

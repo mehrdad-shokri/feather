@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 DateTime zeroDateTime(DateTime source) {
   return DateTime(source.year, source.month, source.day);
@@ -58,3 +59,7 @@ bool isSameOrBeforeTime(DateTime a, DateTime b) =>
 bool isNight(DateTime sunrise, DateTime sunset) =>
     isSameOrAfterTime(DateTime.now().toUtc(), sunset) ||
     isSameOrAfterTime(sunrise, DateTime.now().toUtc());
+
+String formatDate(DateTime date) {
+  return DateFormat.MMMMEEEEd().format(date);
+}
