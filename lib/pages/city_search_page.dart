@@ -8,13 +8,11 @@ import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
-import 'package:client/utils/hex_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rxdart/rxdart.dart';
 
 class CitySearchPage extends StatefulWidget {
   const CitySearchPage({Key? key}) : super(key: key);
@@ -69,21 +67,26 @@ class _CitySearchPageState extends State<CitySearchPage>
                   largeTitle: SearchField(
                     cities: geoBloc.searchedLocations,
                     onGetCurrentPosition: () {
-                      positionBloc.getCurrentPosition((position) {
-                        geoBloc.reverseGeoCode(
-                            position.latitude, position.longitude, (location) {
-                          onLocationUpdated(location);
-                        });
-                      }, (e) {
-                        Fluttertoast.showToast(
-                            msg: e.toString(),
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: Constants.TOAST_DEFAULT_LOCATION,
-                            timeInSecForIosWeb: 3,
-                            backgroundColor: Constants.ERROR_COLOR,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                      });
+                      positionBloc.getCurrentPosition(
+                          onPositionReceived: (position) {
+                            geoBloc.reverseGeoCode(
+                                position.latitude, position.longitude,
+                                onLocation: (location) {
+                              onLocationUpdated(location);
+                            });
+                          },
+                          onError: (e) {
+                            Fluttertoast.showToast(
+                                msg: e.toString(),
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: Constants.TOAST_DEFAULT_LOCATION,
+                                timeInSecForIosWeb: 3,
+                                backgroundColor: Constants.ERROR_COLOR,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          },
+                          onPermissionDenied: () {},
+                          onPermissionDeniedForever: () {});
                     },
                     loadingCurrentPosition:
                         positionBloc.requestingCurrentLocation,

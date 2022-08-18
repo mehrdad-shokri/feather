@@ -18,6 +18,7 @@ class SettingsBloc extends RxBloc {
   final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
   final _weatherApiUnit = BehaviorSubject<WeatherUnits>();
   final _geoApiProvider = BehaviorSubject<GeoApiProvider>();
+  final _themeMode = BehaviorSubject<Brightness>();
 
   Stream<Locale> get locale => _locale.stream;
 
@@ -32,14 +33,18 @@ class SettingsBloc extends RxBloc {
   Stream<WeatherApiProvider> get weatherApiProvider =>
       _weatherApiProvider.stream;
 
+  Stream<Brightness> get themeMode => _themeMode.stream;
+
   SettingsBloc(this._sharedPrefsService) {
     _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);
-    _locale.add(Locale(
-        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS) ??
-            'en'));
+    String? localePrefs =
+        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS);
+    _locale.add(strNotEmpty(localePrefs)
+        ? Locale.fromSubtags(languageCode: localePrefs!)
+        : Constants.DEFAULT_LOCALE);
     String? locationPrefs =
         _sharedPrefsService.instance.getString(Constants.USER_LOCATION_PREFS);
     if (strNotEmpty(locationPrefs)) {
@@ -64,6 +69,12 @@ class SettingsBloc extends RxBloc {
         ? EnumToString.fromString(GeoApiProvider.values, geoApiProvider)!
         : Constants.DEFAULT_GEO_API_PROVIDER;
     _geoApiProvider.add(provider);
+    String? themeMode =
+        _sharedPrefsService.instance.getString(Constants.USER_THEME_PREFS);
+    _themeMode.add(strNotEmpty(themeMode)
+        ? EnumToString.fromString(Brightness.values, themeMode!) ??
+            WidgetsBinding.instance.window.platformBrightness
+        : WidgetsBinding.instance.window.platformBrightness);
   }
 
   void onLocaleChanged(Locale locale) {

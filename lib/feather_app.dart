@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:client/pages/city_search_page.dart';
 import 'package:client/pages/home_page.dart';
 import 'package:client/pages/init_page.dart';
 import 'package:client/pages/next_days_page.dart';
+import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/utils/constants.dart';
-import 'package:client/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,25 +19,34 @@ class FeatherApp extends StatefulWidget {
 
 class FeatherAppState extends State<FeatherApp> {
   late Future<void> appInitFuture;
-  late ServiceProvider appProvider;
-  late Locale locale;
-  late Brightness brightness;
-  late ThemeMode theme;
+  late ServiceProvider serviceProvider;
+  late SettingsBloc settingsBloc;
+
+  Locale locale = Constants.DEFAULT_LOCALE;
+  Brightness brightness = Brightness.light;
+  Brightness theme = WidgetsBinding.instance.window.platformBrightness;
 
   @override
   void initState() {
     super.initState();
-    locale = Locale.fromSubtags(
-        languageCode: languageCodeFromLocaleName(Platform.localeName));
-    brightness = Brightness.light;
-    theme = ThemeMode.system;
     appInitFuture = bootstrapApp();
   }
 
   Future<void> bootstrapApp() async {
-    appProvider = ServiceProvider();
+    serviceProvider = ServiceProvider();
     try {
-      await appProvider.onCreate();
+      await serviceProvider.onCreate();
+      settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
+      settingsBloc.themeMode.listen((event) {
+        setState(() {
+          theme = event;
+        });
+      });
+      settingsBloc.locale.listen((event) {
+        setState(() {
+          locale = event;
+        });
+      });
     } catch (e) {
       //  Catch error by crashlytics
     }
@@ -48,7 +55,7 @@ class FeatherAppState extends State<FeatherApp> {
   @override
   void dispose() {
     super.dispose();
-    appProvider.onDispose();
+    serviceProvider.onDispose();
   }
 
   @override
@@ -67,6 +74,7 @@ class FeatherAppState extends State<FeatherApp> {
           if (element.languageCode == locale?.languageCode) {
             return element;
           }
+          return Constants.DEFAULT_LOCALE;
         }
         return const Locale.fromSubtags(languageCode: 'en');
       },
@@ -96,7 +104,7 @@ class FeatherAppState extends State<FeatherApp> {
       },
       cupertino: (context, target) => CupertinoAppData(
           theme: CupertinoThemeData(
-        brightness: brightness,
+        brightness: theme,
         primaryColor: Constants.PRIMARY_COLOR,
         primaryContrastingColor: Colors.white,
         scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
@@ -159,7 +167,8 @@ class FeatherAppState extends State<FeatherApp> {
         ),
       )),
       material: (context, target) => MaterialAppData(
-          themeMode: theme,
+          themeMode:
+              theme == Brightness.light ? ThemeMode.light : ThemeMode.dark,
           darkTheme: ThemeData(
               brightness: Brightness.dark,
               toggleableActiveColor: Constants.SECONDARY_COLOR,
@@ -206,6 +215,7 @@ class FeatherAppState extends State<FeatherApp> {
                   bodyColor: Constants.TEXT_BODY_COLOR_DARK,
                   displayColor: Constants.TEXT_BODY_COLOR_DARK)),
           theme: ThemeData(
+              brightness: Brightness.light,
               primarySwatch: Colors.blue,
               primaryColor: Constants.PRIMARY_COLOR,
               canvasColor: Constants.BACKGROUND_COLOR,

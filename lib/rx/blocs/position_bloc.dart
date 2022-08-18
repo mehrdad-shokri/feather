@@ -1,8 +1,5 @@
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/services/position_service.dart';
-import 'package:client/utils/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,38 +23,41 @@ class PositionBloc extends RxBloc {
 
   PositionBloc(this._positionService) {
     _locationPermission.add(_positionService.hasPermission);
+    checkPermission();
   }
 
   void getCurrentPosition(
-      Function(Position) onData, Function(Exception) onError) {
+      {required Function onPermissionDenied,
+      required Function onPermissionDeniedForever,
+      required Function(Position) onPositionReceived,
+      required Function onError}) {
     _requestingCurrentLocation.add(false);
-    addFutureSubscription(_positionService.getCurrentPosition(),
-        (Position event) {
-      _requestingCurrentLocation.add(false);
-      _lastPosition.add(event);
-      onData(event);
-    }, (e) {
-      _requestingCurrentLocation.add(false);
-      onError(e);
-    });
-  }
-
-  void requestPermission() {
     _requestingLocationPermission.add(true);
     addFutureSubscription(_positionService.requestPermission(),
-        (LocationPermission permissionStatus) {
+        (LocationPermission permission) {
       _requestingLocationPermission.add(false);
-      _locationPermission.add(permissionStatus);
+      if (permission == LocationPermission.deniedForever) {
+        onPermissionDeniedForever();
+        return;
+      } else if (permission == LocationPermission.denied ||
+          permission == LocationPermission.unableToDetermine) {
+        onPermissionDenied();
+        return;
+      } else if (permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse) {
+        _requestingCurrentLocation.add(true);
+        addFutureSubscription(_positionService.getCurrentPosition(),
+            (Position position) {
+          _requestingCurrentLocation.add(false);
+          onPositionReceived(position);
+        }, (e) {
+          _requestingCurrentLocation.add(false);
+          onError(e);
+        });
+      }
     }, (e) {
-      Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: Constants.TOAST_DEFAULT_LOCATION,
-          timeInSecForIosWeb: 3,
-          backgroundColor: Constants.ERROR_COLOR,
-          textColor: Colors.white,
-          fontSize: 16.0);
       _requestingLocationPermission.add(false);
+      onError(e);
     });
   }
 

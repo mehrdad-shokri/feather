@@ -11,6 +11,7 @@ class Constants {
 
   static const String USER_LOCALE_PREFS = 'user_locale';
   static const String USER_LOCATION_PREFS = 'user_location';
+  static const String USER_THEME_PREFS = 'user_theme';
   static const String IS_FIRST_VISIT_PREFS = 'is_first_visit';
   static const String WEATHER_API_PROVIDER_PREFS = 'weather_api_provider';
   static const String WEATHER_UNITS_PREFS = 'weather_api_units';
@@ -78,7 +79,6 @@ class Constants {
   static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
   static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =
       WeatherApiProvider.openWeatherMap;
-
   static const GeoApiProvider DEFAULT_GEO_API_PROVIDER =
       GeoApiProvider.openWeatherMap;
 

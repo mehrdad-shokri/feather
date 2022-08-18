@@ -4,7 +4,6 @@ import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/managers/geo_api.dart';
-import 'package:client/rx/managers/geo_providers/mock.dart';
 import 'package:client/rx/managers/geo_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/types/geo_providers.dart';
@@ -14,13 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GeoBloc extends RxBloc {
+  late GeoApi _geoApi;
   final EnvService _envService;
   final _reverseGeoLocation = BehaviorSubject<Location>();
+  final _reversingLocation = BehaviorSubject<bool>();
   final _searchedLocations = BehaviorSubject<List<Location>>();
   final _searchingLocations = BehaviorSubject<bool>();
   final WeatherBloc weatherBloc;
   Timer? _citySearchDebounce;
-  GeoApi _geoApi = MockGeoApi();
   GeoApiProvider _geoApiProvider = Constants.DEFAULT_GEO_API_PROVIDER;
   String _lang = Constants.DEFAULT_LOCALE.languageCode;
 
@@ -29,10 +29,11 @@ class GeoBloc extends RxBloc {
   Stream<List<Location>> get searchedLocations => _searchedLocations.stream;
 
   Stream<bool> get searchingLocations => _searchingLocations.stream;
+  Stream<bool> get reversingLocation => _reversingLocation.stream;
 
   GeoBloc(Stream<Locale> locale, Stream<GeoApiProvider> provider,
       this._envService, this.weatherBloc) {
-    // _geoApi = _instantiateGeoApi(_geoApiProvider, _lang);
+    _geoApi = _instantiateGeoApi(_geoApiProvider, _lang);
     locale.listen((event) {
       _lang = event.languageCode;
       _geoApi = _instantiateGeoApi(_geoApiProvider, event.languageCode);
@@ -43,11 +44,11 @@ class GeoBloc extends RxBloc {
     });
   }
 
-  void reverseGeoCode(double lat, double lon, Function onData) {
+  void reverseGeoCode(double lat, double lon, {required Function onLocation}) {
     addFutureSubscription(_geoApi.reverseGeocode(lat, lon),
         (Location? location) {
       if (location != null) _reverseGeoLocation.add(location);
-      onData(location);
+      onLocation(location);
     }, (e) {});
   }
 
@@ -57,7 +58,6 @@ class GeoBloc extends RxBloc {
     }
     _citySearchDebounce = Timer(const Duration(milliseconds: 800), () {
       _searchingLocations.add(true);
-      print('searching ${query}');
       if (strEmpty(query) || query!.length < 3) {
         loadLocationsFromAsset();
       } else {

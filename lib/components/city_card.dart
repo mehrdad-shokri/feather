@@ -111,10 +111,10 @@ class CityCard extends StatelessWidget {
                       ),
                     Expanded(
                         child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 250),
+                      duration: const Duration(milliseconds: 250),
                       child: location.forecast == null
                           ? Container(
-                              margin: EdgeInsets.only(top: 16),
+                              margin: const EdgeInsets.only(top: 16),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

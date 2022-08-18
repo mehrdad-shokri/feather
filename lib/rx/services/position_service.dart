@@ -5,9 +5,7 @@ class PositionService extends RxService {
   late LocationPermission hasPermission;
 
   @override
-  Future<void> onCreate() async {
-    hasPermission = await Geolocator.checkPermission();
-  }
+  Future<void> onCreate() async {}
 
   Future<Position> getCurrentPosition() {
     return Geolocator.getCurrentPosition();
