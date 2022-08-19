@@ -190,7 +190,7 @@ class CityCard extends StatelessWidget {
                                           width: 4,
                                         ),
                                         Text(
-                                          '${location.forecast!.humidityPercent.toStringAsFixed(0)}${windSpeedUnit(location.forecast!.unit)}',
+                                          '${location.forecast!.windSpeed.toStringAsFixed(0)}${windSpeedUnit(location.forecast!.unit)}',
                                           style: TextStyle(
                                               color: textColor(context),
                                               fontSize: Constants.S2_FONT_SIZE,

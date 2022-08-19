@@ -30,7 +30,6 @@ class _CitySearchPageState extends State<CitySearchPage>
   late PositionBloc positionBloc;
   late WeatherBloc weatherBloc;
   late SettingsBloc settingsBloc;
-  late FToast fToast;
 
   @override
   void initState() {
@@ -42,9 +41,7 @@ class _CitySearchPageState extends State<CitySearchPage>
     geoBloc = GeoBloc(settingsBloc.locale, settingsBloc.geoApiProvider,
         provider.envService, weatherBloc);
     positionBloc = PositionBloc(provider.positionService);
-    geoBloc.loadLocationsFromAsset();
-    fToast = FToast();
-    fToast.init(context);
+    // geoBloc.loadLocationsFromAsset();
   }
 
   void onLocationUpdated(Location location) {

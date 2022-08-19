@@ -328,6 +328,7 @@ class WeatherForecast {
       case 711:
       case 721:
       case 731:
+      case 741:
       case 751:
       case 761:
       case 762:
@@ -339,8 +340,6 @@ class WeatherForecast {
           return 'clear';
         }
         return 'sunny';
-      case 741:
-        return 'fog';
       case 801:
         if (isNight(sunrise, sunset)) {
           return 'cloud_night';

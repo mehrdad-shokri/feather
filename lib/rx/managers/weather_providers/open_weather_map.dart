@@ -20,7 +20,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
             'lat': lat,
             'lon': lon,
             'appid': appId,
-            'units': _unitToQueryParam()
+            'units': unitToQueryParam()
           },
         ))
             .data,
@@ -37,7 +37,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
         'lat': lat,
         'lon': lon,
         'appid': appId,
-        'units': _unitToQueryParam()
+        'units': unitToQueryParam()
       },
     ))
         .data as Map<String, dynamic>;
@@ -57,7 +57,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
           'lat': lat,
           'lon': lon,
           'appid': appId,
-          'units': _unitToQueryParam()
+          'units': unitToQueryParam()
         }))
         .data as Map<String, dynamic>;
     int timezone = data['city']['timezone'];
@@ -70,7 +70,4 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
             timezone, lat, lon, cityName, sunrise, sunset, countryCode, unit))
         .toList();
   }
-
-  String _unitToQueryParam() =>
-      unit == WeatherUnits.metric ? 'metric' : 'imperial';
 }

@@ -13,4 +13,7 @@ abstract class WeatherApi {
   Future<List<WeatherForecast>> hourlyForecast(double lat, double lon);
 
   Future<WeatherForecast> current(double lat, double lon);
+
+  String unitToQueryParam() =>
+      unit == WeatherUnits.metric ? 'metric' : 'imperial';
 }

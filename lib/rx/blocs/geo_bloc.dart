@@ -4,6 +4,7 @@ import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/managers/geo_api.dart';
+import 'package:client/rx/managers/geo_providers/mock.dart';
 import 'package:client/rx/managers/geo_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/types/geo_providers.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GeoBloc extends RxBloc {
-  late GeoApi _geoApi;
+  GeoApi _geoApi;
   final EnvService _envService;
   final _reverseGeoLocation = BehaviorSubject<Location>();
   final _reversingLocation = BehaviorSubject<bool>();
@@ -33,7 +34,8 @@ class GeoBloc extends RxBloc {
   Stream<bool> get reversingLocation => _reversingLocation.stream;
 
   GeoBloc(Stream<Locale> locale, Stream<GeoApiProvider> provider,
-      this._envService, this.weatherBloc) {
+      this._envService, this.weatherBloc)
+      : _geoApi = MockGeoApi() {
     _geoApi = _instantiateGeoApi(_geoApiProvider, _lang);
     locale.listen((event) {
       _lang = event.languageCode;
@@ -68,8 +70,7 @@ class GeoBloc extends RxBloc {
           _searchedLocations.add(event);
           List<Location> locations = event;
           for (Location element in locations) {
-            weatherBloc?.getCurrentForecast(element.lat, element.lon,
-                onData: (forecast) {
+            weatherBloc?.getCurrentForecast(element, onData: (forecast) {
               element.forecast = forecast;
               locations[locations.indexWhere((l) => l == element)] = element;
               _searchedLocations.add(locations);
@@ -88,8 +89,7 @@ class GeoBloc extends RxBloc {
         Constants.POPULAR_CITIES.map((e) => Location.fromAsset(e)).toList();
     _searchedLocations.add(locations);
     for (Location element in locations) {
-      weatherBloc?.getCurrentForecast(element.lat, element.lon,
-          onData: (forecast) {
+      weatherBloc?.getCurrentForecast(element, onData: (forecast) {
         element.forecast = forecast;
         locations[locations.indexWhere((l) => l == element)] = element;
         _searchedLocations.add(locations);

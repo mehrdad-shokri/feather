@@ -60,5 +60,17 @@
     "description": "Humidity",
     "type": "text",
     "placeholders": {}
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today",
+    "type": "text",
+    "placeholders": {}
+  },
+  "next7Days": "7 days",
+  "@next7Days": {
+    "description": "Next 7 days",
+    "type": "text",
+    "placeholders": {}
   }
 }
