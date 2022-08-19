@@ -1,4 +1,5 @@
 import 'package:client/models/weather_forecast.dart';
+import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
 import 'package:client/utils/hex_color.dart';
@@ -41,6 +42,14 @@ class HourlyForecast extends StatelessWidget {
                 color: Colors.white,
                 fontWeight: Constants.MEDIUM_FONT_WEIGHT,
                 fontSize: Constants.CAPTION_FONT_SIZE),
+          ),
+          Text(
+            formatDate(weatherForecast.date, format: 'MMMM d'),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white.withAlpha(180),
+                fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                fontSize: 12),
           ),
           Expanded(
               child: Lottie.asset(

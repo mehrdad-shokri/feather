@@ -93,7 +93,7 @@ class HourlyForecasts extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: forecasts.length,
                       scrollDirection: Axis.horizontal,
-                      itemExtent: 100,
+                      itemExtent: 115,
                       itemBuilder: (context, index) => HourlyForecast(
                         forecasts.elementAt(index),
                         key: Key(forecasts.elementAt(index).id),

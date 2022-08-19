@@ -60,7 +60,10 @@ bool isNight(DateTime sunrise, DateTime sunset) =>
     isSameOrAfterTime(DateTime.now().toUtc(), sunset) ||
     isSameOrAfterTime(sunrise, DateTime.now().toUtc());
 
-String formatDate(DateTime date) {
+String formatDate(DateTime date, {String? format}) {
+  if (format != null) {
+    return DateFormat(format).format(date);
+  }
   return DateFormat.MMMMEEEEd().format(date);
 }
 
