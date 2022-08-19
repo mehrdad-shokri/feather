@@ -49,6 +49,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                         context: context,
                         title: t.dataSource,
                         items: apiProviders,
+                        cancelText: t.cancel,
                         translateItem: (WeatherApiProvider e) =>
                             translateWeatherProvider(e, t),
                         onSelect: (WeatherApiProvider e) =>
@@ -64,6 +65,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                         context: context,
                         title: t.theme,
                         items: themes,
+                        cancelText: t.cancel,
                         translateItem: (ThemeMode e) =>
                             translateThemeMode(e, t),
                         onSelect: (ThemeMode e) =>
@@ -79,6 +81,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                         context: context,
                         title: t.language,
                         items: locales,
+                        cancelText: t.cancel,
                         translateItem: (Locale e) => translatedLocale(e, t),
                         onSelect: (Locale e) => onLocaleChange(e));
                   },

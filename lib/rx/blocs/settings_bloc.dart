@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends RxBloc {
-  final Brightness _DEFAULT_THEME =
+  final Brightness _defaultTheme =
       WidgetsBinding.instance.window.platformBrightness;
   final SharedPrefsService _sharedPrefsService;
   final _isFirstVisit = BehaviorSubject<bool>();
@@ -53,8 +53,8 @@ class SettingsBloc extends RxBloc {
         _sharedPrefsService.instance.getString(Constants.USER_THEME_PREFS);
     _themeMode.add(strNotEmpty(themeMode)
         ? EnumToString.fromString(Brightness.values, themeMode!) ??
-            _DEFAULT_THEME
-        : _DEFAULT_THEME);
+            _defaultTheme
+        : _defaultTheme);
   }
 
   void onLocaleChanged(Locale locale) {
@@ -64,7 +64,7 @@ class SettingsBloc extends RxBloc {
   }
 
   void onThemeChanged(Brightness? brightness) {
-    _themeMode.add(brightness ?? _DEFAULT_THEME);
+    _themeMode.add(brightness ?? _defaultTheme);
     if (brightness != null) {
       addFutureSubscription(_sharedPrefsService.instance.setString(
           Constants.USER_THEME_PREFS,

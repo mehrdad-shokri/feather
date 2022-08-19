@@ -112,7 +112,8 @@ void showPlatformActionSheet<T>(
     required List<T> items,
     required Function(T) onSelect,
     required Function(T) translateItem,
-    required String title}) {
+    required String title,
+    required String cancelText}) {
   if (isCupertino(context)) {
     showCupertinoModalPopup(
         context: context,
@@ -137,7 +138,7 @@ void showPlatformActionSheet<T>(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text('Cancel'))
+                    child: Text(cancelText))
               ],
               content: Column(
                 children: items

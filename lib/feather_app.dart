@@ -48,14 +48,15 @@ class FeatherAppState extends State<FeatherApp> {
         });
       });
       settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
-    } catch (e) {}
+    } catch (e) {
+      //  Record crash in crashlytics
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     serviceProvider.onDispose();
-    print('dispse');
   }
 
   @override

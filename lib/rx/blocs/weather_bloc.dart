@@ -117,7 +117,6 @@ class WeatherBloc extends RxBloc {
         (List<WeatherForecast> event) {
       _updatingHourlyForecast.add(false);
       if (_dailyForecast.hasValue) {
-        List<WeatherForecast> daily = _dailyForecast.value;
         _hourlyForecast.add(event.map((e) {
           WeatherForecast day = _dailyForecast.value
               .firstWhere((element) => isSameDay(element.date, e.date));

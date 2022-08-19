@@ -1,4 +1,3 @@
-import 'package:client/models/location.dart';
 import 'package:client/rx/services/connectivity_service.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/position_service.dart';

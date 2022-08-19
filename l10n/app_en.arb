@@ -120,5 +120,11 @@
     "description": "Choose city",
     "type": "text",
     "placeholders": {}
+  },
+  "getStarted": "Get started",
+  "@getStarted": {
+    "description": "Get started",
+    "type": "text",
+    "placeholders": {}
   }
 }

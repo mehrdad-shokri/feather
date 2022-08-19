@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,5 +49,5 @@ bool isDark(BuildContext context) {
 }
 
 Color cardColor(BuildContext context) {
-  return isDark(context) ? Colors.grey.shade800 : Colors.grey.shade100;
+  return isDark(context) ? Colors.grey.shade800 : Colors.white;
 }

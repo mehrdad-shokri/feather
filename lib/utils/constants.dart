@@ -42,7 +42,7 @@ class Constants {
   static const Color TEXT_LABEL_COLOR_DARK = Color.fromRGBO(145, 142, 110, 1.0);
   static const Color PLACEHOLDER_COLOR = Color.fromRGBO(160, 163, 189, 1);
   static const Color PLACEHOLDER_COLOR_DARK =
-      Color.fromRGBO(110, 110, 110, 1.0);
+      Color.fromRGBO(120, 120, 120, 1.0);
   static const Color LINE_COLOR = Color.fromRGBO(214, 216, 231, 1);
   static const Color LINE_COLOR_DARK = Color.fromRGBO(41, 39, 24, 1.0);
 

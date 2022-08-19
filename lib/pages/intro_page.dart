@@ -4,6 +4,7 @@ import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   late SettingsBloc settingsBloc;
+  AppLocalizations? appLocalizations;
 
   @override
   void initState() {
@@ -24,6 +26,8 @@ class _IntroPageState extends State<IntroPage> {
 
   @override
   Widget build(BuildContext context) {
+    appLocalizations ??= AppLocalizations.of(context);
+
     return PlatformScaffold(
       body: SafeArea(
         bottom: true,
@@ -77,7 +81,7 @@ class _IntroPageState extends State<IntroPage> {
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/search', (route) => true);
                         },
-                        child: const Text('Get started'),
+                        child: Text(appLocalizations!.getStarted),
                       ),
                       const SizedBox(
                         height: 16,

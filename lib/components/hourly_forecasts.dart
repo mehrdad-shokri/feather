@@ -1,10 +1,9 @@
 import 'package:client/components/hourly_forecast.dart';
 import 'package:client/models/weather_forecast.dart';
-import 'package:client/utils/date.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
