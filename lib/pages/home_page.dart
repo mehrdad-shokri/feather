@@ -53,8 +53,7 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
         slivers: [
-          forecastHeroAppBar(
-              context: context,
+          ForecastHeroAppbar(
               weatherUnit: weatherBloc.weatherUnit,
               onWeatherUnitChanged: (unit) {
                 weatherBloc.onUnitsChanged(unit);
@@ -65,6 +64,10 @@ class _HomePageState extends State<HomePage> {
               },
               apiProvider: weatherBloc.weatherApiProvider,
               apiProviders: WeatherApiProvider.values,
+              theme: settingsBloc.themeMode,
+              themes: ThemeMode.values,
+              onThemeChange: (Brightness? brightness) =>
+                  settingsBloc.onThemeChanged(brightness),
               t: appLocalizations!),
           SliverToBoxAdapter(
             child: SizedBox(

@@ -164,7 +164,7 @@ class ForecastHeroCard extends StatelessWidget {
                                 ),
                                 Positioned(
                                   top: 0,
-                                  right: -12,
+                                  right: -8,
                                   child: SvgPicture.asset(
                                     'assets/svg/degrees.svg',
                                     color: Colors.white,

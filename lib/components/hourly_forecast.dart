@@ -3,6 +3,7 @@ import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
 import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class HourlyForecast extends StatelessWidget {
@@ -46,12 +47,28 @@ class HourlyForecast extends StatelessWidget {
                   'assets/lottie/${weatherForecast.lottieAnimation}.json',
                   alignment: Alignment.center,
                   fit: BoxFit.contain)),
-          Text(
-            '${weatherForecast.tempFeelsLike?.round()}',
-            style: const TextStyle(
-                fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                fontSize: Constants.S2_FONT_SIZE,
-                color: Colors.white),
+          Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topRight,
+            children: [
+              Text(
+                '${weatherForecast.tempFeelsLike?.round()}',
+                style: const TextStyle(
+                    fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                    fontSize: Constants.S2_FONT_SIZE,
+                    color: Colors.white),
+              ),
+              Positioned(
+                top: 0,
+                right: -4,
+                child: SvgPicture.asset(
+                  'assets/svg/degrees.svg',
+                  color: Colors.white,
+                  width: 4,
+                  height: 4,
+                ),
+              )
+            ],
           )
         ],
       ),

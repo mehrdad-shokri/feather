@@ -8,15 +8,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-Widget forecastHeroAppBar(
-        {required BuildContext context,
-        required List<WeatherApiProvider> apiProviders,
-        required Function(WeatherApiProvider) onApiProviderChanged,
-        required Function(WeatherUnits) onWeatherUnitChanged,
-        required Stream<WeatherApiProvider> apiProvider,
-        required Stream<WeatherUnits> weatherUnit,
-        required AppLocalizations t}) =>
-    SliverAppBar(
+class ForecastHeroAppbar extends StatelessWidget {
+  final List<WeatherApiProvider> apiProviders;
+  final Function(WeatherApiProvider) onApiProviderChanged;
+  final Function(WeatherUnits) onWeatherUnitChanged;
+  final Function(Brightness?) onThemeChange;
+  final Stream<WeatherApiProvider> apiProvider;
+  final Stream<WeatherUnits> weatherUnit;
+  final List<ThemeMode> themes;
+  final Stream<Brightness> theme;
+  final AppLocalizations t;
+
+  const ForecastHeroAppbar(
+      {Key? key,
+      required this.onApiProviderChanged,
+      required this.onWeatherUnitChanged,
+      required this.apiProvider,
+      required this.apiProviders,
+      required this.weatherUnit,
+      required this.themes,
+      required this.theme,
+      required this.onThemeChange,
+      required this.t})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
       elevation: 0,
       primary: true,
       actions: [
@@ -24,43 +42,34 @@ Widget forecastHeroAppBar(
             options: [
               PopupMenuOption(
                   onTap: (_) {
-                    if (isCupertino(context)) {
-                      showCupertinoModalPopup(
-                          context: context,
-                          builder: (context) => CupertinoActionSheet(
-                                title: Text(t.dataSource),
-                                actions: apiProviders
-                                    .map((e) => CupertinoActionSheetAction(
-                                        onPressed: () {
-                                          onApiProviderChanged(e);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                            translateWeatherProvider(e, t))))
-                                    .toList(),
-                              ));
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Text(t.dataSource),
-                                content: Column(
-                                  children: apiProviders
-                                      .map((e) => TextButton(
-                                          onPressed: () {
-                                            onApiProviderChanged(e);
-                                          },
-                                          child: Text(
-                                              translateWeatherProvider(e, t))))
-                                      .toList(),
-                                ),
-                              ));
-                    }
+                    showPlatformActionSheet(
+                        context: context,
+                        title: t.dataSource,
+                        items: apiProviders,
+                        translateItem: (WeatherApiProvider e) =>
+                            translateWeatherProvider(e, t),
+                        onSelect: (WeatherApiProvider e) =>
+                            onApiProviderChanged(e));
                   },
                   material: (context, target) => MaterialPopupMenuOptionData(
                       padding: EdgeInsets.zero, child: Text(t.dataSource)),
                   cupertino: (context, target) =>
                       CupertinoPopupMenuOptionData(child: Text(t.dataSource))),
+              PopupMenuOption(
+                  onTap: (_) {
+                    showPlatformActionSheet(
+                        context: context,
+                        title: t.theme,
+                        items: themes,
+                        translateItem: (ThemeMode e) =>
+                            translateThemeMode(e, t),
+                        onSelect: (ThemeMode e) =>
+                            onThemeChange(themeModeToBrightness(e)));
+                  },
+                  material: (context, target) => MaterialPopupMenuOptionData(
+                      padding: EdgeInsets.zero, child: Text(t.theme)),
+                  cupertino: (context, target) =>
+                      CupertinoPopupMenuOptionData(child: Text(t.theme))),
               PopupMenuOption(
                   onTap: (_) {},
                   material: (context, target) => MaterialPopupMenuOptionData(
@@ -68,10 +77,13 @@ Widget forecastHeroAppBar(
                   cupertino: (context, target) =>
                       CupertinoPopupMenuOptionData(child: Text(t.about)))
             ],
-            icon: const Icon(
-              Icons.more_vert,
-              color: Colors.white,
-              size: 32,
+            icon: const Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Icon(
+                Icons.more_vert,
+                color: Colors.white,
+                size: 32,
+              ),
             ))
       ],
       leading: StreamBuilder(
@@ -114,3 +126,5 @@ Widget forecastHeroAppBar(
       ),
       backgroundColor: HexColor.fromHex('#06c7f1'),
     );
+  }
+}

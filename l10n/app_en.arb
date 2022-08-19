@@ -72,5 +72,47 @@
     "description": "Next 7 days",
     "type": "text",
     "placeholders": {}
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel",
+    "type": "text",
+    "placeholders": {}
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language",
+    "type": "text",
+    "placeholders": {}
+  },
+  "themeModeLight": "Light",
+  "@themeModeLight": {
+    "description": "light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "themeModeDark": "Dark",
+  "@themeModeDark": {
+    "description": "dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "themeModeSystem": "System Default",
+  "@themeModeSystem": {
+    "description": "system default theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageEn": "English",
+  "@languageEn": {
+    "description": "en",
+    "type": "text",
+    "placeholders": {}
   }
 }

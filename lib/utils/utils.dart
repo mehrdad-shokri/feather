@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'dart:convert';
@@ -9,6 +10,7 @@ import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 String languageCodeFromLocaleName(String localeName) =>
     localeName.split('_').first;
@@ -44,24 +46,12 @@ String timeTo2Digit(int? digit) {
   }
 }
 
-TextDirection correctDirection(String input) {
-  return input.startsWith(RegExp(r'[A-Za-z0-9]'))
-      ? TextDirection.ltr
-      : TextDirection.rtl;
-}
-
-TextAlign correctAlignment(String input) {
-  return input.startsWith(RegExp(r'[A-Za-z0-9]'))
-      ? TextAlign.left
-      : TextAlign.right;
-}
-
 String currentLocale(BuildContext context) {
   return Localizations.localeOf(context).languageCode;
 }
 
 bool isRtl(BuildContext context) {
-  return currentLocale(context) == 'fa' ? true : false;
+  return ['fa', 'ar', 'he'].contains(currentLocale(context)) ? true : false;
 }
 
 T? firstOrNull<T>(Iterable<T> items, callback) {
@@ -82,5 +72,77 @@ String translateWeatherProvider(
       return t.openWeatherMap;
     default:
       return '';
+  }
+}
+
+String translateThemeMode(ThemeMode themeMode, AppLocalizations t) {
+  switch (themeMode) {
+    case ThemeMode.light:
+      return t.themeModeLight;
+    case ThemeMode.dark:
+      return t.themeModeDark;
+    case ThemeMode.system:
+      return t.themeModeSystem;
+    default:
+      return '';
+  }
+}
+
+Brightness? themeModeToBrightness(ThemeMode themeMode) {
+  switch (themeMode) {
+    case ThemeMode.light:
+      return Brightness.light;
+    case ThemeMode.dark:
+      return Brightness.dark;
+    case ThemeMode.system:
+      return null;
+    default:
+      return null;
+  }
+}
+
+void showPlatformActionSheet<T>(
+    {required BuildContext context,
+    required List<T> items,
+    required Function(T) onSelect,
+    required Function(T) translateItem,
+    required String title}) {
+  if (isCupertino(context)) {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) => CupertinoActionSheet(
+              title: Text(title),
+              actions: items
+                  .map((e) => CupertinoActionSheetAction(
+                      onPressed: () {
+                        onSelect(e);
+                        Navigator.pop(context);
+                      },
+                      child: Text(translateItem(e))))
+                  .toList(),
+            ));
+  } else {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(title),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'))
+              ],
+              content: Column(
+                children: items
+                    .map((e) => TextButton(
+                        onPressed: () {
+                          onSelect(e);
+                          Navigator.pop(context);
+                        },
+                        child: Text(translateItem(e))))
+                    .toList(),
+              ),
+            ));
   }
 }
