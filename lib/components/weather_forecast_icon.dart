@@ -6,10 +6,9 @@ class WeatherForecastIcon extends StatelessWidget {
   final String? assetDir;
   final String title;
   final String? value;
-  final IconData? icon;
 
   const WeatherForecastIcon(
-      {Key? key, required this.title, this.value, this.assetDir, this.icon})
+      {Key? key, required this.title, this.value, this.assetDir})
       : super(key: key);
 
   @override

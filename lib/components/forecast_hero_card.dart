@@ -20,6 +20,7 @@ class ForecastHeroCard extends StatelessWidget {
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<WeatherForecast> weatherForecast;
+  final Stream<List<WeatherForecast>> hourlyForecast;
   final Stream<WeatherUnits> weatherUnit;
   final AppLocalizations t;
 
@@ -29,6 +30,7 @@ class ForecastHeroCard extends StatelessWidget {
       required this.onLocationChangeRequest,
       required this.isUpdating,
       required this.weatherForecast,
+      required this.hourlyForecast,
       required this.weatherUnit,
       required this.t})
       : super(key: key);
@@ -209,19 +211,32 @@ class ForecastHeroCard extends StatelessWidget {
                                       '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
                                   title: t.wind,
                                 ),
-                                if (forecast.pop != null)
-                                  WeatherForecastIcon(
-                                    assetDir: 'assets/svg/chance-of-rain.svg',
-                                    value:
-                                        '${forecast.pop?.toStringAsFixed(0)}',
-                                    title: t.chanceOfRain,
-                                  )
-                                else
-                                  WeatherForecastIcon(
-                                    assetDir: 'assets/svg/chance-of-rain.svg',
-                                    value: 'N/A',
-                                    title: t.chanceOfRain,
-                                  ),
+                                StreamBuilder(
+                                  stream: hourlyForecast,
+                                  builder: (context, snapshot) {
+                                    List<WeatherForecast>? forecasts =
+                                        snapshot.data as List<WeatherForecast>?;
+                                    if (forecasts == null ||
+                                        forecasts.isEmpty ||
+                                        forecasts.first.pop == null) {
+                                      return WeatherForecastIcon(
+                                        assetDir:
+                                            'assets/svg/chance-of-rain.svg',
+                                        value:
+                                            '${forecast.pop?.toStringAsFixed(0)}',
+                                        title: t.chanceOfRain,
+                                      );
+                                    } else {
+                                      return WeatherForecastIcon(
+                                        assetDir:
+                                            'assets/svg/chance-of-rain.svg',
+                                        value:
+                                            '${forecasts.first.pop == 0 ? '-' : ((forecasts.first.pop!) * 100).toInt()}%',
+                                        title: t.chanceOfRain,
+                                      );
+                                    }
+                                  },
+                                ),
                                 WeatherForecastIcon(
                                   assetDir: 'assets/svg/humidity.svg',
                                   value: '${forecast.humidityPercent}%',

@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
               t: appLocalizations!),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: deviceHeight! * .70,
+              height: deviceHeight! * .7,
               child: ForecastHeroCard(
                   location: settingsBloc.activeLocation,
                   onLocationChangeRequest: () {
@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
                   isUpdating: weatherBloc.isUpdating,
                   weatherForecast: weatherBloc.currentForecast,
                   weatherUnit: weatherBloc.weatherUnit,
+                  hourlyForecast: weatherBloc.hourlyForecast,
                   t: appLocalizations!),
             ),
           ),

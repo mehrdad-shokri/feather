@@ -102,6 +102,7 @@ class CityCard extends StatelessWidget {
                                 child: Text(
                               ', ${location.state!}',
                               overflow: TextOverflow.fade,
+                              softWrap: false,
                               style: TextStyle(
                                   color: placeholderColor(context),
                                   fontWeight: Constants.REGULAR_FONT_WEIGHT,

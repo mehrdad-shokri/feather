@@ -47,7 +47,7 @@ class HourlyForecast extends StatelessWidget {
             formatDate(weatherForecast.date, format: 'MMMM d'),
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.white.withAlpha(180),
+                color: Colors.white.withAlpha(200),
                 fontWeight: Constants.REGULAR_FONT_WEIGHT,
                 fontSize: 12),
           ),
