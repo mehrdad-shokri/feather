@@ -73,7 +73,7 @@ T? firstOrNull<T>(Iterable<T> items, callback) {
 }
 
 String windSpeedUnit(WeatherUnits metric) =>
-    metric == WeatherUnits.metric ? 'km/h' : 'mph';
+    metric == WeatherUnits.metric ? ' km/h' : ' mph';
 
 String translateWeatherProvider(
     WeatherApiProvider provider, AppLocalizations t) {

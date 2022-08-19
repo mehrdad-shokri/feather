@@ -38,7 +38,7 @@ class ForecastHeroCard extends StatelessWidget {
     return Container(
       color: backgroundColor(context),
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
@@ -55,6 +55,7 @@ class ForecastHeroCard extends StatelessWidget {
                 stops: const [0.0, .31, .95],
                 tileMode: TileMode.clamp)),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             PlatformTextButton(
               onPressed: () {
@@ -136,25 +137,26 @@ class ForecastHeroCard extends StatelessWidget {
               stream: weatherForecast,
               builder: (context, snapshot) {
                 WeatherForecast? forecast = snapshot.data as WeatherForecast?;
-                return AnimatedSwitcher(
+                return Expanded(
+                    child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
                   child: forecast == null
                       ? Container()
                       : Column(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Lottie.asset(
-                                'assets/lottie/${forecast.lottieAnimation}.json',
-                                alignment: Alignment.center,
-                                height: 200,
-                                fit: BoxFit.cover),
+                            Expanded(
+                                child: Lottie.asset(
+                                    'assets/lottie/${forecast.lottieAnimation}.json',
+                                    alignment: Alignment.center,
+                                    fit: BoxFit.cover)),
                             Stack(
                               alignment: Alignment.topRight,
                               clipBehavior: Clip.none,
                               children: [
                                 Text(
-                                  '${forecast.tempFeelsLike}',
+                                  '${forecast.tempFeelsLike?.round()}',
                                   style: const TextStyle(
                                       fontSize: Constants.H2_FONT_SIZE,
                                       color: Colors.white,
@@ -166,13 +168,13 @@ class ForecastHeroCard extends StatelessWidget {
                                     WeatherUnits? unit =
                                         snapshot.data as WeatherUnits?;
                                     return Positioned(
-                                      top: -8,
-                                      right: -16,
+                                      top: -4,
+                                      right: -8,
                                       child: SvgPicture.asset(
                                         'assets/svg/degrees.svg',
                                         color: Colors.white,
-                                        width: 16,
-                                        height: 16,
+                                        width: 8,
+                                        height: 8,
                                       ),
                                     );
                                   },
@@ -180,15 +182,15 @@ class ForecastHeroCard extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(
-                              height: 16,
+                              height: 8,
                             ),
                             Text(forecast.weatherTitle,
                                 style: TextStyle(
                                     color: Constants.SECONDARY_COLOR_LIGHT,
-                                    fontSize: Constants.H2_FONT_SIZE,
+                                    fontSize: Constants.H1_FONT_SIZE,
                                     fontWeight: Constants.MEDIUM_FONT_WEIGHT)),
                             const SizedBox(
-                              height: 8,
+                              height: 16,
                             ),
                             Text(
                               formatDate(DateTime.now()
@@ -216,7 +218,7 @@ class ForecastHeroCard extends StatelessWidget {
                                 ),
                                 if (forecast.pop != null)
                                   WeatherForecastIcon(
-                                    icon: Feather.na,
+                                    assetDir: 'assets/svg/chance-of-rain.svg',
                                     value:
                                         '${forecast.pop?.toStringAsFixed(0)}',
                                     title: t.chanceOfRain,
@@ -224,7 +226,7 @@ class ForecastHeroCard extends StatelessWidget {
                                 else
                                   WeatherForecastIcon(
                                     assetDir: 'assets/svg/chance-of-rain.svg',
-                                    value: 'NAN',
+                                    value: 'N/A',
                                     title: t.chanceOfRain,
                                   ),
                                 WeatherForecastIcon(
@@ -236,7 +238,7 @@ class ForecastHeroCard extends StatelessWidget {
                             )
                           ],
                         ),
-                );
+                ));
               },
             )
           ],

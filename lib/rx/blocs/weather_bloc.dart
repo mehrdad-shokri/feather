@@ -5,24 +5,26 @@ import 'package:client/rx/managers/weather_api.dart';
 import 'package:client/rx/managers/weather_providers/mock.dart';
 import 'package:client/rx/managers/weather_providers/open_weather_map.dart';
 import 'package:client/rx/services/env_service.dart';
+import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WeatherBloc extends RxBloc {
   WeatherApi _weatherApi;
   Location? _lastLocation;
   final EnvService _envService;
+  final SharedPrefsService _sharedPrefsService;
   final _currentForecast = BehaviorSubject<WeatherForecast>();
   final _updatingCurrentForecast = BehaviorSubject<bool>();
   final _dailyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _updatingDailyForecast = BehaviorSubject<bool>();
   final _hourlyForecast = BehaviorSubject<List<WeatherForecast>>();
   final _updatingHourlyForecast = BehaviorSubject<bool>();
-  WeatherApiProvider _weatherApiProvider =
-      Constants.DEFAULT_WEATHER_API_PROVIDER;
-  WeatherUnits _weatherUnit = Constants.DEFAULT_WEATHER_API_UNITS;
+  final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
+  final _weatherApiUnit = BehaviorSubject<WeatherUnits>();
 
   Stream<bool> get isUpdating => _updatingCurrentForecast.stream
       .mergeWith([_updatingHourlyForecast.stream]);
@@ -33,18 +35,33 @@ class WeatherBloc extends RxBloc {
 
   Stream<List<WeatherForecast>> get hourlyForecast => _hourlyForecast.stream;
 
-  WeatherBloc(Stream<WeatherApiProvider> weatherApiProvider,
-      Stream<WeatherUnits> weatherUnits, this._envService)
+  Stream<WeatherUnits> get weatherUnit => _weatherApiUnit.stream;
+
+  Stream<WeatherApiProvider> get weatherApiProvider =>
+      _weatherApiProvider.stream;
+
+  WeatherBloc(this._sharedPrefsService, this._envService)
       : _weatherApi = MockWeatherApi() {
-    _weatherApi = _instantiateWeatherApi(_weatherApiProvider, _weatherUnit);
-    weatherApiProvider.listen((event) {
-      _weatherApiProvider = event;
-      _weatherApi = _instantiateWeatherApi(event, _weatherUnit);
+    String? weatherApiProviderPrefs = _sharedPrefsService.instance
+        .getString(Constants.WEATHER_API_PROVIDER_PREFS);
+    String? weatherUnitsPrefs =
+        _sharedPrefsService.instance.getString(Constants.WEATHER_UNITS_PREFS);
+    WeatherUnits weatherApiUnits = weatherUnitsPrefs != null
+        ? EnumToString.fromString(WeatherUnits.values, weatherUnitsPrefs)!
+        : Constants.DEFAULT_WEATHER_API_UNITS;
+    WeatherApiProvider weatherApiProvider = weatherApiProviderPrefs != null
+        ? EnumToString.fromString(
+            WeatherApiProvider.values, weatherApiProviderPrefs)!
+        : Constants.DEFAULT_WEATHER_API_PROVIDER;
+    _weatherApiUnit.add(weatherApiUnits);
+    _weatherApiProvider.add(weatherApiProvider);
+    _weatherApi = _instantiateWeatherApi(weatherApiProvider, weatherApiUnits);
+    _weatherApiProvider.listen((event) {
+      _weatherApi = _instantiateWeatherApi(event, _weatherApiUnit.value);
       if (_lastLocation != null) getCurrentForecast(_lastLocation!);
     });
-    weatherUnits.listen((event) {
-      _weatherUnit = event;
-      _weatherApi = _instantiateWeatherApi(_weatherApiProvider, event);
+    _weatherApiUnit.listen((event) {
+      _weatherApi = _instantiateWeatherApi(_weatherApiProvider.value, event);
       if (_lastLocation != null) getCurrentForecast(_lastLocation!);
     });
   }
@@ -71,7 +88,7 @@ class WeatherBloc extends RxBloc {
     }
     _lastLocation = location;
     _updatingCurrentForecast.add(true);
-    print('send request ${_weatherUnit}');
+    print('send request ${_weatherApiUnit.value}');
     addFutureSubscription(_weatherApi.current(location.lat, location.lon),
         (WeatherForecast event) {
       _updatingCurrentForecast.add(false);
@@ -84,17 +101,39 @@ class WeatherBloc extends RxBloc {
     });
   }
 
-  void getHourlyForecast(double lat, double lon) {
-    addFutureSubscription(_weatherApi.hourlyForecast(lat, lon),
-        (List<WeatherForecast>? event) {
-      if (event != null) _hourlyForecast.add(event);
-    }, (e) {});
+  void getHourlyForecast(Location location) {
+    _updatingHourlyForecast.add(true);
+    addFutureSubscription(
+        _weatherApi.hourlyForecast(location.lat, location.lon),
+        (List<WeatherForecast> event) {
+      _updatingHourlyForecast.add(false);
+      _hourlyForecast.add(event);
+    }, (e) {
+      _updatingHourlyForecast.add(false);
+    });
   }
 
   void getDailyForecast(double lat, double lon) {
+    _updatingDailyForecast.add(true);
     addFutureSubscription(_weatherApi.dailyForecast(lat, lon),
         (List<WeatherForecast>? event) {
+      _updatingDailyForecast.add(false);
       if (event != null) _dailyForecast.add(event);
-    }, (e) {});
+    }, (e) {
+      _updatingDailyForecast.add(false);
+    });
+  }
+
+  void onWeatherApiProviderChanged(WeatherApiProvider provider) {
+    _weatherApiProvider.add(provider);
+    addFutureSubscription(_sharedPrefsService.instance.setString(
+        Constants.WEATHER_API_PROVIDER_PREFS,
+        EnumToString.convertToString(provider)));
+  }
+
+  void onUnitsChanged(WeatherUnits unit) {
+    _weatherApiUnit.add(unit);
+    _sharedPrefsService.instance.setString(
+        Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit));
   }
 }

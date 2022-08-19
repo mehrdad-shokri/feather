@@ -15,8 +15,7 @@ class SettingsBloc extends RxBloc {
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
   final _activeLocation = BehaviorSubject<Location>();
-  final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
-  final _weatherApiUnit = BehaviorSubject<WeatherUnits>();
+
   final _geoApiProvider = BehaviorSubject<GeoApiProvider>();
   final _themeMode = BehaviorSubject<Brightness>();
 
@@ -26,12 +25,7 @@ class SettingsBloc extends RxBloc {
 
   Stream<Location> get activeLocation => _activeLocation.stream;
 
-  Stream<WeatherUnits> get weatherUnit => _weatherApiUnit.stream;
-
   Stream<GeoApiProvider> get geoApiProvider => _geoApiProvider.stream;
-
-  Stream<WeatherApiProvider> get weatherApiProvider =>
-      _weatherApiProvider.stream;
 
   Stream<Brightness> get themeMode => _themeMode.stream;
 
@@ -50,19 +44,6 @@ class SettingsBloc extends RxBloc {
     if (strNotEmpty(locationPrefs)) {
       _activeLocation.add(Location.fromPrefsJson(locationPrefs!));
     }
-    String? weatherApiProviderPrefs = _sharedPrefsService.instance
-        .getString(Constants.WEATHER_API_PROVIDER_PREFS);
-    String? weatherUnitsPrefs =
-        _sharedPrefsService.instance.getString(Constants.WEATHER_UNITS_PREFS);
-    WeatherUnits weatherApiUnits = weatherUnitsPrefs != null
-        ? EnumToString.fromString(WeatherUnits.values, weatherUnitsPrefs)!
-        : Constants.DEFAULT_WEATHER_API_UNITS;
-    WeatherApiProvider weatherApiProvider = weatherApiProviderPrefs != null
-        ? EnumToString.fromString(
-            WeatherApiProvider.values, weatherApiProviderPrefs)!
-        : Constants.DEFAULT_WEATHER_API_PROVIDER;
-    _weatherApiUnit.add(weatherApiUnits);
-    _weatherApiProvider.add(weatherApiProvider);
     String? geoApiProvider = _sharedPrefsService.instance
         .getString(Constants.GEO_API_PROVIDER_PREFS);
     GeoApiProvider provider = geoApiProvider != null
@@ -93,19 +74,6 @@ class SettingsBloc extends RxBloc {
     _activeLocation.add(location);
     addFutureSubscription(_sharedPrefsService.instance
         .setString(Constants.USER_LOCATION_PREFS, location.toPrefsJson()));
-  }
-
-  void onWeatherApiProviderChanged(WeatherApiProvider provider) {
-    _weatherApiProvider.add(provider);
-    addFutureSubscription(_sharedPrefsService.instance.setString(
-        Constants.WEATHER_API_PROVIDER_PREFS,
-        EnumToString.convertToString(provider)));
-  }
-
-  void onUnitsChanged(WeatherUnits unit) {
-    _weatherApiUnit.add(unit);
-    _sharedPrefsService.instance.setString(
-        Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit));
   }
 
   void onGeoApiProviderChanged(GeoApiProvider geoApiProvider) {

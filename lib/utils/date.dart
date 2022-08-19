@@ -63,3 +63,7 @@ bool isNight(DateTime sunrise, DateTime sunset) =>
 String formatDate(DateTime date) {
   return DateFormat.MMMMEEEEd().format(date);
 }
+
+String formatTime(DateTime date) {
+  return DateFormat('KK:mm a').format(date);
+}

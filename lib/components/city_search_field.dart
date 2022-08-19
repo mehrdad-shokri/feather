@@ -26,7 +26,9 @@ class SearchField extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.only(right: 16, bottom: 8),
         decoration: BoxDecoration(
-          color: CupertinoTheme.of(context).barBackgroundColor,
+          color: isCupertino(context)
+              ? CupertinoTheme.of(context).barBackgroundColor
+              : Theme.of(context).appBarTheme.backgroundColor,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,

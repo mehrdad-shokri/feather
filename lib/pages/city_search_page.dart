@@ -36,12 +36,11 @@ class _CitySearchPageState extends State<CitySearchPage>
     super.initState();
     ServiceProvider provider = ServiceProvider.getInstance();
     settingsBloc = SettingsBloc(provider.sharedPrefsService);
-    weatherBloc = WeatherBloc(settingsBloc.weatherApiProvider,
-        settingsBloc.weatherUnit, provider.envService);
+    weatherBloc = WeatherBloc(provider.sharedPrefsService, provider.envService);
     geoBloc = GeoBloc(settingsBloc.locale, settingsBloc.geoApiProvider,
         provider.envService, weatherBloc);
     positionBloc = PositionBloc(provider.positionService);
-    // geoBloc.loadLocationsFromAsset();
+    geoBloc.loadLocationsFromAsset();
   }
 
   void onLocationUpdated(Location location) {
@@ -196,7 +195,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                         delegate: SliverChildBuilderDelegate(
                             (context, index) => CityCard(
                                   location: locations.elementAt(index),
-                                  key: Key('$index'),
+                                  key: Key(locations.elementAt(index).id),
                                   shouldAddMargin: index <= 1,
                                   onPress: () {
                                     onLocationUpdated(

@@ -5,21 +5,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WeatherForecastIcon extends StatelessWidget {
   final String? assetDir;
   final String title;
-  final String value;
+  final String? value;
   final IconData? icon;
 
   const WeatherForecastIcon(
-      {Key? key,
-      required this.title,
-      required this.value,
-      this.assetDir,
-      this.icon})
+      {Key? key, required this.title, this.value, this.assetDir, this.icon})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (assetDir != null)
           SvgPicture.asset(
@@ -29,22 +26,17 @@ class WeatherForecastIcon extends StatelessWidget {
             fit: BoxFit.contain,
             color: Colors.grey.shade300,
           ),
-        if (icon != null)
-          Icon(
-            icon,
-            color: Colors.grey.shade300,
-            size: Constants.ICON_MEDIUM_SIZE,
-          ),
         const SizedBox(
           height: 8,
         ),
-        Text(
-          value,
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: Constants.S2_FONT_SIZE,
-              fontWeight: Constants.MEDIUM_FONT_WEIGHT),
-        ),
+        if (value != null)
+          Text(
+            value!,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: Constants.S2_FONT_SIZE,
+                fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+          ),
         const SizedBox(
           height: 4,
         ),

@@ -1,14 +1,11 @@
-import 'dart:io';
-
-import 'package:client/utils/constants.dart';
-import 'package:client/utils/utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
+import 'package:client/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 PlatformAppBar forecastHeroAppBar(

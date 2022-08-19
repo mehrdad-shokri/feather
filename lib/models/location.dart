@@ -17,6 +17,7 @@ class Location {
       required this.country,
       this.state});
 
+  String get id => '$lat$lon';
   factory Location.fromPrefsJson(String lastCityPrefs) {
     Map<String, dynamic> locationJson = json.decode(lastCityPrefs);
     return Location(

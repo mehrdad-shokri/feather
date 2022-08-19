@@ -356,4 +356,16 @@ class WeatherForecast {
 
   static double _openWeatherMapMetricCorrection(WeatherUnits unit) =>
       (unit == WeatherUnits.metric ? 3.6 : 1);
+
+  @override
+  bool operator ==(Object other) =>
+      other is WeatherForecast &&
+      lat == other.lat &&
+      lon == other.lon &&
+      date == other.date;
+
+  @override
+  int get hashCode => (lat * lon).toInt();
+
+  String get id => '$lat-$lon';
 }
