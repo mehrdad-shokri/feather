@@ -49,50 +49,47 @@ class _HomePageState extends State<HomePage> {
     deviceHeight ??= MediaQuery.of(context).size.height;
     print('${deviceHeight} ${deviceHeight! * .75}');
     return PlatformScaffold(
-      appBar: forecastHeroAppBar(
-          context: context,
-          weatherUnit: weatherBloc.weatherUnit,
-          onWeatherUnitChanged: (unit) {
-            weatherBloc.onUnitsChanged(unit);
-          },
-          onApiProviderChanged: (provider) {
-            weatherBloc.onWeatherApiProviderChanged(provider);
-            weatherBloc.getCurrentForecast(widget.arguments.location);
-          },
-          apiProvider: weatherBloc.weatherApiProvider,
-          apiProviders: WeatherApiProvider.values,
-          t: appLocalizations!),
       iosContentPadding: true,
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(
-                height: deviceHeight! * .70,
-                child: ForecastHeroCard(
-                    location: settingsBloc.activeLocation,
-                    onLocationChangeRequest: () {
-                      Navigator.pushNamed(context, '/search');
-                    },
-                    isUpdating: weatherBloc.isUpdating,
-                    weatherForecast: weatherBloc.currentForecast,
-                    weatherUnit: weatherBloc.weatherUnit,
-                    t: appLocalizations!),
-              ),
-              SizedBox(
-                height: deviceHeight! * .3,
-                child: HourlyForecasts(
-                    t: appLocalizations!,
-                    isUpdating: weatherBloc.isUpdating,
-                    hourlyForecast: weatherBloc.hourlyForecast),
-              )
-            ],
+      body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
+        slivers: [
+          forecastHeroAppBar(
+              context: context,
+              weatherUnit: weatherBloc.weatherUnit,
+              onWeatherUnitChanged: (unit) {
+                weatherBloc.onUnitsChanged(unit);
+              },
+              onApiProviderChanged: (provider) {
+                weatherBloc.onWeatherApiProviderChanged(provider);
+                weatherBloc.getCurrentForecast(widget.arguments.location);
+              },
+              apiProvider: weatherBloc.weatherApiProvider,
+              apiProviders: WeatherApiProvider.values,
+              t: appLocalizations!),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: deviceHeight! * .70,
+              child: ForecastHeroCard(
+                  location: settingsBloc.activeLocation,
+                  onLocationChangeRequest: () {
+                    Navigator.pushNamed(context, '/search');
+                  },
+                  isUpdating: weatherBloc.isUpdating,
+                  weatherForecast: weatherBloc.currentForecast,
+                  weatherUnit: weatherBloc.weatherUnit,
+                  t: appLocalizations!),
+            ),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: deviceHeight! * .3,
+              child: HourlyForecasts(
+                  t: appLocalizations!,
+                  isUpdating: weatherBloc.isUpdating,
+                  hourlyForecast: weatherBloc.hourlyForecast),
+            ),
+          )
+        ],
       ),
     );
   }

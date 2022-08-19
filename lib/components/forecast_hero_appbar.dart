@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-PlatformAppBar forecastHeroAppBar(
+Widget forecastHeroAppBar(
         {required BuildContext context,
         required List<WeatherApiProvider> apiProviders,
         required Function(WeatherApiProvider) onApiProviderChanged,
@@ -16,12 +16,10 @@ PlatformAppBar forecastHeroAppBar(
         required Stream<WeatherApiProvider> apiProvider,
         required Stream<WeatherUnits> weatherUnit,
         required AppLocalizations t}) =>
-    PlatformAppBar(
-      material: (context, _) => MaterialAppBarData(elevation: 0),
-      cupertino: (context, _) => CupertinoNavigationBarData(
-          border: const Border(),
-          padding: const EdgeInsetsDirectional.only(start: 0, end: 8)),
-      trailingActions: [
+    SliverAppBar(
+      elevation: 0,
+      primary: true,
+      actions: [
         PlatformPopupMenu(
             options: [
               PopupMenuOption(
