@@ -23,7 +23,7 @@ class Constants {
 
   static final Color SECONDARY_COLOR = Colors.yellow.shade800;
   static final Color SECONDARY_COLOR_DARK = Colors.yellow.shade900;
-  static final Color SECONDARY_COLOR_LIGHT = Colors.yellow.shade700;
+  static final Color SECONDARY_COLOR_LIGHT = Colors.yellow.shade600;
 
   static const Color ERROR_COLOR = Color.fromRGBO(237, 46, 126, 1);
   static const Color ERROR_COLOR_DARK = Color.fromRGBO(195, 0, 82, 1);
@@ -41,12 +41,13 @@ class Constants {
   static const Color TEXT_LABEL_COLOR = Color.fromRGBO(110, 113, 145, 1);
   static const Color TEXT_LABEL_COLOR_DARK = Color.fromRGBO(145, 142, 110, 1.0);
   static const Color PLACEHOLDER_COLOR = Color.fromRGBO(160, 163, 189, 1);
-  static const Color PLACEHOLDER_COLOR_DARK = Color.fromRGBO(95, 92, 66, 1.0);
+  static const Color PLACEHOLDER_COLOR_DARK =
+      Color.fromRGBO(110, 110, 110, 1.0);
   static const Color LINE_COLOR = Color.fromRGBO(214, 216, 231, 1);
   static const Color LINE_COLOR_DARK = Color.fromRGBO(41, 39, 24, 1.0);
 
   static const Color BACKGROUND_COLOR = Color.fromRGBO(239, 243, 247, 1.0);
-  static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(16, 12, 8, 1.0);
+  static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(12, 9, 38, 1.0);
   static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(239, 240, 246, 1);
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(16, 15, 9, 1.0);

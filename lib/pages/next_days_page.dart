@@ -8,7 +8,7 @@ class NextDaysPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: Text('7 Days'),
+        title: const Text('7 Days'),
       ),
       body: Column(),
     );

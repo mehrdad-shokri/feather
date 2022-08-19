@@ -28,15 +28,17 @@ class CityCard extends StatelessWidget {
         margin: shouldAddMargin ? const EdgeInsets.only(top: 16) : null,
         key: key,
         child: PlatformElevatedButton(
-            color: Colors.white,
+            color: cardColor(context),
             onPressed: onPress,
             padding: Constants.CARD_INNER_PADDING,
             material: (_, __) => MaterialElevatedButtonData(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                )))),
+                style: ElevatedButton.styleFrom(
+                    primary: cardColor(context),
+                    onPrimary: textColor(context),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)))),
             cupertino: (_, __) => CupertinoElevatedButtonData(
+                color: cardColor(context),
                 borderRadius: BorderRadius.circular(16)),
             child: Stack(
               alignment: Alignment.topRight,
@@ -45,7 +47,7 @@ class CityCard extends StatelessWidget {
               children: [
                 if (location.forecast != null)
                   Positioned(
-                    top: 40,
+                    top: 32,
                     right: 0,
                     child: Lottie.asset(
                         'assets/lottie/${location.forecast!.lottieAnimation}.json',
@@ -135,8 +137,11 @@ class CityCard extends StatelessWidget {
                                 if (location.forecast!.temp != null) ...[
                                   TemperatureIcon(
                                       unit: location.forecast!.unit,
-                                      temperature:
-                                          location.forecast!.temp.toString()),
+                                      temperature: location
+                                              .forecast!.tempFeelsLike
+                                              ?.round()
+                                              .toString() ??
+                                          ''),
                                   const SizedBox(
                                     height: 4,
                                   ),

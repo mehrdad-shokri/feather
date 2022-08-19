@@ -15,6 +15,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CitySearchPage extends StatefulWidget {
   const CitySearchPage({Key? key}) : super(key: key);
@@ -26,6 +27,8 @@ class CitySearchPage extends StatefulWidget {
 class _CitySearchPageState extends State<CitySearchPage>
     with SingleTickerProviderStateMixin {
   String? searchedPhrase;
+  AppLocalizations? appLocalizations;
+
   late GeoBloc geoBloc;
   late PositionBloc positionBloc;
   late WeatherBloc weatherBloc;
@@ -52,8 +55,11 @@ class _CitySearchPageState extends State<CitySearchPage>
 
   @override
   Widget build(BuildContext context) {
+    appLocalizations ??= AppLocalizations.of(context);
+
     return PlatformScaffold(
         iosContentPadding: true,
+        backgroundColor: backgroundColor(context),
         body: SafeArea(
             bottom: false,
             top: false,
@@ -61,50 +67,107 @@ class _CitySearchPageState extends State<CitySearchPage>
             right: false,
             child: CustomScrollView(
               slivers: [
-                CupertinoSliverNavigationBar(
-                  padding: EdgeInsetsDirectional.zero,
-                  largeTitle: SearchField(
-                    cities: geoBloc.searchedLocations,
-                    onGetCurrentPosition: () {
-                      positionBloc.getCurrentPosition(
-                          onPositionReceived: (position) {
-                            geoBloc.reverseGeoCode(
-                                position.latitude, position.longitude,
-                                onLocation: (location) {
-                              onLocationUpdated(location);
-                            });
-                          },
-                          onError: (e) {
-                            Fluttertoast.showToast(
-                                msg: e.toString(),
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: Constants.TOAST_DEFAULT_LOCATION,
-                                timeInSecForIosWeb: 3,
-                                backgroundColor: Constants.ERROR_COLOR,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-                          },
-                          onPermissionDenied: () {},
-                          onPermissionDeniedForever: () {});
-                    },
-                    loadingCurrentPosition: positionBloc
-                        .requestingCurrentLocation
-                        .mergeWith([positionBloc.requestingLocationPermission]),
-                    onSearchCity: (query) {
-                      setState(() {
+                PlatformWidget(
+                  cupertino: (context, _) => CupertinoSliverNavigationBar(
+                    padding: EdgeInsetsDirectional.zero,
+                    largeTitle: SearchField(
+                      cities: geoBloc.searchedLocations,
+                      onGetCurrentPosition: () {
+                        positionBloc.getCurrentPosition(
+                            onPositionReceived: (position) {
+                              geoBloc.reverseGeoCode(
+                                  position.latitude, position.longitude,
+                                  onLocation: (location) {
+                                onLocationUpdated(location);
+                              });
+                            },
+                            onError: (e) {
+                              Fluttertoast.showToast(
+                                  msg: e.toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: Constants.TOAST_DEFAULT_LOCATION,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Constants.ERROR_COLOR,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            },
+                            onPermissionDenied: () {},
+                            onPermissionDeniedForever: () {});
+                      },
+                      loadingCurrentPosition:
+                          positionBloc.requestingCurrentLocation.mergeWith(
+                              [positionBloc.requestingLocationPermission]),
+                      onSearchCity: (query) {
+                        setState(() {
+                          searchedPhrase = query;
+                          geoBloc.searchQuery(query);
+                        });
+                      },
+                      onAutoCompleteCity: (query) {
                         searchedPhrase = query;
                         geoBloc.searchQuery(query);
-                      });
-                    },
-                    onAutoCompleteCity: (query) {
-                      searchedPhrase = query;
-                      geoBloc.searchQuery(query);
-                    },
+                      },
+                    ),
+                    border: Border(
+                        bottom:
+                            BorderSide(color: dividerColor(context), width: 1)),
+                    middle: Text(
+                      appLocalizations!.chooseCity,
+                      style: TextStyle(
+                          color: headingColor(context),
+                          fontSize: Constants.H6_FONT_SIZE,
+                          fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                    ),
                   ),
-                  border: Border(
-                      bottom:
-                          BorderSide(color: dividerColor(context), width: 1)),
-                  middle: const Text('Choose a city'),
+                  material: (context, _) => SliverAppBar(
+                    title: Text(
+                      appLocalizations!.chooseCity,
+                      style: TextStyle(
+                          color: headingColor(context),
+                          fontSize: Constants.H6_FONT_SIZE,
+                          fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                    ),
+                    flexibleSpace: SearchField(
+                      cities: geoBloc.searchedLocations,
+                      onGetCurrentPosition: () {
+                        positionBloc.getCurrentPosition(
+                            onPositionReceived: (position) {
+                              geoBloc.reverseGeoCode(
+                                  position.latitude, position.longitude,
+                                  onLocation: (location) {
+                                onLocationUpdated(location);
+                              });
+                            },
+                            onError: (e) {
+                              Fluttertoast.showToast(
+                                  msg: e.toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: Constants.TOAST_DEFAULT_LOCATION,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Constants.ERROR_COLOR,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            },
+                            onPermissionDenied: () {},
+                            onPermissionDeniedForever: () {});
+                      },
+                      loadingCurrentPosition:
+                          positionBloc.requestingCurrentLocation.mergeWith(
+                              [positionBloc.requestingLocationPermission]),
+                      onSearchCity: (query) {
+                        setState(() {
+                          searchedPhrase = query;
+                          geoBloc.searchQuery(query);
+                        });
+                      },
+                      onAutoCompleteCity: (query) {
+                        searchedPhrase = query;
+                        geoBloc.searchQuery(query);
+                      },
+                    ),
+                    // expandedHeight: 350,
+                    // collapsedHeight: 200,
+                  ),
                 ),
                 PlatformWidget(
                   cupertino: (_, __) => CupertinoSliverRefreshControl(

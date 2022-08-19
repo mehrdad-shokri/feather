@@ -56,9 +56,8 @@ bool isSameOrAfterTime(DateTime a, DateTime b) =>
 bool isSameOrBeforeTime(DateTime a, DateTime b) =>
     a.difference(b).inSeconds <= 0;
 
-bool isNight(DateTime sunrise, DateTime sunset) =>
-    isSameOrAfterTime(DateTime.now().toUtc(), sunset) ||
-    isSameOrAfterTime(sunrise, DateTime.now().toUtc());
+bool isNight(DateTime date, DateTime sunrise, DateTime sunset) =>
+    isSameOrAfterTime(date, sunset) || isSameOrAfterTime(sunrise, date);
 
 String formatDate(DateTime date, {String? format}) {
   if (format != null) {
@@ -68,7 +67,6 @@ String formatDate(DateTime date, {String? format}) {
 }
 
 String formatTime(DateTime date) {
-  print(date);
   String timeFormat = DateFormat('hh:mm a').format(date);
   if (timeFormat.startsWith('0')) {
     return timeFormat.substring(

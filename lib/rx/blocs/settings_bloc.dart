@@ -2,8 +2,6 @@ import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/rx_bloc.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/geo_providers.dart';
-import 'package:client/types/weather_providers.dart';
-import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/utils.dart';
 import 'package:enum_to_string/enum_to_string.dart';
@@ -17,7 +15,6 @@ class SettingsBloc extends RxBloc {
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
   final _activeLocation = BehaviorSubject<Location>();
-
   final _geoApiProvider = BehaviorSubject<GeoApiProvider>();
   final _themeMode = BehaviorSubject<Brightness>();
 

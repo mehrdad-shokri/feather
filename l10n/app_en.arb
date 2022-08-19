@@ -114,5 +114,11 @@
     "description": "en",
     "type": "text",
     "placeholders": {}
+  },
+  "chooseCity": "Choose a city",
+  "@chooseCity": {
+    "description": "Choose city",
+    "type": "text",
+    "placeholders": {}
   }
 }

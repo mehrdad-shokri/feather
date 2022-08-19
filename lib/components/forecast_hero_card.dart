@@ -41,6 +41,7 @@ class ForecastHeroCard extends StatelessWidget {
       color: backgroundColor(context),
       child: Container(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+        margin: const EdgeInsets.only(bottom: 8),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
@@ -230,8 +231,9 @@ class ForecastHeroCard extends StatelessWidget {
                                       return WeatherForecastIcon(
                                         assetDir:
                                             'assets/svg/chance-of-rain.svg',
-                                        value:
-                                            '${forecasts.first.pop == 0 ? '-' : ((forecasts.first.pop!) * 100).toInt()}%',
+                                        value: forecasts.first.pop == 0
+                                            ? '-'
+                                            : '${((forecasts.first.pop!) * 100).toInt()}%',
                                         title: t.chanceOfRain,
                                       );
                                     }

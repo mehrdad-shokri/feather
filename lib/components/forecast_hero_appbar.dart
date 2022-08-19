@@ -3,7 +3,6 @@ import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
 import 'package:client/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -13,9 +12,11 @@ class ForecastHeroAppbar extends StatelessWidget {
   final Function(WeatherApiProvider) onApiProviderChanged;
   final Function(WeatherUnits) onWeatherUnitChanged;
   final Function(Brightness?) onThemeChange;
+  final Function(Locale) onLocaleChange;
   final Stream<WeatherApiProvider> apiProvider;
   final Stream<WeatherUnits> weatherUnit;
   final List<ThemeMode> themes;
+  final List<Locale> locales;
   final Stream<Brightness> theme;
   final AppLocalizations t;
 
@@ -29,6 +30,8 @@ class ForecastHeroAppbar extends StatelessWidget {
       required this.themes,
       required this.theme,
       required this.onThemeChange,
+      required this.locales,
+      required this.onLocaleChange,
       required this.t})
       : super(key: key);
 
@@ -70,6 +73,19 @@ class ForecastHeroAppbar extends StatelessWidget {
                       padding: EdgeInsets.zero, child: Text(t.theme)),
                   cupertino: (context, target) =>
                       CupertinoPopupMenuOptionData(child: Text(t.theme))),
+              PopupMenuOption(
+                  onTap: (_) {
+                    showPlatformActionSheet(
+                        context: context,
+                        title: t.language,
+                        items: locales,
+                        translateItem: (Locale e) => translatedLocale(e, t),
+                        onSelect: (Locale e) => onLocaleChange(e));
+                  },
+                  material: (context, target) => MaterialPopupMenuOptionData(
+                      padding: EdgeInsets.zero, child: Text(t.language)),
+                  cupertino: (context, target) =>
+                      CupertinoPopupMenuOptionData(child: Text(t.language))),
               PopupMenuOption(
                   onTap: (_) {},
                   material: (context, target) => MaterialPopupMenuOptionData(

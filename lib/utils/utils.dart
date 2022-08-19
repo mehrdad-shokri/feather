@@ -1,8 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'dart:convert';
 import 'dart:math';
 
@@ -10,6 +5,8 @@ import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 String languageCodeFromLocaleName(String localeName) =>
@@ -83,6 +80,15 @@ String translateThemeMode(ThemeMode themeMode, AppLocalizations t) {
       return t.themeModeDark;
     case ThemeMode.system:
       return t.themeModeSystem;
+    default:
+      return '';
+  }
+}
+
+String translatedLocale(Locale locale, AppLocalizations t) {
+  switch (locale.languageCode) {
+    case 'en':
+      return t.languageEn;
     default:
       return '';
   }

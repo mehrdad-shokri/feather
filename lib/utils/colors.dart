@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 Color headingColor(BuildContext context) {
   return isDark(context)
@@ -43,8 +44,12 @@ Color appbarBackIconColor(BuildContext context) {
 }
 
 bool isDark(BuildContext context) {
-  if (Platform.isIOS || Platform.isMacOS) {
-    CupertinoTheme.of(context).brightness == Brightness.dark;
+  if (isCupertino(context)) {
+    return CupertinoTheme.of(context).brightness == Brightness.dark;
   }
   return Theme.of(context).brightness == Brightness.dark;
+}
+
+Color cardColor(BuildContext context) {
+  return isDark(context) ? Colors.grey.shade800 : Colors.grey.shade100;
 }

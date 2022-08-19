@@ -6,6 +6,7 @@ import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/home_page_arguments.dart';
 import 'package:client/types/weather_providers.dart';
+import 'package:client/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     weatherBloc.getCurrentForecast(widget.arguments.location,
         initialForecast: widget.arguments.location.forecast);
     weatherBloc.getHourlyForecast(widget.arguments.location);
+    weatherBloc.getDailyForecast(widget.arguments.location);
   }
 
   @override
@@ -47,9 +49,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     appLocalizations ??= AppLocalizations.of(context);
     deviceHeight ??= MediaQuery.of(context).size.height;
-    print('${deviceHeight} ${deviceHeight! * .75}');
     return PlatformScaffold(
       iosContentPadding: true,
+      backgroundColor: backgroundColor(context),
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
         slivers: [
@@ -61,13 +63,27 @@ class _HomePageState extends State<HomePage> {
               onApiProviderChanged: (provider) {
                 weatherBloc.onWeatherApiProviderChanged(provider);
                 weatherBloc.getCurrentForecast(widget.arguments.location);
+                weatherBloc.getHourlyForecast(widget.arguments.location);
               },
               apiProvider: weatherBloc.weatherApiProvider,
               apiProviders: WeatherApiProvider.values,
               theme: settingsBloc.themeMode,
               themes: ThemeMode.values,
-              onThemeChange: (Brightness? brightness) =>
-                  settingsBloc.onThemeChanged(brightness),
+              locales: AppLocalizations.supportedLocales,
+              onLocaleChange: (Locale locale) {
+                settingsBloc.onLocaleChanged(locale);
+                if (ServiceProvider.getInstance().localeChangeCallback !=
+                    null) {
+                  ServiceProvider.getInstance().localeChangeCallback!(locale);
+                }
+              },
+              onThemeChange: (Brightness? brightness) {
+                settingsBloc.onThemeChanged(brightness);
+                if (ServiceProvider.getInstance().themeChangeCallback != null) {
+                  ServiceProvider.getInstance()
+                      .themeChangeCallback!(brightness);
+                }
+              },
               t: appLocalizations!),
           SliverToBoxAdapter(
             child: SizedBox(

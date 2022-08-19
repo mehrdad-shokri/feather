@@ -1,5 +1,4 @@
 import 'package:client/models/weather_forecast.dart';
-import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
 import 'package:client/utils/hex_color.dart';

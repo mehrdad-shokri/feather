@@ -3,6 +3,7 @@ import 'package:client/rx/services/connectivity_service.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/position_service.dart';
 import 'package:client/rx/services/shared_prefs_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class ServiceProvider {
@@ -10,7 +11,8 @@ class ServiceProvider {
   late PositionService positionService;
   late SharedPrefsService sharedPrefsService;
   late EnvService envService;
-  Location? activeLocation;
+  Function? themeChangeCallback;
+  Function? localeChangeCallback;
 
   ServiceProvider() {
     connectivityService = ConnectivityService();
@@ -42,7 +44,9 @@ class ServiceProvider {
   static ServiceProvider getInstance() =>
       GetIt.I.get<ServiceProvider>(instanceName: 'appProvider');
 
-  void setActiveLocation(Location location) {
-    activeLocation = location;
-  }
+  void setThemeChangeListener(Function(Brightness? theme) callback) =>
+      themeChangeCallback = callback;
+
+  void setLocaleChangeListener(Function(Locale theme) callback) =>
+      localeChangeCallback = callback;
 }

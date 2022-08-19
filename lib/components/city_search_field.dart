@@ -1,4 +1,5 @@
 import 'package:client/models/location.dart';
+import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,10 +27,10 @@ class SearchField extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.only(right: 16, bottom: 8),
         decoration: BoxDecoration(
-          color: isCupertino(context)
-              ? CupertinoTheme.of(context).barBackgroundColor
-              : Theme.of(context).appBarTheme.backgroundColor,
-        ),
+            // color: isCupertino(context)
+            //     ? CupertinoTheme.of(context).barBackgroundColor
+            //     : Theme.of(context).appBarTheme.backgroundColor,
+            ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -37,6 +38,10 @@ class SearchField extends StatelessWidget {
                 child: PlatformWidget(
               cupertino: (_, __) => CupertinoSearchTextField(
                 placeholder: 'Search',
+                style: TextStyle(
+                    color: textColor(context),
+                    fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                    fontSize: Constants.S1_FONT_SIZE),
                 onChanged: onAutoCompleteCity,
                 onSubmitted: onSearchCity,
                 autocorrect: false,

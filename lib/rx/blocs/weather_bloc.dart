@@ -9,6 +9,7 @@ import 'package:client/rx/services/shared_prefs_service.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
+import 'package:client/utils/date.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,8 +27,8 @@ class WeatherBloc extends RxBloc {
   final _weatherApiProvider = BehaviorSubject<WeatherApiProvider>();
   final _weatherApiUnit = BehaviorSubject<WeatherUnits>();
 
-  Stream<bool> get isUpdating => _updatingCurrentForecast.stream
-      .mergeWith([_updatingHourlyForecast.stream]);
+  Stream<bool> get isUpdating => _updatingCurrentForecast.stream.mergeWith(
+      [_updatingHourlyForecast.stream, _updatingDailyForecast.stream]);
 
   Stream<WeatherForecast> get currentForecast => _currentForecast.stream;
 
@@ -64,11 +65,22 @@ class WeatherBloc extends RxBloc {
       _weatherApi = _instantiateWeatherApi(_weatherApiProvider.value, event);
       if (_lastLocation != null) getCurrentForecast(_lastLocation!);
     });
+    _dailyForecast.listen((value) {
+      if (_hourlyForecast.hasValue) {
+        List<WeatherForecast> hourlyForecasts = _hourlyForecast.value.map((e) {
+          WeatherForecast day =
+              value.firstWhere((element) => isSameDay(e.date, element.date));
+          e.sunset = day.sunset;
+          e.sunrise = day.sunrise;
+          return e;
+        }).toList();
+        _hourlyForecast.add(hourlyForecasts);
+      }
+    });
   }
 
   WeatherApi _instantiateWeatherApi(
       WeatherApiProvider provider, WeatherUnits unit) {
-    print('_instantiateWeatherApi ${unit}');
     switch (provider) {
       case WeatherApiProvider.openWeatherMap:
         return OpenWeatherMapWeatherApi(
@@ -88,15 +100,12 @@ class WeatherBloc extends RxBloc {
     }
     _lastLocation = location;
     _updatingCurrentForecast.add(true);
-    print('send request ${_weatherApiUnit.value}');
     addFutureSubscription(_weatherApi.current(location.lat, location.lon),
         (WeatherForecast event) {
       _updatingCurrentForecast.add(false);
       _currentForecast.add(event);
       if (onData != null) onData(event);
     }, (e) {
-      print('error');
-      print(e);
       _updatingCurrentForecast.add(false);
     });
   }
@@ -107,18 +116,29 @@ class WeatherBloc extends RxBloc {
         _weatherApi.hourlyForecast(location.lat, location.lon),
         (List<WeatherForecast> event) {
       _updatingHourlyForecast.add(false);
-      _hourlyForecast.add(event);
+      if (_dailyForecast.hasValue) {
+        List<WeatherForecast> daily = _dailyForecast.value;
+        _hourlyForecast.add(event.map((e) {
+          WeatherForecast day = _dailyForecast.value
+              .firstWhere((element) => isSameDay(element.date, e.date));
+          e.sunrise = day.sunrise;
+          e.sunset = day.sunset;
+          return e;
+        }).toList());
+      } else {
+        _hourlyForecast.add(event);
+      }
     }, (e) {
       _updatingHourlyForecast.add(false);
     });
   }
 
-  void getDailyForecast(double lat, double lon) {
+  void getDailyForecast(Location location) {
     _updatingDailyForecast.add(true);
-    addFutureSubscription(_weatherApi.dailyForecast(lat, lon),
-        (List<WeatherForecast>? event) {
+    addFutureSubscription(_weatherApi.dailyForecast(location.lat, location.lon),
+        (List<WeatherForecast> event) {
       _updatingDailyForecast.add(false);
-      if (event != null) _dailyForecast.add(event);
+      _dailyForecast.add(event);
     }, (e) {
       _updatingDailyForecast.add(false);
     });

@@ -37,26 +37,25 @@ class FeatherAppState extends State<FeatherApp> {
     serviceProvider = ServiceProvider();
     try {
       await serviceProvider.onCreate();
-      settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
-      settingsBloc.themeMode.listen((event) {
+      serviceProvider.setThemeChangeListener((event) {
         setState(() {
-          theme = event;
+          theme = event ?? WidgetsBinding.instance.window.platformBrightness;
         });
       });
-      settingsBloc.locale.listen((event) {
+      serviceProvider.setLocaleChangeListener((event) {
         setState(() {
           locale = event;
         });
       });
-    } catch (e) {
-      //  Catch error by crashlytics
-    }
+      settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
+    } catch (e) {}
   }
 
   @override
   void dispose() {
     super.dispose();
     serviceProvider.onDispose();
+    print('dispse');
   }
 
   @override

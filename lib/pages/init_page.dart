@@ -23,6 +23,7 @@ class InitPage extends StatelessWidget {
             stream: settingsBloc.isFirstVisit,
             builder: (contest, snapshot) {
               bool? isFirstVisit = snapshot.data as bool?;
+              print('isFirstVisit ${isFirstVisit}');
               if (isFirstVisit == null) return const LoadingPage();
               if (isFirstVisit) {
                 return const IntroPage();
@@ -31,6 +32,7 @@ class InitPage extends StatelessWidget {
                 stream: settingsBloc.activeLocation,
                 builder: (context, snapshot) {
                   Location? location = snapshot.data as Location?;
+                  print('location ${location}');
                   if (location == null) {
                     return const LoadingPage();
                   }

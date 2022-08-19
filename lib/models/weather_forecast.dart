@@ -19,8 +19,8 @@ class WeatherForecast {
   final double? temp;
   final int? pressureSeaLevel;
   final int? pressureGroundLevel;
-  final DateTime? sunrise;
-  final DateTime? sunset;
+  DateTime? _sunrise;
+  DateTime? _sunset;
   final String? cityName;
   final double? rainVolume1h;
   final double? rainVolume3h;
@@ -40,7 +40,7 @@ class WeatherForecast {
   final double lon;
   final double? pop;
   final int weatherCode;
-  final String lottieAnimation;
+  String lottieAnimation;
   final WeatherUnits unit;
 
   WeatherForecast(
@@ -64,8 +64,8 @@ class WeatherForecast {
       this.tempFeelsLike,
       this.visibility,
       this.pressureSeaLevel,
-      this.sunrise,
-      this.sunset,
+      required DateTime? sunrise,
+      required DateTime? sunset,
       this.cityName,
       this.countryCode,
       this.rainVolume1h,
@@ -83,7 +83,9 @@ class WeatherForecast {
       this.pressureGroundLevel,
       this.rainForecast,
       this.snowForecast,
-      this.pop});
+      this.pop})
+      : _sunrise = sunrise,
+        _sunset = sunset;
 
   factory WeatherForecast.fromOpenWeatherMapCurrentJson(
           Map<String, dynamic> data,
@@ -101,6 +103,7 @@ class WeatherForecast {
         weatherDescription: (data['weather'] as List).first['description'],
         lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
             (data['weather'] as List).first['id'],
+            DateTime.now().toUtc(),
             DateTime.fromMillisecondsSinceEpoch(data['sys']['sunrise'] * 1000,
                 isUtc: true),
             DateTime.fromMillisecondsSinceEpoch(data['sys']['sunset'] * 1000,
@@ -163,6 +166,8 @@ class WeatherForecast {
           weatherCode: (data['weather'] as List).first['id'],
           lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
               (data['weather'] as List).first['id'],
+              DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
+                  isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(data['sunrise'] * 1000,
                   isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(data['sunset'] * 1000,
@@ -229,6 +234,8 @@ class WeatherForecast {
           weatherCode: (data['weather'] as List).first['id'],
           lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
               (data['weather'] as List).first['id'],
+              DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
+                  isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(sunrise * 1000, isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(sunset * 1000, isUtc: true)),
           tempFeelsLike: double.parse(data['main']['feels_like'].toString()),
@@ -271,7 +278,7 @@ class WeatherForecast {
               isUtc: true));
 
   static String _openWeatherMapWeatherCodeToLottieAnimation(
-      int weatherCode, DateTime sunrise, DateTime sunset) {
+      int weatherCode, DateTime date, DateTime? sunrise, DateTime? sunset) {
     switch (weatherCode) {
       case 200:
       case 201:
@@ -304,7 +311,9 @@ class WeatherForecast {
       case 502:
       case 503:
       case 504:
-        if (isNight(sunrise, sunset)) {
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
           return 'rain_night';
         }
         return 'rain_day';
@@ -320,7 +329,9 @@ class WeatherForecast {
       case 620:
       case 621:
       case 622:
-        if (isNight(sunrise, sunset)) {
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
           return 'snow_night';
         }
         return 'snow_day';
@@ -336,12 +347,16 @@ class WeatherForecast {
       case 781:
         return 'mist';
       case 800:
-        if (isNight(sunrise, sunset)) {
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
           return 'clear';
         }
         return 'sunny';
       case 801:
-        if (isNight(sunrise, sunset)) {
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
           return 'cloud_night';
         }
         return 'cloud_day';
@@ -368,4 +383,20 @@ class WeatherForecast {
   int get hashCode => (lat * lon).toInt();
 
   String get id => '$lat-$lon';
+
+  set sunrise(DateTime? value) {
+    _sunrise = value;
+    lottieAnimation = _openWeatherMapWeatherCodeToLottieAnimation(
+        weatherCode, date, value, _sunset);
+  }
+
+  set sunset(DateTime? value) {
+    _sunset = value;
+    lottieAnimation = _openWeatherMapWeatherCodeToLottieAnimation(
+        weatherCode, date, _sunrise, value);
+  }
+
+  DateTime? get sunrise => _sunrise;
+
+  DateTime? get sunset => _sunset;
 }
