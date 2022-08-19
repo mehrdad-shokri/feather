@@ -65,5 +65,12 @@ String formatDate(DateTime date) {
 }
 
 String formatTime(DateTime date) {
-  return DateFormat('KK:mm a').format(date);
+  print(date);
+  String timeFormat = DateFormat('hh:mm a').format(date);
+  if (timeFormat.startsWith('0')) {
+    return timeFormat.substring(
+      1,
+    );
+  }
+  return timeFormat;
 }

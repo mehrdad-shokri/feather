@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   late SettingsBloc settingsBloc;
   late WeatherBloc weatherBloc;
   AppLocalizations? appLocalizations;
+  double? deviceHeight;
 
   @override
   void initState() {
@@ -45,6 +46,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     appLocalizations ??= AppLocalizations.of(context);
+    deviceHeight ??= MediaQuery.of(context).size.height;
+    print('${deviceHeight} ${deviceHeight! * .75}');
     return PlatformScaffold(
       appBar: forecastHeroAppBar(
           context: context,
@@ -63,29 +66,32 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Flexible(
-              flex: 326,
-              child: ForecastHeroCard(
-                  location: settingsBloc.activeLocation,
-                  onLocationChangeRequest: () {
-                    Navigator.pushNamed(context, '/search');
-                  },
-                  isUpdating: weatherBloc.isUpdating,
-                  weatherForecast: weatherBloc.currentForecast,
-                  weatherUnit: weatherBloc.weatherUnit,
-                  t: appLocalizations!),
-            ),
-            Flexible(
-              flex: 100,
-              child: HourlyForecasts(
-                  t: appLocalizations!,
-                  isUpdating: weatherBloc.isUpdating,
-                  hourlyForecast: weatherBloc.hourlyForecast),
-            )
-          ],
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                height: deviceHeight! * .70,
+                child: ForecastHeroCard(
+                    location: settingsBloc.activeLocation,
+                    onLocationChangeRequest: () {
+                      Navigator.pushNamed(context, '/search');
+                    },
+                    isUpdating: weatherBloc.isUpdating,
+                    weatherForecast: weatherBloc.currentForecast,
+                    weatherUnit: weatherBloc.weatherUnit,
+                    t: appLocalizations!),
+              ),
+              SizedBox(
+                height: deviceHeight! * .3,
+                child: HourlyForecasts(
+                    t: appLocalizations!,
+                    isUpdating: weatherBloc.isUpdating,
+                    hourlyForecast: weatherBloc.hourlyForecast),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -89,15 +89,23 @@ class HourlyForecasts extends StatelessWidget {
                   }
                   return Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: ListView.builder(
-                      itemCount: forecasts.length,
-                      scrollDirection: Axis.horizontal,
-                      itemExtent: 120,
-                      itemBuilder: (context, index) => HourlyForecast(
-                        forecasts.elementAt(index),
-                        key: Key(forecasts.elementAt(index).id),
-                      ),
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                            child: ListView.builder(
+                          itemCount: forecasts.length,
+                          scrollDirection: Axis.horizontal,
+                          itemExtent: 100,
+                          itemBuilder: (context, index) => HourlyForecast(
+                            forecasts.elementAt(index),
+                            key: Key(forecasts.elementAt(index).id),
+                          ),
+                        ))
+                      ],
                     ),
                   ));
                 },

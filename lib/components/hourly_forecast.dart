@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class HourlyForecast extends StatelessWidget {
+  final EdgeInsets? margin;
   final WeatherForecast weatherForecast;
 
-  const HourlyForecast(this.weatherForecast, {Key? key}) : super(key: key);
+  const HourlyForecast(this.weatherForecast, {Key? key, this.margin})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       margin: const EdgeInsets.symmetric(horizontal: 8),
+      width: 80,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           gradient: LinearGradient(
@@ -29,25 +32,20 @@ class HourlyForecast extends StatelessWidget {
               tileMode: TileMode.clamp)),
       clipBehavior: Clip.antiAlias,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             formatTime(weatherForecast.date),
             style: const TextStyle(
                 color: Colors.white,
-                fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                fontWeight: Constants.MEDIUM_FONT_WEIGHT,
                 fontSize: Constants.CAPTION_FONT_SIZE),
-          ),
-          const SizedBox(
-            height: 4,
           ),
           Expanded(
               child: Lottie.asset(
                   'assets/lottie/${weatherForecast.lottieAnimation}.json',
                   alignment: Alignment.center,
-                  fit: BoxFit.cover)),
-          const SizedBox(
-            height: 4,
-          ),
+                  fit: BoxFit.contain)),
           Text(
             '${weatherForecast.tempFeelsLike?.round()}',
             style: const TextStyle(

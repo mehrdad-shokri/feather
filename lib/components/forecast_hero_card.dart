@@ -162,22 +162,15 @@ class ForecastHeroCard extends StatelessWidget {
                                       color: Colors.white,
                                       fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                                 ),
-                                StreamBuilder(
-                                  stream: weatherUnit,
-                                  builder: (context, snapshot) {
-                                    WeatherUnits? unit =
-                                        snapshot.data as WeatherUnits?;
-                                    return Positioned(
-                                      top: -4,
-                                      right: -8,
-                                      child: SvgPicture.asset(
-                                        'assets/svg/degrees.svg',
-                                        color: Colors.white,
-                                        width: 8,
-                                        height: 8,
-                                      ),
-                                    );
-                                  },
+                                Positioned(
+                                  top: 0,
+                                  right: -12,
+                                  child: SvgPicture.asset(
+                                    'assets/svg/degrees.svg',
+                                    color: Colors.white,
+                                    width: 8,
+                                    height: 8,
+                                  ),
                                 )
                               ],
                             ),
