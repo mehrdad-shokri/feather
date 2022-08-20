@@ -173,6 +173,8 @@ class _CitySearchPageState extends State<CitySearchPage>
                 ),
                 PlatformWidget(
                   cupertino: (_, __) => CupertinoSliverRefreshControl(
+                    refreshTriggerPullDistance: 250,
+                    refreshIndicatorExtent: 50,
                     onRefresh: () async {
                       await geoBloc.onRefresh(searchedPhrase);
                     },

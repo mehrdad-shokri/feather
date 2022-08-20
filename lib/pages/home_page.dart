@@ -57,7 +57,8 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           PlatformWidget(
             cupertino: (_, __) => CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 200,
+              refreshTriggerPullDistance: 250,
+              refreshIndicatorExtent: 50,
               onRefresh: () async {
                 await weatherBloc.refresh(widget.arguments.location);
               },
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage> {
               onApiProviderChanged: (provider) {
                 weatherBloc.onWeatherApiProviderChanged(provider);
               },
+              currentForecast: weatherBloc.currentForecast,
               apiProvider: weatherBloc.weatherApiProvider,
               apiProviders: WeatherApiProvider.values,
               theme: settingsBloc.themeMode,
@@ -107,13 +109,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: deviceHeight! * .3,
-              child: HourlyForecasts(
-                  t: appLocalizations!,
-                  isUpdating: weatherBloc.isUpdating,
-                  hourlyForecast: weatherBloc.hourlyForecast),
-            ),
+            child: HourlyForecasts(
+                t: appLocalizations!,
+                isUpdating: weatherBloc.isUpdating,
+                hourlyForecast: weatherBloc.hourlyForecast),
           )
         ],
       ),

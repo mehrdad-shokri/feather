@@ -83,8 +83,8 @@ class HourlyForecasts extends StatelessWidget {
                 if (forecasts == null) {
                   return Container();
                 }
-                return Expanded(
-                    child: Padding(
+                return Container(
+                  height: 140,
                   padding: const EdgeInsets.only(bottom: 16),
                   child: ListView.builder(
                     itemCount: forecasts.length,
@@ -95,7 +95,7 @@ class HourlyForecasts extends StatelessWidget {
                       key: Key(forecasts.elementAt(index).id),
                     ),
                   ),
-                ));
+                );
               },
             );
           },

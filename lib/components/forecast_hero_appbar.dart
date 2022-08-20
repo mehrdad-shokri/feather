@@ -1,3 +1,4 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
@@ -18,6 +19,7 @@ class ForecastHeroAppbar extends StatelessWidget {
   final List<ThemeMode> themes;
   final List<Locale> locales;
   final Stream<Brightness> theme;
+  final Stream<WeatherForecast> currentForecast;
   final AppLocalizations t;
 
   const ForecastHeroAppbar(
@@ -32,118 +34,139 @@ class ForecastHeroAppbar extends StatelessWidget {
       required this.onThemeChange,
       required this.locales,
       required this.onLocaleChange,
+      required this.currentForecast,
       required this.t})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
-      elevation: 0,
-      primary: true,
-      actions: [
-        PlatformPopupMenu(
-            options: [
-              PopupMenuOption(
-                  onTap: (_) {
-                    showPlatformActionSheet(
-                        context: context,
-                        title: t.dataSource,
-                        items: apiProviders,
-                        cancelText: t.cancel,
-                        translateItem: (WeatherApiProvider e) =>
-                            translateWeatherProvider(e, t),
-                        onSelect: (WeatherApiProvider e) =>
-                            onApiProviderChanged(e));
-                  },
-                  material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero, child: Text(t.dataSource)),
-                  cupertino: (context, target) =>
-                      CupertinoPopupMenuOptionData(child: Text(t.dataSource))),
-              PopupMenuOption(
-                  onTap: (_) {
-                    showPlatformActionSheet(
-                        context: context,
-                        title: t.theme,
-                        items: themes,
-                        cancelText: t.cancel,
-                        translateItem: (ThemeMode e) =>
-                            translateThemeMode(e, t),
-                        onSelect: (ThemeMode e) =>
-                            onThemeChange(themeModeToBrightness(e)));
-                  },
-                  material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero, child: Text(t.theme)),
-                  cupertino: (context, target) =>
-                      CupertinoPopupMenuOptionData(child: Text(t.theme))),
-              PopupMenuOption(
-                  onTap: (_) {
-                    showPlatformActionSheet(
-                        context: context,
-                        title: t.language,
-                        items: locales,
-                        cancelText: t.cancel,
-                        translateItem: (Locale e) => translatedLocale(e, t),
-                        onSelect: (Locale e) => onLocaleChange(e));
-                  },
-                  material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero, child: Text(t.language)),
-                  cupertino: (context, target) =>
-                      CupertinoPopupMenuOptionData(child: Text(t.language))),
-              PopupMenuOption(
-                  onTap: (_) {},
-                  material: (context, target) => MaterialPopupMenuOptionData(
-                      padding: EdgeInsets.zero, child: Text(t.about)),
-                  cupertino: (context, target) =>
-                      CupertinoPopupMenuOptionData(child: Text(t.about)))
-            ],
-            icon: const Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: Icon(
-                Icons.more_vert,
-                color: Colors.white,
-                size: 32,
-              ),
-            ))
-      ],
-      leading: StreamBuilder(
-        stream: weatherUnit,
-        builder: (context, snapshot) {
-          WeatherUnits? unit = snapshot.data as WeatherUnits?;
-          return PlatformPopupMenu(
-              material: (_, __) => MaterialPopupMenuData(),
-              cupertino: (_, __) => CupertinoPopupMenuData(
-                    title: Text(t.units),
+    return StreamBuilder(
+      stream: currentForecast,
+      builder: (context, snapshot) {
+        WeatherForecast? weatherForecast = snapshot.data as WeatherForecast?;
+        return SliverAppBar(
+          elevation: 0,
+          primary: true,
+          bottom: null,
+          backgroundColor: weatherForecast != null
+              ? weatherForecast.colorGradient.first
+              : HexColor.fromHex('#06c7f1'),
+          actions: [
+            PlatformPopupMenu(
+                options: [
+                  PopupMenuOption(
+                      onTap: (_) {
+                        showPlatformActionSheet(
+                            context: context,
+                            title: t.dataSource,
+                            items: apiProviders,
+                            cancelText: t.cancel,
+                            translateItem: (WeatherApiProvider e) =>
+                                translateWeatherProvider(e, t),
+                            onSelect: (WeatherApiProvider e) =>
+                                onApiProviderChanged(e));
+                      },
+                      material: (context, target) =>
+                          MaterialPopupMenuOptionData(
+                              padding: EdgeInsets.zero,
+                              child: Text(t.dataSource)),
+                      cupertino: (context, target) =>
+                          CupertinoPopupMenuOptionData(
+                              child: Text(t.dataSource))),
+                  PopupMenuOption(
+                      onTap: (_) {
+                        showPlatformActionSheet(
+                            context: context,
+                            title: t.theme,
+                            items: themes,
+                            cancelText: t.cancel,
+                            translateItem: (ThemeMode e) =>
+                                translateThemeMode(e, t),
+                            onSelect: (ThemeMode e) =>
+                                onThemeChange(themeModeToBrightness(e)));
+                      },
+                      material: (context, target) =>
+                          MaterialPopupMenuOptionData(
+                              padding: EdgeInsets.zero, child: Text(t.theme)),
+                      cupertino: (context, target) =>
+                          CupertinoPopupMenuOptionData(child: Text(t.theme))),
+                  PopupMenuOption(
+                      onTap: (_) {
+                        showPlatformActionSheet(
+                            context: context,
+                            title: t.language,
+                            items: locales,
+                            cancelText: t.cancel,
+                            translateItem: (Locale e) => translatedLocale(e, t),
+                            onSelect: (Locale e) => onLocaleChange(e));
+                      },
+                      material: (context, target) =>
+                          MaterialPopupMenuOptionData(
+                              padding: EdgeInsets.zero,
+                              child: Text(t.language)),
+                      cupertino: (context, target) =>
+                          CupertinoPopupMenuOptionData(
+                              child: Text(t.language))),
+                  PopupMenuOption(
+                      onTap: (_) {},
+                      material: (context, target) =>
+                          MaterialPopupMenuOptionData(
+                              padding: EdgeInsets.zero, child: Text(t.about)),
+                      cupertino: (context, target) =>
+                          CupertinoPopupMenuOptionData(child: Text(t.about)))
+                ],
+                icon: const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                    size: 32,
                   ),
-              options: [
-                PopupMenuOption(
-                    onTap: (_) {
-                      onWeatherUnitChanged(WeatherUnits.metric);
-                    },
-                    label: t.metric,
-                    material: (context, target) =>
-                        MaterialPopupMenuOptionData(child: Text(t.metric)),
-                    cupertino: (context, target) =>
-                        CupertinoPopupMenuOptionData(child: Text(t.metric))),
-                PopupMenuOption(
-                    onTap: (_) {
-                      onWeatherUnitChanged(WeatherUnits.imperial);
-                    },
-                    label: t.imperial,
-                    material: (context, target) =>
-                        MaterialPopupMenuOptionData(child: Text(t.imperial)),
-                    cupertino: (context, target) =>
-                        CupertinoPopupMenuOptionData(child: Text(t.imperial)))
-              ],
-              icon: Icon(
-                unit == WeatherUnits.metric
-                    ? Feather.celcius
-                    : Feather.fahrenheit,
-                size: 54,
-                color: Colors.white,
-              ));
-        },
-      ),
-      backgroundColor: HexColor.fromHex('#06c7f1'),
+                ))
+          ],
+          leading: StreamBuilder(
+            stream: weatherUnit,
+            builder: (context, snapshot) {
+              WeatherUnits? unit = snapshot.data as WeatherUnits?;
+              return PlatformPopupMenu(
+                  material: (_, __) => MaterialPopupMenuData(),
+                  cupertino: (_, __) => CupertinoPopupMenuData(
+                        title: Text(t.units),
+                      ),
+                  options: [
+                    PopupMenuOption(
+                        onTap: (_) {
+                          onWeatherUnitChanged(WeatherUnits.metric);
+                        },
+                        label: t.metric,
+                        material: (context, target) =>
+                            MaterialPopupMenuOptionData(child: Text(t.metric)),
+                        cupertino: (context, target) =>
+                            CupertinoPopupMenuOptionData(
+                                child: Text(t.metric))),
+                    PopupMenuOption(
+                        onTap: (_) {
+                          onWeatherUnitChanged(WeatherUnits.imperial);
+                        },
+                        label: t.imperial,
+                        material: (context, target) =>
+                            MaterialPopupMenuOptionData(
+                                child: Text(t.imperial)),
+                        cupertino: (context, target) =>
+                            CupertinoPopupMenuOptionData(
+                                child: Text(t.imperial)))
+                  ],
+                  icon: Icon(
+                    unit == WeatherUnits.metric
+                        ? Feather.celcius
+                        : Feather.fahrenheit,
+                    size: 54,
+                    color: Colors.white,
+                  ));
+            },
+          ),
+        );
+      },
     );
   }
 }

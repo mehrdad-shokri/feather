@@ -15,18 +15,16 @@ class HourlyForecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'forecast ${weatherForecast.date} ${weatherForecast.sunrise} ${weatherForecast.sunset}');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       margin: const EdgeInsets.symmetric(horizontal: 8),
       width: 80,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
-              colors: [
-                HexColor.fromHex('#06c7f1'),
-                HexColor.fromHex('#07b9e0'),
-                HexColor.fromHex('#0648f1')
-              ],
+              colors: weatherForecast.colorGradient,
               begin: const FractionalOffset(0.5, 0),
               end: const FractionalOffset(0.5, 1.0),
               stops: const [0.0, .31, .95],
@@ -36,25 +34,35 @@ class HourlyForecast extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            formatTime(weatherForecast.date),
+            formatTime(weatherForecast.date
+                .add(Duration(seconds: weatherForecast.timezone))),
             style: const TextStyle(
                 color: Colors.white,
                 fontWeight: Constants.MEDIUM_FONT_WEIGHT,
                 fontSize: Constants.CAPTION_FONT_SIZE),
           ),
           Text(
-            formatDate(weatherForecast.date, format: 'MMMM d'),
+            formatDate(
+                weatherForecast.date
+                    .add(Duration(seconds: weatherForecast.timezone)),
+                format: 'MMMM d'),
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white.withAlpha(200),
                 fontWeight: Constants.REGULAR_FONT_WEIGHT,
                 fontSize: 12),
           ),
+          const SizedBox(
+            height: 2,
+          ),
           Expanded(
               child: Lottie.asset(
                   'assets/lottie/${weatherForecast.lottieAnimation}.json',
                   alignment: Alignment.center,
                   fit: BoxFit.contain)),
+          const SizedBox(
+            height: 2,
+          ),
           Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topRight,
@@ -68,7 +76,7 @@ class HourlyForecast extends StatelessWidget {
               ),
               Positioned(
                 top: 0,
-                right: -4,
+                right: -8,
                 child: SvgPicture.asset(
                   'assets/svg/degrees.svg',
                   color: Colors.white,

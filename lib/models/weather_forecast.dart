@@ -1,5 +1,6 @@
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/date.dart';
+import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 
 class WeatherForecast {
@@ -43,7 +44,7 @@ class WeatherForecast {
   final int weatherCode;
   String lottieAnimation;
   final WeatherUnits unit;
-  final List<Color> weatherGradient;
+  List<Color> colorGradient;
 
   WeatherForecast(
       {required this.maxTemp,
@@ -86,7 +87,7 @@ class WeatherForecast {
       this.rainForecast,
       this.snowForecast,
       this.pop,
-      this.weatherGradient = const []})
+      required this.colorGradient})
       : _sunrise = sunrise,
         _sunset = sunset;
 
@@ -105,6 +106,13 @@ class WeatherForecast {
         weatherTitle: (data['weather'] as List).first['main'],
         weatherDescription: (data['weather'] as List).first['description'],
         lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
+            (data['weather'] as List).first['id'],
+            DateTime.now().toUtc(),
+            DateTime.fromMillisecondsSinceEpoch(data['sys']['sunrise'] * 1000,
+                isUtc: true),
+            DateTime.fromMillisecondsSinceEpoch(data['sys']['sunset'] * 1000,
+                isUtc: true)),
+        colorGradient: _openWeatherMapWeatherCodeToColorGradients(
             (data['weather'] as List).first['id'],
             DateTime.now().toUtc(),
             DateTime.fromMillisecondsSinceEpoch(data['sys']['sunrise'] * 1000,
@@ -175,6 +183,14 @@ class WeatherForecast {
                   isUtc: true),
               DateTime.fromMillisecondsSinceEpoch(data['sunset'] * 1000,
                   isUtc: true)),
+          colorGradient: _openWeatherMapWeatherCodeToColorGradients(
+              (data['weather'] as List).first['id'],
+              DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
+                  isUtc: true),
+              DateTime.fromMillisecondsSinceEpoch(data['sunrise'] * 1000,
+                  isUtc: true),
+              DateTime.fromMillisecondsSinceEpoch(data['sunset'] * 1000,
+                  isUtc: true)),
           weatherDescription: (data['weather'] as List).first['description'],
           humidityPercent: data['humidity'],
           pressureSeaLevel: data['pressure'],
@@ -236,6 +252,12 @@ class WeatherForecast {
           weatherDescription: (data['weather'] as List).first['description'],
           weatherCode: (data['weather'] as List).first['id'],
           lottieAnimation: _openWeatherMapWeatherCodeToLottieAnimation(
+              (data['weather'] as List).first['id'],
+              DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
+                  isUtc: true),
+              DateTime.fromMillisecondsSinceEpoch(sunrise * 1000, isUtc: true),
+              DateTime.fromMillisecondsSinceEpoch(sunset * 1000, isUtc: true)),
+          colorGradient: _openWeatherMapWeatherCodeToColorGradients(
               (data['weather'] as List).first['id'],
               DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000,
                   isUtc: true),
@@ -372,6 +394,166 @@ class WeatherForecast {
     }
   }
 
+  static List<Color> _openWeatherMapWeatherCodeToColorGradients(
+      int weatherCode, DateTime date, DateTime? sunrise, DateTime? sunset) {
+    switch (weatherCode) {
+      case 200:
+      case 201:
+      case 202:
+      case 230:
+      case 231:
+      case 232:
+        return [
+          HexColor.fromHex('#094bf4'),
+          HexColor.fromHex('#4680f2'),
+          HexColor.fromHex('#6da5fa')
+        ];
+      case 210:
+      case 211:
+      case 212:
+      case 221:
+        return [
+          HexColor.fromHex('#094bf4'),
+          HexColor.fromHex('#4680f2'),
+          HexColor.fromHex('#6da5fa')
+        ];
+
+      case 300:
+      case 301:
+      case 302:
+      case 310:
+      case 311:
+      case 312:
+      case 313:
+      case 314:
+      case 321:
+      case 520:
+      case 521:
+      case 522:
+      case 523:
+        return [
+          HexColor.fromHex('#1a5bbd'),
+          HexColor.fromHex('#628af1'),
+          HexColor.fromHex('#7bb2ff')
+        ];
+
+      case 500:
+      case 501:
+      case 502:
+      case 503:
+      case 504:
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
+          return [
+            HexColor.fromHex('#092795'),
+            HexColor.fromHex('#2329cb'),
+            HexColor.fromHex('#4456f4')
+          ];
+        }
+        return [
+          HexColor.fromHex('#0060c0'),
+          HexColor.fromHex('#387EE8'),
+          HexColor.fromHex('#458af1')
+        ];
+
+      case 511:
+      case 600:
+      case 601:
+      case 602:
+      case 611:
+      case 612:
+      case 613:
+      case 615:
+      case 616:
+      case 620:
+      case 621:
+      case 622:
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
+          return [
+            HexColor.fromHex('#03398b'),
+            HexColor.fromHex('#548bc1'),
+            HexColor.fromHex('#4c97df')
+          ];
+        }
+        return [
+          HexColor.fromHex('#0185ff'),
+          HexColor.fromHex('#45aefb'),
+          HexColor.fromHex('95b7ff')
+        ];
+      case 701:
+      case 711:
+      case 721:
+      case 731:
+      case 741:
+      case 751:
+      case 761:
+      case 762:
+      case 771:
+      case 781:
+        return [
+          HexColor.fromHex('#6796c0'),
+          HexColor.fromHex('#88b6d7'),
+          HexColor.fromHex('#b4c9f6')
+        ];
+      case 800:
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
+          return [
+            HexColor.fromHex('#080C72'),
+            HexColor.fromHex('#011098'),
+            HexColor.fromHex('#232B70')
+          ];
+        }
+        return [
+          HexColor.fromHex('#0f6ad6'),
+          HexColor.fromHex('#5ea8fe'),
+          HexColor.fromHex('#6dc2ff')
+        ];
+      case 801:
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
+          return [
+            HexColor.fromHex('#2C2A89'),
+            HexColor.fromHex('#3B438B'),
+            HexColor.fromHex('#4650A9')
+          ];
+        }
+        return [
+          HexColor.fromHex('#0085FF'),
+          HexColor.fromHex('#45A5FE'),
+          HexColor.fromHex('#7DCFFE')
+        ];
+      case 802:
+      case 803:
+      case 804:
+        if (sunrise != null &&
+            sunset != null &&
+            isNight(date, sunrise, sunset)) {
+          return [
+            HexColor.fromHex('#08215C'),
+            HexColor.fromHex('#2F3F7B'),
+            HexColor.fromHex('#1D3677')
+          ];
+        }
+        return [
+          HexColor.fromHex('#06c7f1'),
+          HexColor.fromHex('#07b9e0'),
+          HexColor.fromHex('#0648f1')
+        ];
+      default:
+        return [
+          HexColor.fromHex('#06c7f1'),
+          HexColor.fromHex('#07b9e0'),
+          HexColor.fromHex('#0648f1')
+        ];
+    }
+  }
+
   static double _openWeatherMapMetricCorrection(WeatherUnits unit) =>
       (unit == WeatherUnits.metric ? 3.6 : 1);
 
@@ -391,11 +573,15 @@ class WeatherForecast {
     _sunrise = value;
     lottieAnimation = _openWeatherMapWeatherCodeToLottieAnimation(
         weatherCode, date, value, _sunset);
+    colorGradient = _openWeatherMapWeatherCodeToColorGradients(
+        weatherCode, date, value, _sunset);
   }
 
   set sunset(DateTime? value) {
     _sunset = value;
     lottieAnimation = _openWeatherMapWeatherCodeToLottieAnimation(
+        weatherCode, date, _sunrise, value);
+    colorGradient = _openWeatherMapWeatherCodeToColorGradients(
         weatherCode, date, _sunrise, value);
   }
 
