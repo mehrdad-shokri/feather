@@ -1,5 +1,6 @@
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/date.dart';
+import 'package:flutter/material.dart';
 
 class WeatherForecast {
   final String weatherTitle;
@@ -42,6 +43,7 @@ class WeatherForecast {
   final int weatherCode;
   String lottieAnimation;
   final WeatherUnits unit;
+  final List<Color> weatherGradient;
 
   WeatherForecast(
       {required this.maxTemp,
@@ -83,7 +85,8 @@ class WeatherForecast {
       this.pressureGroundLevel,
       this.rainForecast,
       this.snowForecast,
-      this.pop})
+      this.pop,
+      this.weatherGradient = const []})
       : _sunrise = sunrise,
         _sunset = sunset;
 

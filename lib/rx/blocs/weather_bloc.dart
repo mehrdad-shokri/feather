@@ -155,4 +155,19 @@ class WeatherBloc extends RxBloc {
     _sharedPrefsService.instance.setString(
         Constants.WEATHER_UNITS_PREFS, EnumToString.convertToString(unit));
   }
+
+  Future<void> refresh(Location location) async {
+    _lastLocation = location;
+    _updatingCurrentForecast.add(true);
+    WeatherForecast current =
+        await _weatherApi.current(location.lat, location.lon);
+    _currentForecast.add(current);
+    List<WeatherForecast> hourly =
+        await _weatherApi.hourlyForecast(location.lat, location.lon);
+    _hourlyForecast.add(hourly);
+    List<WeatherForecast> daily =
+        await _weatherApi.dailyForecast(location.lat, location.lon);
+    _dailyForecast.add(daily);
+    _updatingCurrentForecast.add(false);
+  }
 }

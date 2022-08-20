@@ -47,7 +47,7 @@ class Constants {
   static const Color LINE_COLOR_DARK = Color.fromRGBO(41, 39, 24, 1.0);
 
   static const Color BACKGROUND_COLOR = Color.fromRGBO(239, 243, 247, 1.0);
-  static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(12, 9, 38, 1.0);
+  static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(25, 17, 13, 1.0);
   static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(239, 240, 246, 1);
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(16, 15, 9, 1.0);
@@ -112,4 +112,6 @@ class Constants {
       "lng": "18.06871"
     },
   ];
+
+  static const Map<String, List<Color>> weatherColors = {};
 }

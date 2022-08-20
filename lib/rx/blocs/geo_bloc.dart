@@ -110,4 +110,19 @@ class GeoBloc extends RxBloc {
             lang);
     }
   }
+
+  Future<void> onRefresh(String? query) async {
+    if (strEmpty(query) || query!.length < 3) {
+      loadLocationsFromAsset();
+    } else {
+      List<Location> locations = await _geoApi.searchByQuery(query);
+      for (Location element in locations) {
+        weatherBloc?.getCurrentForecast(element, onData: (forecast) {
+          element.forecast = forecast;
+          locations[locations.indexWhere((l) => l == element)] = element;
+          _searchedLocations.add(locations);
+        });
+      }
+    }
+  }
 }

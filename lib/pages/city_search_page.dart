@@ -100,11 +100,13 @@ class _CitySearchPageState extends State<CitySearchPage>
                       onSearchCity: (query) {
                         setState(() {
                           searchedPhrase = query;
-                          geoBloc.searchQuery(query);
                         });
+                        geoBloc.searchQuery(query);
                       },
                       onAutoCompleteCity: (query) {
-                        searchedPhrase = query;
+                        setState(() {
+                          searchedPhrase = query;
+                        });
                         geoBloc.searchQuery(query);
                       },
                     ),
@@ -171,7 +173,9 @@ class _CitySearchPageState extends State<CitySearchPage>
                 ),
                 PlatformWidget(
                   cupertino: (_, __) => CupertinoSliverRefreshControl(
-                    onRefresh: () async {},
+                    onRefresh: () async {
+                      await geoBloc.onRefresh(searchedPhrase);
+                    },
                   ),
                 ),
                 StreamBuilder(

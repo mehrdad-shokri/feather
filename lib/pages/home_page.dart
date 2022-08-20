@@ -7,6 +7,7 @@ import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/home_page_arguments.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/utils/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -53,8 +54,15 @@ class _HomePageState extends State<HomePage> {
       iosContentPadding: true,
       backgroundColor: backgroundColor(context),
       body: CustomScrollView(
-        physics: const ClampingScrollPhysics(),
         slivers: [
+          PlatformWidget(
+            cupertino: (_, __) => CupertinoSliverRefreshControl(
+              refreshTriggerPullDistance: 200,
+              onRefresh: () async {
+                await weatherBloc.refresh(widget.arguments.location);
+              },
+            ),
+          ),
           ForecastHeroAppbar(
               weatherUnit: weatherBloc.weatherUnit,
               onWeatherUnitChanged: (unit) {
@@ -62,8 +70,6 @@ class _HomePageState extends State<HomePage> {
               },
               onApiProviderChanged: (provider) {
                 weatherBloc.onWeatherApiProviderChanged(provider);
-                weatherBloc.getCurrentForecast(widget.arguments.location);
-                weatherBloc.getHourlyForecast(widget.arguments.location);
               },
               apiProvider: weatherBloc.weatherApiProvider,
               apiProviders: WeatherApiProvider.values,
