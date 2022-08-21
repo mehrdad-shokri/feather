@@ -65,86 +65,19 @@ class _CitySearchPageState extends State<CitySearchPage>
             top: false,
             left: false,
             right: false,
-            child: CustomScrollView(
-              slivers: [
-                PlatformWidget(
-                  cupertino: (context, _) => CupertinoSliverNavigationBar(
-                    padding: EdgeInsetsDirectional.zero,
-                    largeTitle: SearchField(
-                      cities: geoBloc.searchedLocations,
-                      t: appLocalizations!,
-                      onGetCurrentPosition: () {
-                        positionBloc.getCurrentPosition(
-                            onPositionReceived: (position) {
-                              geoBloc.reverseGeoCode(
-                                  position.latitude, position.longitude,
-                                  onLocation: (location) {
-                                onLocationUpdated(location);
-                              });
-                            },
-                            onError: (e) {
-                              Fluttertoast.showToast(
-                                  msg: e.toString(),
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: Constants.TOAST_DEFAULT_LOCATION,
-                                  timeInSecForIosWeb: 3,
-                                  backgroundColor: Constants.ERROR_COLOR,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            },
-                            onPermissionDenied: () {},
-                            onPermissionDeniedForever: () {});
-                      },
-                      loadingCurrentPosition:
-                          positionBloc.requestingCurrentLocation.mergeWith(
-                              [positionBloc.requestingLocationPermission]),
-                      onSearchCity: (query) {
-                        setState(() {
-                          searchedPhrase = query;
-                        });
-                        geoBloc.searchQuery(query);
-                      },
-                      onAutoCompleteCity: (query) {
-                        setState(() {
-                          searchedPhrase = query;
-                        });
-                        geoBloc.searchQuery(query);
-                      },
-                    ),
-                    border: Border(
-                        bottom:
-                            BorderSide(color: dividerColor(context), width: 1)),
-                    middle: Text(
-                      appLocalizations!.chooseCity,
-                      style: TextStyle(
-                          color: headingColor(context),
-                          fontSize: Constants.H6_FONT_SIZE,
-                          fontWeight: Constants.MEDIUM_FONT_WEIGHT),
-                    ),
-                  ),
-                  material: (context, _) => SliverAppBar(
-                    title: Text(
-                      appLocalizations!.chooseCity,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: headingColor(context),
-                          fontSize: Constants.H6_FONT_SIZE,
-                          fontWeight: Constants.MEDIUM_FONT_WEIGHT),
-                    ),
-                    titleSpacing: 0,
-                    iconTheme:
-                        IconThemeData(color: appbarBackIconColor(context)),
-                    pinned: true,
-                    primary: true,
-                    floating: false,
-                    stretch: false,
-                    elevation: 4,
-                    backgroundColor: barBackgroundColor(context),
-                    expandedHeight: kToolbarHeight + 32,
-                    collapsedHeight: kToolbarHeight + 32,
-                    bottom: PreferredSize(
-                      preferredSize: const Size.fromHeight(24),
-                      child: SearchField(
+            child: PlatformWidgetBuilder(
+              material: (context, child, _) => RefreshIndicator(
+                  child: child ?? Container(),
+                  onRefresh: () async {
+                    await geoBloc.onRefresh(searchedPhrase);
+                  }),
+              cupertino: (context, child, _) => child,
+              child: CustomScrollView(
+                slivers: [
+                  PlatformWidget(
+                    cupertino: (context, _) => CupertinoSliverNavigationBar(
+                      padding: EdgeInsetsDirectional.zero,
+                      largeTitle: SearchField(
                         cities: geoBloc.searchedLocations,
                         t: appLocalizations!,
                         onGetCurrentPosition: () {
@@ -175,130 +108,206 @@ class _CitySearchPageState extends State<CitySearchPage>
                         onSearchCity: (query) {
                           setState(() {
                             searchedPhrase = query;
-                            geoBloc.searchQuery(query);
                           });
+                          geoBloc.searchQuery(query);
                         },
                         onAutoCompleteCity: (query) {
-                          searchedPhrase = query;
+                          setState(() {
+                            searchedPhrase = query;
+                          });
                           geoBloc.searchQuery(query);
                         },
                       ),
+                      border: Border(
+                          bottom: BorderSide(
+                              color: dividerColor(context), width: 1)),
+                      middle: Text(
+                        appLocalizations!.chooseCity,
+                        style: TextStyle(
+                            color: headingColor(context),
+                            fontSize: Constants.H6_FONT_SIZE,
+                            fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                      ),
+                    ),
+                    material: (context, _) => SliverAppBar(
+                      title: Text(
+                        appLocalizations!.chooseCity,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: headingColor(context),
+                            fontSize: Constants.H6_FONT_SIZE,
+                            fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                      ),
+                      titleSpacing: 0,
+                      iconTheme:
+                          IconThemeData(color: appbarBackIconColor(context)),
+                      pinned: true,
+                      primary: true,
+                      floating: false,
+                      stretch: false,
+                      elevation: 4,
+                      backgroundColor: barBackgroundColor(context),
+                      expandedHeight: kToolbarHeight + 32,
+                      collapsedHeight: kToolbarHeight + 32,
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(24),
+                        child: SearchField(
+                          cities: geoBloc.searchedLocations,
+                          t: appLocalizations!,
+                          onGetCurrentPosition: () {
+                            positionBloc.getCurrentPosition(
+                                onPositionReceived: (position) {
+                                  geoBloc.reverseGeoCode(
+                                      position.latitude, position.longitude,
+                                      onLocation: (location) {
+                                    onLocationUpdated(location);
+                                  });
+                                },
+                                onError: (e) {
+                                  Fluttertoast.showToast(
+                                      msg: e.toString(),
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: Constants.TOAST_DEFAULT_LOCATION,
+                                      timeInSecForIosWeb: 3,
+                                      backgroundColor: Constants.ERROR_COLOR,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                },
+                                onPermissionDenied: () {},
+                                onPermissionDeniedForever: () {});
+                          },
+                          loadingCurrentPosition:
+                              positionBloc.requestingCurrentLocation.mergeWith(
+                                  [positionBloc.requestingLocationPermission]),
+                          onSearchCity: (query) {
+                            setState(() {
+                              searchedPhrase = query;
+                              geoBloc.searchQuery(query);
+                            });
+                          },
+                          onAutoCompleteCity: (query) {
+                            searchedPhrase = query;
+                            geoBloc.searchQuery(query);
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                PlatformWidget(
-                  cupertino: (_, __) => CupertinoSliverRefreshControl(
-                    refreshTriggerPullDistance: 250,
-                    refreshIndicatorExtent: 50,
-                    onRefresh: () async {
-                      await geoBloc.onRefresh(searchedPhrase);
+                  PlatformWidget(
+                    cupertino: (_, __) => CupertinoSliverRefreshControl(
+                      refreshTriggerPullDistance: 250,
+                      refreshIndicatorExtent: 50,
+                      onRefresh: () async {
+                        await geoBloc.onRefresh(searchedPhrase);
+                      },
+                    ),
+                    material: (_, __) => const SliverToBoxAdapter(),
+                  ),
+                  StreamBuilder(
+                    stream: geoBloc.searchingLocations,
+                    builder: (context, snapshot) {
+                      bool? loading = snapshot.data as bool?;
+                      return SliverToBoxAdapter(
+                          child: AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 250),
+                        reverseDuration: const Duration(milliseconds: 250),
+                        crossFadeState: loading != null && loading
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Container(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none,
+                          margin: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.all(8),
+                          child: PlatformCircularProgressIndicator(),
+                        ),
+                        secondChild: Container(
+                          height: 0,
+                        ),
+                      ));
                     },
                   ),
-                  material: (_, __) => const SliverToBoxAdapter(),
-                ),
-                StreamBuilder(
-                  stream: geoBloc.searchingLocations,
-                  builder: (context, snapshot) {
-                    bool? loading = snapshot.data as bool?;
-                    return SliverToBoxAdapter(
-                        child: AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 250),
-                      reverseDuration: const Duration(milliseconds: 250),
-                      crossFadeState: loading != null && loading
-                          ? CrossFadeState.showFirst
-                          : CrossFadeState.showSecond,
-                      firstChild: Container(
-                        alignment: Alignment.center,
-                        clipBehavior: Clip.none,
-                        margin: const EdgeInsets.only(top: 8),
-                        child: PlatformCircularProgressIndicator(),
-                      ),
-                      secondChild: Container(
-                        height: 0,
-                      ),
-                    ));
-                  },
-                ),
-                StreamBuilder(
-                  stream: geoBloc.searchedLocations,
-                  builder: (context, snapshot) {
-                    List<Location>? locations =
-                        snapshot.data as List<Location>?;
-                    if (locations == null) {
-                      return SliverToBoxAdapter(
-                        child: Container(),
-                      );
-                    }
-                    if (locations.isEmpty) {
-                      return SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 64, horizontal: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Lottie.asset('assets/lottie/astronaut.json',
-                                  alignment: Alignment.center,
-                                  width: 240,
-                                  fit: BoxFit.contain),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              Text(
-                                'City not found',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: Constants.H6_FONT_SIZE,
-                                    fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                                    color: textColor(context)),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                'Make sure it\'s been founded by the time you search it, you know...',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: secondaryTextColor(context),
-                                  fontSize: Constants.S1_FONT_SIZE,
+                  StreamBuilder(
+                    stream: geoBloc.searchedLocations,
+                    builder: (context, snapshot) {
+                      List<Location>? locations =
+                          snapshot.data as List<Location>?;
+                      if (locations == null) {
+                        return SliverToBoxAdapter(
+                          child: Container(),
+                        );
+                      }
+                      if (locations.isEmpty) {
+                        return SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 64, horizontal: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Lottie.asset('assets/lottie/astronaut.json',
+                                    alignment: Alignment.center,
+                                    width: 240,
+                                    fit: BoxFit.contain),
+                                const SizedBox(
+                                  height: 16,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  'City not found',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: Constants.H6_FONT_SIZE,
+                                      fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                                      color: textColor(context)),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  'Make sure it\'s been founded by the time you search it, you know...',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: secondaryTextColor(context),
+                                    fontSize: Constants.S1_FONT_SIZE,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+                        );
+                      }
+                      return SliverPadding(
+                        padding: Constants.PAGE_PADDING,
+                        sliver: SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1),
+                          delegate: SliverChildBuilderDelegate(
+                              (context, index) => CityCard(
+                                    location: locations.elementAt(index),
+                                    key: Key(locations.elementAt(index).id),
+                                    shouldAddMargin: index <= 1,
+                                    onPress: () {
+                                      onLocationUpdated(
+                                          locations.elementAt(index));
+                                    },
+                                  ),
+                              childCount: locations.length),
                         ),
                       );
-                    }
-                    return SliverPadding(
-                      padding: Constants.PAGE_PADDING,
-                      sliver: SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                crossAxisCount: 2,
-                                childAspectRatio: 1),
-                        delegate: SliverChildBuilderDelegate(
-                            (context, index) => CityCard(
-                                  location: locations.elementAt(index),
-                                  key: Key(locations.elementAt(index).id),
-                                  shouldAddMargin: index <= 1,
-                                  onPress: () {
-                                    onLocationUpdated(
-                                        locations.elementAt(index));
-                                  },
-                                ),
-                            childCount: locations.length),
-                      ),
-                    );
-                  },
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 24,
+                    },
                   ),
-                )
-              ],
+                  SliverToBoxAdapter(
+                    child: Container(
+                      height: 24,
+                    ),
+                  )
+                ],
+              ),
             )));
   }
 

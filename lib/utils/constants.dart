@@ -82,6 +82,7 @@ class Constants {
 
   static const ToastGravity TOAST_DEFAULT_LOCATION = ToastGravity.BOTTOM;
   static const Locale DEFAULT_LOCALE = Locale('en');
+  static const ThemeMode DEFAULT_THEME = ThemeMode.system;
   static const WeatherUnits DEFAULT_WEATHER_API_UNITS = WeatherUnits.metric;
   static const WeatherApiProvider DEFAULT_WEATHER_API_PROVIDER =
       WeatherApiProvider.openWeatherMap;

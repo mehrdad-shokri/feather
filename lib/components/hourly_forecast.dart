@@ -1,7 +1,6 @@
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
-import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
@@ -15,8 +14,6 @@ class HourlyForecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'forecast ${weatherForecast.date} ${weatherForecast.sunrise} ${weatherForecast.sunset}');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       margin: const EdgeInsets.symmetric(horizontal: 8),

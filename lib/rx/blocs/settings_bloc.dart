@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends RxBloc {
-  // final Brightness _defaultTheme =
-  //     WidgetsBinding.instance.window.platformBrightness;
   final SharedPrefsService _sharedPrefsService;
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
@@ -29,7 +27,6 @@ class SettingsBloc extends RxBloc {
   Stream<ThemeMode> get themeMode => _themeMode.stream;
 
   SettingsBloc(this._sharedPrefsService) {
-    // _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);
@@ -53,8 +50,8 @@ class SettingsBloc extends RxBloc {
         _sharedPrefsService.instance.getString(Constants.USER_THEME_PREFS);
     _themeMode.add(strNotEmpty(themeMode)
         ? EnumToString.fromString(ThemeMode.values, themeMode!) ??
-            ThemeMode.system
-        : ThemeMode.system);
+            Constants.DEFAULT_THEME
+        : Constants.DEFAULT_THEME);
   }
 
   void onLocaleChanged(Locale locale) {

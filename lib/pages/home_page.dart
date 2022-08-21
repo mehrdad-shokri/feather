@@ -53,69 +53,80 @@ class _HomePageState extends State<HomePage> {
     return PlatformScaffold(
       iosContentPadding: true,
       backgroundColor: backgroundColor(context),
-      body: CustomScrollView(
-        slivers: [
-          PlatformWidget(
-            cupertino: (_, __) => CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 250,
-              refreshIndicatorExtent: 50,
-              onRefresh: () async {
-                await weatherBloc.refresh(widget.arguments.location);
-              },
+      body: PlatformWidgetBuilder(
+        material: (context, child, __) => RefreshIndicator(
+          onRefresh: () async {
+            await weatherBloc.refresh(widget.arguments.location);
+          },
+          child: child ?? Container(),
+        ),
+        cupertino: (context, child, _) => child,
+        child: CustomScrollView(
+          slivers: [
+            PlatformWidget(
+              cupertino: (_, __) => CupertinoSliverRefreshControl(
+                refreshTriggerPullDistance: 250,
+                refreshIndicatorExtent: 50,
+                onRefresh: () async {
+                  await weatherBloc.refresh(widget.arguments.location);
+                },
+              ),
+              material: (_, __) => const SliverToBoxAdapter(),
             ),
-            material: (_, __) => const SliverToBoxAdapter(),
-          ),
-          ForecastHeroAppbar(
-              weatherUnit: weatherBloc.weatherUnit,
-              onWeatherUnitChanged: (unit) {
-                weatherBloc.onUnitsChanged(unit);
-              },
-              onApiProviderChanged: (provider) {
-                weatherBloc.onWeatherApiProviderChanged(provider);
-              },
-              locale: settingsBloc.locale,
-              currentForecast: weatherBloc.currentForecast,
-              apiProvider: weatherBloc.weatherApiProvider,
-              apiProviders: WeatherApiProvider.values,
-              theme: settingsBloc.themeMode,
-              themes: ThemeMode.values,
-              locales: AppLocalizations.supportedLocales,
-              onLocaleChange: (Locale locale) {
-                settingsBloc.onLocaleChanged(locale);
-                if (ServiceProvider.getInstance().localeChangeCallback !=
-                    null) {
-                  ServiceProvider.getInstance().localeChangeCallback!(locale);
-                }
-              },
-              onThemeChange: (ThemeMode themeMode) {
-                settingsBloc.onThemeChanged(themeMode);
-                if (ServiceProvider.getInstance().themeChangeCallback != null) {
-                  ServiceProvider.getInstance().themeChangeCallback!(themeMode);
-                }
-              },
-              t: appLocalizations!),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: deviceHeight! * .7,
-              child: ForecastHeroCard(
-                  location: settingsBloc.activeLocation,
-                  onLocationChangeRequest: () {
-                    Navigator.pushNamed(context, '/search');
-                  },
+            ForecastHeroAppbar(
+                weatherUnit: weatherBloc.weatherUnit,
+                onWeatherUnitChanged: (unit) {
+                  weatherBloc.onUnitsChanged(unit);
+                },
+                onApiProviderChanged: (provider) {
+                  weatherBloc.onWeatherApiProviderChanged(provider);
+                },
+                locale: settingsBloc.locale,
+                currentForecast: weatherBloc.currentForecast,
+                apiProvider: weatherBloc.weatherApiProvider,
+                apiProviders: WeatherApiProvider.values,
+                theme: settingsBloc.themeMode,
+                themes: ThemeMode.values,
+                locales: AppLocalizations.supportedLocales,
+                onLocaleChange: (Locale locale) {
+                  settingsBloc.onLocaleChanged(locale);
+                  if (ServiceProvider.getInstance().localeChangeCallback !=
+                      null) {
+                    ServiceProvider.getInstance().localeChangeCallback!(locale);
+                  }
+                },
+                onThemeChange: (ThemeMode themeMode) {
+                  settingsBloc.onThemeChanged(themeMode);
+                  if (ServiceProvider.getInstance().themeChangeCallback !=
+                      null) {
+                    ServiceProvider.getInstance()
+                        .themeChangeCallback!(themeMode);
+                  }
+                },
+                t: appLocalizations!),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: deviceHeight! * .7,
+                child: ForecastHeroCard(
+                    location: settingsBloc.activeLocation,
+                    onLocationChangeRequest: () {
+                      Navigator.pushNamed(context, '/search');
+                    },
+                    isUpdating: weatherBloc.isUpdating,
+                    weatherForecast: weatherBloc.currentForecast,
+                    weatherUnit: weatherBloc.weatherUnit,
+                    hourlyForecast: weatherBloc.hourlyForecast,
+                    t: appLocalizations!),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: HourlyForecasts(
+                  t: appLocalizations!,
                   isUpdating: weatherBloc.isUpdating,
-                  weatherForecast: weatherBloc.currentForecast,
-                  weatherUnit: weatherBloc.weatherUnit,
-                  hourlyForecast: weatherBloc.hourlyForecast,
-                  t: appLocalizations!),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: HourlyForecasts(
-                t: appLocalizations!,
-                isUpdating: weatherBloc.isUpdating,
-                hourlyForecast: weatherBloc.hourlyForecast),
-          )
-        ],
+                  hourlyForecast: weatherBloc.hourlyForecast),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class FeatherAppState extends State<FeatherApp> {
   late SettingsBloc settingsBloc;
 
   Locale locale = Constants.DEFAULT_LOCALE;
-  ThemeMode theme = ThemeMode.system;
+  ThemeMode theme = Constants.DEFAULT_THEME;
 
   @override
   void initState() {
@@ -49,9 +49,7 @@ class FeatherAppState extends State<FeatherApp> {
       });
       settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
     } catch (e) {
-      print('error');
-      print(e);
-      //  Record crash in crashlytics
+      //  TODO: Record crash in crashlytics
     }
   }
 
@@ -231,11 +229,9 @@ class FeatherAppState extends State<FeatherApp> {
               toggleableActiveColor: Constants.SECONDARY_COLOR,
               dividerColor: Constants.LINE_COLOR,
               scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
-              colorScheme: Theme.of(context) // Todo Need consideration
-                  .colorScheme
-                  .copyWith(
-                      secondary: Constants.SECONDARY_COLOR,
-                      brightness: Brightness.light),
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                  secondary: Constants.SECONDARY_COLOR,
+                  brightness: Brightness.light),
               cardTheme: CardTheme(shape: Constants.CARD_SHAPE, elevation: 4),
               appBarTheme: AppBarTheme.of(context).copyWith(
                   backgroundColor: Constants.BAR_BACKGROUND_COLOR,
@@ -264,8 +260,8 @@ class FeatherAppState extends State<FeatherApp> {
                       fontFamily: Constants.APPLICATION_DEFAULT_FONT),
                   behavior: SnackBarBehavior.floating),
 //              scaffoldBackgroundColor: Colors.white,
-              bottomSheetTheme: const BottomSheetThemeData(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))),
+              bottomSheetTheme:
+                  const BottomSheetThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))),
               textTheme: Theme.of(context).textTheme.apply(fontFamily: Constants.APPLICATION_DEFAULT_FONT, bodyColor: Constants.TEXT_BODY_COLOR, displayColor: Constants.TEXT_BODY_COLOR))),
     );
   }

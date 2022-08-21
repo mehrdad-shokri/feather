@@ -138,8 +138,11 @@ void showPlatformActionSheet<T>(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text(cancelText))
+                    child: Text(
+                      cancelText,
+                    ))
               ],
+              contentPadding: const EdgeInsets.only(top: 16),
               content: StreamBuilder(
                 stream: value,
                 builder: (context, snapshot) {
