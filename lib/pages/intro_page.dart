@@ -77,14 +77,24 @@ class _IntroPageState extends State<IntroPage> {
                       ),
                       PlatformElevatedButton(
                         onPressed: () {
-                          settingsBloc.onFirstVisited();
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/search', (route) => true);
                         },
-                        child: Text(appLocalizations!.getStarted),
+                        color: Constants.PRIMARY_COLOR,
+                        material: (_, __) => MaterialElevatedButtonData(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(120, 45),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 16))),
+                        child: Text(
+                          appLocalizations!.getStarted,
+                          style: const TextStyle(
+                              fontSize: Constants.S1_FONT_SIZE,
+                              color: Colors.white),
+                        ),
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 32,
                       )
                     ],
                   ))

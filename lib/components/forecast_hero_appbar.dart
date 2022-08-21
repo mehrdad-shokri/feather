@@ -68,7 +68,6 @@ class ForecastHeroAppbar extends StatelessWidget {
                       },
                       material: (context, target) =>
                           MaterialPopupMenuOptionData(
-                              padding: EdgeInsets.zero,
                               child: Text(t.dataSource)),
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(
@@ -86,8 +85,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                                 onThemeChange(themeModeToBrightness(e)));
                       },
                       material: (context, target) =>
-                          MaterialPopupMenuOptionData(
-                              padding: EdgeInsets.zero, child: Text(t.theme)),
+                          MaterialPopupMenuOptionData(child: Text(t.theme)),
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(child: Text(t.theme))),
                   PopupMenuOption(
@@ -101,17 +99,14 @@ class ForecastHeroAppbar extends StatelessWidget {
                             onSelect: (Locale e) => onLocaleChange(e));
                       },
                       material: (context, target) =>
-                          MaterialPopupMenuOptionData(
-                              padding: EdgeInsets.zero,
-                              child: Text(t.language)),
+                          MaterialPopupMenuOptionData(child: Text(t.language)),
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(
                               child: Text(t.language))),
                   PopupMenuOption(
                       onTap: (_) {},
                       material: (context, target) =>
-                          MaterialPopupMenuOptionData(
-                              padding: EdgeInsets.zero, child: Text(t.about)),
+                          MaterialPopupMenuOptionData(child: Text(t.about)),
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(child: Text(t.about)))
                 ],

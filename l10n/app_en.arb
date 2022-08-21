@@ -126,5 +126,11 @@
     "description": "Get started",
     "type": "text",
     "placeholders": {}
+  },
+  "searchLabel": "Search",
+  "@searchLabel": {
+    "description": "Search",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -34,7 +34,7 @@ class Constants {
   static const Color WARNING_COLOR_LIGHT = Color.fromRGBO(255, 240, 212, 1);
   static const Color WARNING_COLOR_DARK = Color.fromRGBO(162, 107, 0, 1);
 
-  static const Color TEXT_BLACK_COLOR = Color.fromRGBO(20, 20, 43, 1);
+  static const Color TEXT_BLACK_COLOR = Color.fromRGBO(20, 20, 32, 1);
   static const Color TEXT_BLACK_COLOR_DARK = Color.fromRGBO(235, 235, 212, 1.0);
   static const Color TEXT_BODY_COLOR = Color.fromRGBO(78, 75, 102, 1.0);
   static const Color TEXT_BODY_COLOR_DARK = Color.fromRGBO(203, 203, 203, 1);
@@ -48,9 +48,14 @@ class Constants {
 
   static const Color BACKGROUND_COLOR = Color.fromRGBO(239, 243, 247, 1.0);
   static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(25, 17, 13, 1.0);
-  static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(239, 240, 246, 1);
+  static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(231, 231, 232, 1);
   static const Color INPUT_BACKGROUND_COLOR_DARK =
-      Color.fromRGBO(16, 15, 9, 1.0);
+      Color.fromRGBO(45, 44, 46, 1.0);
+
+  static Color BAR_BACKGROUND_COLOR = const Color.fromRGBO(247, 247, 247, 1);
+  static Color BAR_BACKGROUND_COLOR_DARK = const Color.fromRGBO(26, 26, 26, 1);
+  static Color CARD_COLOR_DARK = Colors.grey.shade800;
+  static const Color CARD_COLOR = Colors.white;
 
   static const double ICON_SMALL_SIZE = 18;
   static const double ICON_MEDIUM_SIZE = 24;

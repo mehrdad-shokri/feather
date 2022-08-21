@@ -38,7 +38,9 @@ Color placeholderColor(BuildContext context) {
 }
 
 Color appbarBackIconColor(BuildContext context) {
-  return isDark(context) ? Colors.white : Colors.black;
+  return isDark(context)
+      ? const Color.fromRGBO(148, 148, 158, 1)
+      : const Color.fromRGBO(115, 115, 119, 1);
 }
 
 bool isDark(BuildContext context) {
@@ -49,5 +51,17 @@ bool isDark(BuildContext context) {
 }
 
 Color cardColor(BuildContext context) {
-  return isDark(context) ? Colors.grey.shade800 : Colors.white;
+  return isDark(context) ? Constants.CARD_COLOR_DARK : Constants.CARD_COLOR;
+}
+
+Color inputBackgroundColor(BuildContext context) {
+  return isDark(context)
+      ? Constants.INPUT_BACKGROUND_COLOR_DARK
+      : Constants.INPUT_BACKGROUND_COLOR;
+}
+
+Color barBackgroundColor(BuildContext context) {
+  return isDark(context)
+      ? Constants.BAR_BACKGROUND_COLOR_DARK
+      : Constants.BAR_BACKGROUND_COLOR;
 }

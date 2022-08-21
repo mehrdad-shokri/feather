@@ -72,6 +72,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                     padding: EdgeInsetsDirectional.zero,
                     largeTitle: SearchField(
                       cities: geoBloc.searchedLocations,
+                      t: appLocalizations!,
                       onGetCurrentPosition: () {
                         positionBloc.getCurrentPosition(
                             onPositionReceived: (position) {
@@ -124,51 +125,65 @@ class _CitySearchPageState extends State<CitySearchPage>
                   material: (context, _) => SliverAppBar(
                     title: Text(
                       appLocalizations!.chooseCity,
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                           color: headingColor(context),
                           fontSize: Constants.H6_FONT_SIZE,
                           fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                     ),
-                    flexibleSpace: SearchField(
-                      cities: geoBloc.searchedLocations,
-                      onGetCurrentPosition: () {
-                        positionBloc.getCurrentPosition(
-                            onPositionReceived: (position) {
-                              geoBloc.reverseGeoCode(
-                                  position.latitude, position.longitude,
-                                  onLocation: (location) {
-                                onLocationUpdated(location);
-                              });
-                            },
-                            onError: (e) {
-                              Fluttertoast.showToast(
-                                  msg: e.toString(),
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: Constants.TOAST_DEFAULT_LOCATION,
-                                  timeInSecForIosWeb: 3,
-                                  backgroundColor: Constants.ERROR_COLOR,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            },
-                            onPermissionDenied: () {},
-                            onPermissionDeniedForever: () {});
-                      },
-                      loadingCurrentPosition:
-                          positionBloc.requestingCurrentLocation.mergeWith(
-                              [positionBloc.requestingLocationPermission]),
-                      onSearchCity: (query) {
-                        setState(() {
+                    iconTheme:
+                        IconThemeData(color: appbarBackIconColor(context)),
+                    pinned: true,
+                    primary: true,
+                    floating: false,
+                    stretch: false,
+                    elevation: 4,
+                    forceElevated: true,
+                    backgroundColor: barBackgroundColor(context),
+                    expandedHeight: kToolbarHeight + 32,
+                    collapsedHeight: kToolbarHeight + 32,
+                    bottom: PreferredSize(
+                      preferredSize: const Size.fromHeight(24),
+                      child: SearchField(
+                        cities: geoBloc.searchedLocations,
+                        t: appLocalizations!,
+                        onGetCurrentPosition: () {
+                          positionBloc.getCurrentPosition(
+                              onPositionReceived: (position) {
+                                geoBloc.reverseGeoCode(
+                                    position.latitude, position.longitude,
+                                    onLocation: (location) {
+                                  onLocationUpdated(location);
+                                });
+                              },
+                              onError: (e) {
+                                Fluttertoast.showToast(
+                                    msg: e.toString(),
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: Constants.TOAST_DEFAULT_LOCATION,
+                                    timeInSecForIosWeb: 3,
+                                    backgroundColor: Constants.ERROR_COLOR,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              },
+                              onPermissionDenied: () {},
+                              onPermissionDeniedForever: () {});
+                        },
+                        loadingCurrentPosition:
+                            positionBloc.requestingCurrentLocation.mergeWith(
+                                [positionBloc.requestingLocationPermission]),
+                        onSearchCity: (query) {
+                          setState(() {
+                            searchedPhrase = query;
+                            geoBloc.searchQuery(query);
+                          });
+                        },
+                        onAutoCompleteCity: (query) {
                           searchedPhrase = query;
                           geoBloc.searchQuery(query);
-                        });
-                      },
-                      onAutoCompleteCity: (query) {
-                        searchedPhrase = query;
-                        geoBloc.searchQuery(query);
-                      },
+                        },
+                      ),
                     ),
-                    // expandedHeight: 350,
-                    // collapsedHeight: 200,
                   ),
                 ),
                 PlatformWidget(
@@ -179,6 +194,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                       await geoBloc.onRefresh(searchedPhrase);
                     },
                   ),
+                  material: (_, __) => const SliverToBoxAdapter(),
                 ),
                 StreamBuilder(
                   stream: geoBloc.searchingLocations,
@@ -193,6 +209,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                           : CrossFadeState.showSecond,
                       firstChild: Container(
                         alignment: Alignment.center,
+                        clipBehavior: Clip.none,
                         margin: const EdgeInsets.only(top: 8),
                         child: PlatformCircularProgressIndicator(),
                       ),

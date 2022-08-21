@@ -29,7 +29,7 @@ class SettingsBloc extends RxBloc {
   Stream<Brightness> get themeMode => _themeMode.stream;
 
   SettingsBloc(this._sharedPrefsService) {
-    // _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
+    _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);

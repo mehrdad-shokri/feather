@@ -49,6 +49,8 @@ class FeatherAppState extends State<FeatherApp> {
       });
       settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
     } catch (e) {
+      print('error');
+      print(e);
       //  Record crash in crashlytics
     }
   }
@@ -183,9 +185,12 @@ class FeatherAppState extends State<FeatherApp> {
               errorColor: Constants.ERROR_COLOR,
               dividerColor: Constants.LINE_COLOR_DARK,
               cardTheme: CardTheme(shape: Constants.CARD_SHAPE, elevation: 4),
-              colorScheme: Theme.of(context)
-                  .colorScheme
-                  .copyWith(secondary: Constants.SECONDARY_COLOR),
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                  secondary: Constants.SECONDARY_COLOR,
+                  brightness: Brightness.dark),
+              appBarTheme: AppBarTheme.of(context).copyWith(
+                  backgroundColor: Constants.BAR_BACKGROUND_COLOR_DARK,
+                  foregroundColor: Constants.TEXT_BLACK_COLOR_DARK),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
                       primary: Constants.PRIMARY_COLOR_DARK,
@@ -229,8 +234,13 @@ class FeatherAppState extends State<FeatherApp> {
               scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
               colorScheme: Theme.of(context) // Todo Need consideration
                   .colorScheme
-                  .copyWith(secondary: Constants.SECONDARY_COLOR),
+                  .copyWith(
+                      secondary: Constants.SECONDARY_COLOR,
+                      brightness: Brightness.light),
               cardTheme: CardTheme(shape: Constants.CARD_SHAPE, elevation: 4),
+              appBarTheme: AppBarTheme.of(context).copyWith(
+                  backgroundColor: Constants.BAR_BACKGROUND_COLOR,
+                  foregroundColor: Constants.TEXT_BLACK_COLOR),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
                       primary: Constants.PRIMARY_COLOR_DARK,
@@ -255,14 +265,8 @@ class FeatherAppState extends State<FeatherApp> {
                       fontFamily: Constants.APPLICATION_DEFAULT_FONT),
                   behavior: SnackBarBehavior.floating),
 //              scaffoldBackgroundColor: Colors.white,
-              bottomSheetTheme: const BottomSheetThemeData(
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(24)))),
-              textTheme: Theme.of(context).textTheme.apply(
-                  fontFamily: Constants.APPLICATION_DEFAULT_FONT,
-                  bodyColor: Constants.TEXT_BODY_COLOR,
-                  displayColor: Constants.TEXT_BODY_COLOR))),
+              bottomSheetTheme: const BottomSheetThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))),
+              textTheme: Theme.of(context).textTheme.apply(fontFamily: Constants.APPLICATION_DEFAULT_FONT, bodyColor: Constants.TEXT_BODY_COLOR, displayColor: Constants.TEXT_BODY_COLOR))),
     );
   }
 }

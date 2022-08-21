@@ -63,6 +63,7 @@ class _HomePageState extends State<HomePage> {
                 await weatherBloc.refresh(widget.arguments.location);
               },
             ),
+            material: (_, __) => const SliverToBoxAdapter(),
           ),
           ForecastHeroAppbar(
               weatherUnit: weatherBloc.weatherUnit,

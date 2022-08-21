@@ -35,10 +35,13 @@ class CityCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     primary: cardColor(context),
                     onPrimary: textColor(context),
+                    alignment: Alignment.center,
+                    padding: Constants.CARD_INNER_PADDING,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)))),
             cupertino: (_, __) => CupertinoElevatedButtonData(
                 color: cardColor(context),
+                padding: Constants.CARD_INNER_PADDING,
                 borderRadius: BorderRadius.circular(16)),
             child: Stack(
               alignment: Alignment.topRight,
