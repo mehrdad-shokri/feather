@@ -404,18 +404,18 @@ class WeatherForecast {
       case 231:
       case 232:
         return [
-          HexColor.fromHex('#094bf4'),
+          HexColor.fromHex('#6da5fa'),
           HexColor.fromHex('#4680f2'),
-          HexColor.fromHex('#6da5fa')
+          HexColor.fromHex('#094bf4'),
         ];
       case 210:
       case 211:
       case 212:
       case 221:
         return [
-          HexColor.fromHex('#094bf4'),
+          HexColor.fromHex('#6da5fa'),
           HexColor.fromHex('#4680f2'),
-          HexColor.fromHex('#6da5fa')
+          HexColor.fromHex('#094bf4'),
         ];
 
       case 300:
@@ -432,9 +432,9 @@ class WeatherForecast {
       case 522:
       case 523:
         return [
-          HexColor.fromHex('#1a5bbd'),
+          HexColor.fromHex('#7bb2ff'),
           HexColor.fromHex('#628af1'),
-          HexColor.fromHex('#7bb2ff')
+          HexColor.fromHex('#1a5bbd'),
         ];
 
       case 500:
@@ -446,15 +446,15 @@ class WeatherForecast {
             sunset != null &&
             isNight(date, sunrise, sunset)) {
           return [
-            HexColor.fromHex('#092795'),
+            HexColor.fromHex('#4456f4'),
             HexColor.fromHex('#2329cb'),
-            HexColor.fromHex('#4456f4')
+            HexColor.fromHex('#092795'),
           ];
         }
         return [
-          HexColor.fromHex('#0060c0'),
+          HexColor.fromHex('#458af1'),
           HexColor.fromHex('#387EE8'),
-          HexColor.fromHex('#458af1')
+          HexColor.fromHex('#0060c0'),
         ];
 
       case 511:
@@ -473,15 +473,15 @@ class WeatherForecast {
             sunset != null &&
             isNight(date, sunrise, sunset)) {
           return [
-            HexColor.fromHex('#03398b'),
+            HexColor.fromHex('#4c97df'),
             HexColor.fromHex('#548bc1'),
-            HexColor.fromHex('#4c97df')
+            HexColor.fromHex('#03398b'),
           ];
         }
         return [
-          HexColor.fromHex('#0185ff'),
+          HexColor.fromHex('95b7ff'),
           HexColor.fromHex('#45aefb'),
-          HexColor.fromHex('95b7ff')
+          HexColor.fromHex('#0185ff'),
         ];
       case 701:
       case 711:
@@ -494,39 +494,39 @@ class WeatherForecast {
       case 771:
       case 781:
         return [
-          HexColor.fromHex('#6796c0'),
+          HexColor.fromHex('#b4c9f6'),
           HexColor.fromHex('#88b6d7'),
-          HexColor.fromHex('#b4c9f6')
+          HexColor.fromHex('#6796c0'),
         ];
       case 800:
         if (sunrise != null &&
             sunset != null &&
             isNight(date, sunrise, sunset)) {
           return [
-            HexColor.fromHex('#080C72'),
+            HexColor.fromHex('#232B70'),
             HexColor.fromHex('#011098'),
-            HexColor.fromHex('#232B70')
+            HexColor.fromHex('#080C72'),
           ];
         }
         return [
-          HexColor.fromHex('#0f6ad6'),
+          HexColor.fromHex('#6dc2ff'),
           HexColor.fromHex('#5ea8fe'),
-          HexColor.fromHex('#6dc2ff')
+          HexColor.fromHex('#0f6ad6'),
         ];
       case 801:
         if (sunrise != null &&
             sunset != null &&
             isNight(date, sunrise, sunset)) {
           return [
-            HexColor.fromHex('#2C2A89'),
+            HexColor.fromHex('#4650A9'),
             HexColor.fromHex('#3B438B'),
-            HexColor.fromHex('#4650A9')
+            HexColor.fromHex('#2C2A89'),
           ];
         }
         return [
-          HexColor.fromHex('#0085FF'),
+          HexColor.fromHex('#7DCFFE'),
           HexColor.fromHex('#45A5FE'),
-          HexColor.fromHex('#7DCFFE')
+          HexColor.fromHex('#0085FF'),
         ];
       case 802:
       case 803:
@@ -535,21 +535,21 @@ class WeatherForecast {
             sunset != null &&
             isNight(date, sunrise, sunset)) {
           return [
-            HexColor.fromHex('#08215C'),
+            HexColor.fromHex('#1D3677'),
             HexColor.fromHex('#2F3F7B'),
-            HexColor.fromHex('#1D3677')
+            HexColor.fromHex('#08215C'),
           ];
         }
         return [
           HexColor.fromHex('#06c7f1'),
           HexColor.fromHex('#07b9e0'),
-          HexColor.fromHex('#0648f1')
+          HexColor.fromHex('#0648f1'),
         ];
       default:
         return [
-          HexColor.fromHex('#06c7f1'),
-          HexColor.fromHex('#07b9e0'),
-          HexColor.fromHex('#0648f1')
+          HexColor.fromHex('#0f6ad6'),
+          HexColor.fromHex('#5ea8fe'),
+          HexColor.fromHex('#6dc2ff')
         ];
     }
   }
