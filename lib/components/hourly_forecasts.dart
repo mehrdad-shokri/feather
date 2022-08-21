@@ -50,6 +50,9 @@ class HourlyForecasts extends StatelessWidget {
                           fontWeight: Constants.BOLD_FONT_WEIGHT,
                           fontSize: Constants.S1_FONT_SIZE),
                     ),
+                    const SizedBox(
+                      width: 4,
+                    ),
                     Icon(
                       isCupertino(context)
                           ? Icons.arrow_forward_ios

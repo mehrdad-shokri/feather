@@ -12,13 +12,14 @@ class ForecastHeroAppbar extends StatelessWidget {
   final List<WeatherApiProvider> apiProviders;
   final Function(WeatherApiProvider) onApiProviderChanged;
   final Function(WeatherUnits) onWeatherUnitChanged;
-  final Function(Brightness?) onThemeChange;
+  final Function(ThemeMode) onThemeChange;
   final Function(Locale) onLocaleChange;
   final Stream<WeatherApiProvider> apiProvider;
+  final Stream<Locale> locale;
   final Stream<WeatherUnits> weatherUnit;
   final List<ThemeMode> themes;
   final List<Locale> locales;
-  final Stream<Brightness> theme;
+  final Stream<ThemeMode> theme;
   final Stream<WeatherForecast> currentForecast;
   final AppLocalizations t;
 
@@ -28,6 +29,7 @@ class ForecastHeroAppbar extends StatelessWidget {
       required this.onWeatherUnitChanged,
       required this.apiProvider,
       required this.apiProviders,
+      required this.locale,
       required this.weatherUnit,
       required this.themes,
       required this.theme,
@@ -61,6 +63,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                             title: t.dataSource,
                             items: apiProviders,
                             cancelText: t.cancel,
+                            value: apiProvider,
                             translateItem: (WeatherApiProvider e) =>
                                 translateWeatherProvider(e, t),
                             onSelect: (WeatherApiProvider e) =>
@@ -79,10 +82,10 @@ class ForecastHeroAppbar extends StatelessWidget {
                             title: t.theme,
                             items: themes,
                             cancelText: t.cancel,
+                            value: theme,
                             translateItem: (ThemeMode e) =>
                                 translateThemeMode(e, t),
-                            onSelect: (ThemeMode e) =>
-                                onThemeChange(themeModeToBrightness(e)));
+                            onSelect: (ThemeMode e) => onThemeChange(e));
                       },
                       material: (context, target) =>
                           MaterialPopupMenuOptionData(child: Text(t.theme)),
@@ -95,6 +98,7 @@ class ForecastHeroAppbar extends StatelessWidget {
                             title: t.language,
                             items: locales,
                             cancelText: t.cancel,
+                            value: locale,
                             translateItem: (Locale e) => translatedLocale(e, t),
                             onSelect: (Locale e) => onLocaleChange(e));
                       },

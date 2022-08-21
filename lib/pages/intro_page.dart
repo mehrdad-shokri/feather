@@ -43,7 +43,7 @@ class _IntroPageState extends State<IntroPage> {
               Flexible(
                 flex: 2,
                 fit: FlexFit.tight,
-                child: Image.asset('assets/images/logo_android.png',
+                child: Image.asset('assets/images/logo.png',
                     width: double.maxFinite),
               ),
               const SizedBox(
@@ -83,7 +83,7 @@ class _IntroPageState extends State<IntroPage> {
                         color: Constants.PRIMARY_COLOR,
                         material: (_, __) => MaterialElevatedButtonData(
                             style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(120, 45),
+                                fixedSize: const Size(145, 45),
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 4, horizontal: 16))),
                         child: Text(

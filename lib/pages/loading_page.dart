@@ -11,7 +11,7 @@ class LoadingPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo_android.png', width: 320),
+            Image.asset('assets/images/logo.png', width: 320),
             const SizedBox(
               height: 16,
             ),

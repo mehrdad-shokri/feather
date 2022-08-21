@@ -23,7 +23,7 @@ class WeatherForecastIcon extends StatelessWidget {
             height: Constants.ICON_MEDIUM_SIZE,
             width: Constants.ICON_MEDIUM_SIZE,
             fit: BoxFit.contain,
-            color: Colors.grey.shade300,
+            color: Colors.white,
           ),
         const SizedBox(
           height: 8,

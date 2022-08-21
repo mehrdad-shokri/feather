@@ -94,22 +94,21 @@ String translatedLocale(Locale locale, AppLocalizations t) {
   }
 }
 
-Brightness? themeModeToBrightness(ThemeMode themeMode) {
+Brightness themeModeToBrightness(ThemeMode themeMode) {
   switch (themeMode) {
     case ThemeMode.light:
       return Brightness.light;
     case ThemeMode.dark:
       return Brightness.dark;
     case ThemeMode.system:
-      return null;
-    default:
-      return null;
+      return WidgetsBinding.instance.window.platformBrightness;
   }
 }
 
 void showPlatformActionSheet<T>(
     {required BuildContext context,
     required List<T> items,
+    required Stream<T> value,
     required Function(T) onSelect,
     required Function(T) translateItem,
     required String title,
@@ -117,6 +116,7 @@ void showPlatformActionSheet<T>(
   if (isCupertino(context)) {
     showCupertinoModalPopup(
         context: context,
+        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
         builder: (context) => CupertinoActionSheet(
               title: Text(title),
               actions: items
@@ -140,15 +140,26 @@ void showPlatformActionSheet<T>(
                     },
                     child: Text(cancelText))
               ],
-              content: Column(
-                children: items
-                    .map((e) => TextButton(
-                        onPressed: () {
-                          onSelect(e);
-                          Navigator.pop(context);
-                        },
-                        child: Text(translateItem(e))))
-                    .toList(),
+              content: StreamBuilder(
+                stream: value,
+                builder: (context, snapshot) {
+                  T? val = snapshot.data as T?;
+                  if (val == null) return Container();
+                  return ListView(
+                    shrinkWrap: true,
+                    children: items
+                        .map((e) => RadioListTile(
+                              onChanged: (_) {
+                                onSelect(e);
+                                Navigator.pop(context);
+                              },
+                              groupValue: val.toString(),
+                              title: Text(translateItem(e)),
+                              value: e.toString(),
+                            ))
+                        .toList(),
+                  );
+                },
               ),
             ));
   }

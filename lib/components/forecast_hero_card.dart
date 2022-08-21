@@ -51,10 +51,11 @@ class ForecastHeroCard extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(24),
                       bottomRight: Radius.circular(24)),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0),
+                      color:
+                          isDark(context) ? Colors.grey.shade900 : Colors.grey,
+                      offset: const Offset(0.0, 1.0),
                       spreadRadius: 4,
                       blurRadius: 6.0,
                     ),

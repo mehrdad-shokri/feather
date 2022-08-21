@@ -131,6 +131,7 @@ class _CitySearchPageState extends State<CitySearchPage>
                           fontSize: Constants.H6_FONT_SIZE,
                           fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                     ),
+                    titleSpacing: 0,
                     iconTheme:
                         IconThemeData(color: appbarBackIconColor(context)),
                     pinned: true,
@@ -138,7 +139,6 @@ class _CitySearchPageState extends State<CitySearchPage>
                     floating: false,
                     stretch: false,
                     elevation: 4,
-                    forceElevated: true,
                     backgroundColor: barBackgroundColor(context),
                     expandedHeight: kToolbarHeight + 32,
                     collapsedHeight: kToolbarHeight + 32,

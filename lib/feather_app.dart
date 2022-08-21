@@ -6,6 +6,7 @@ import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/home_page_arguments.dart';
 import 'package:client/utils/constants.dart';
+import 'package:client/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,8 +25,7 @@ class FeatherAppState extends State<FeatherApp> {
   late SettingsBloc settingsBloc;
 
   Locale locale = Constants.DEFAULT_LOCALE;
-  Brightness brightness = Brightness.light;
-  Brightness theme = WidgetsBinding.instance.window.platformBrightness;
+  ThemeMode theme = ThemeMode.system;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class FeatherAppState extends State<FeatherApp> {
       await serviceProvider.onCreate();
       serviceProvider.setThemeChangeListener((event) {
         setState(() {
-          theme = event ?? WidgetsBinding.instance.window.platformBrightness;
+          theme = event;
         });
       });
       serviceProvider.setLocaleChangeListener((event) {
@@ -109,7 +109,7 @@ class FeatherAppState extends State<FeatherApp> {
       },
       cupertino: (context, target) => CupertinoAppData(
           theme: CupertinoThemeData(
-        brightness: theme,
+        brightness: themeModeToBrightness(theme),
         primaryColor: Constants.PRIMARY_COLOR,
         primaryContrastingColor: Colors.white,
         scaffoldBackgroundColor: Constants.BACKGROUND_COLOR,
@@ -172,8 +172,7 @@ class FeatherAppState extends State<FeatherApp> {
         ),
       )),
       material: (context, target) => MaterialAppData(
-          themeMode:
-              theme == Brightness.light ? ThemeMode.light : ThemeMode.dark,
+          themeMode: theme,
           darkTheme: ThemeData(
               brightness: Brightness.dark,
               toggleableActiveColor: Constants.SECONDARY_COLOR,
@@ -265,7 +264,8 @@ class FeatherAppState extends State<FeatherApp> {
                       fontFamily: Constants.APPLICATION_DEFAULT_FONT),
                   behavior: SnackBarBehavior.floating),
 //              scaffoldBackgroundColor: Colors.white,
-              bottomSheetTheme: const BottomSheetThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))),
+              bottomSheetTheme: const BottomSheetThemeData(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))),
               textTheme: Theme.of(context).textTheme.apply(fontFamily: Constants.APPLICATION_DEFAULT_FONT, bodyColor: Constants.TEXT_BODY_COLOR, displayColor: Constants.TEXT_BODY_COLOR))),
     );
   }

@@ -43,7 +43,7 @@ class ServiceProvider {
   static ServiceProvider getInstance() =>
       GetIt.I.get<ServiceProvider>(instanceName: 'appProvider');
 
-  void setThemeChangeListener(Function(Brightness? theme) callback) =>
+  void setThemeChangeListener(Function(ThemeMode theme) callback) =>
       themeChangeCallback = callback;
 
   void setLocaleChangeListener(Function(Locale theme) callback) =>

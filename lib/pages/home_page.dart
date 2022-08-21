@@ -73,6 +73,7 @@ class _HomePageState extends State<HomePage> {
               onApiProviderChanged: (provider) {
                 weatherBloc.onWeatherApiProviderChanged(provider);
               },
+              locale: settingsBloc.locale,
               currentForecast: weatherBloc.currentForecast,
               apiProvider: weatherBloc.weatherApiProvider,
               apiProviders: WeatherApiProvider.values,
@@ -86,11 +87,10 @@ class _HomePageState extends State<HomePage> {
                   ServiceProvider.getInstance().localeChangeCallback!(locale);
                 }
               },
-              onThemeChange: (Brightness? brightness) {
-                settingsBloc.onThemeChanged(brightness);
+              onThemeChange: (ThemeMode themeMode) {
+                settingsBloc.onThemeChanged(themeMode);
                 if (ServiceProvider.getInstance().themeChangeCallback != null) {
-                  ServiceProvider.getInstance()
-                      .themeChangeCallback!(brightness);
+                  ServiceProvider.getInstance().themeChangeCallback!(themeMode);
                 }
               },
               t: appLocalizations!),

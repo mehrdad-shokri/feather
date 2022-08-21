@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends RxBloc {
-  final Brightness _defaultTheme =
-      WidgetsBinding.instance.window.platformBrightness;
+  // final Brightness _defaultTheme =
+  //     WidgetsBinding.instance.window.platformBrightness;
   final SharedPrefsService _sharedPrefsService;
   final _isFirstVisit = BehaviorSubject<bool>();
   final _locale = BehaviorSubject<Locale>();
   final _activeLocation = BehaviorSubject<Location>();
   final _geoApiProvider = BehaviorSubject<GeoApiProvider>();
-  final _themeMode = BehaviorSubject<Brightness>();
+  final _themeMode = BehaviorSubject<ThemeMode>();
 
   Stream<Locale> get locale => _locale.stream;
 
@@ -26,10 +26,10 @@ class SettingsBloc extends RxBloc {
 
   Stream<GeoApiProvider> get geoApiProvider => _geoApiProvider.stream;
 
-  Stream<Brightness> get themeMode => _themeMode.stream;
+  Stream<ThemeMode> get themeMode => _themeMode.stream;
 
   SettingsBloc(this._sharedPrefsService) {
-    _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
+    // _sharedPrefsService.instance.remove(Constants.IS_FIRST_VISIT_PREFS);
     _isFirstVisit.add(
         _sharedPrefsService.instance.getBool(Constants.IS_FIRST_VISIT_PREFS) ??
             true);
@@ -52,9 +52,9 @@ class SettingsBloc extends RxBloc {
     String? themeMode =
         _sharedPrefsService.instance.getString(Constants.USER_THEME_PREFS);
     _themeMode.add(strNotEmpty(themeMode)
-        ? EnumToString.fromString(Brightness.values, themeMode!) ??
-            _defaultTheme
-        : _defaultTheme);
+        ? EnumToString.fromString(ThemeMode.values, themeMode!) ??
+            ThemeMode.system
+        : ThemeMode.system);
   }
 
   void onLocaleChanged(Locale locale) {
@@ -63,13 +63,10 @@ class SettingsBloc extends RxBloc {
         .setString(Constants.USER_LOCALE_PREFS, locale.languageCode));
   }
 
-  void onThemeChanged(Brightness? brightness) {
-    _themeMode.add(brightness ?? _defaultTheme);
-    if (brightness != null) {
-      addFutureSubscription(_sharedPrefsService.instance.setString(
-          Constants.USER_THEME_PREFS,
-          EnumToString.convertToString(brightness)));
-    }
+  void onThemeChanged(ThemeMode brightness) {
+    _themeMode.add(brightness);
+    addFutureSubscription(_sharedPrefsService.instance.setString(
+        Constants.USER_THEME_PREFS, EnumToString.convertToString(brightness)));
   }
 
   void onFirstVisited() {

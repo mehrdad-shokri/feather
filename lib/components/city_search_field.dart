@@ -30,7 +30,7 @@ class SearchField extends StatelessWidget {
     return Container(
         padding: isCupertino(context)
             ? const EdgeInsets.only(right: 16, bottom: 8)
-            : const EdgeInsets.only(right: 16, bottom: 8, left: 16),
+            : const EdgeInsets.only(right: 16, bottom: 16, left: 16),
         decoration: BoxDecoration(
           color: isCupertino(context)
               ? CupertinoTheme.of(context).barBackgroundColor
@@ -53,6 +53,7 @@ class SearchField extends StatelessWidget {
               ),
               material: (_, __) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     color: inputBackgroundColor(context)),
@@ -73,14 +74,14 @@ class SearchField extends StatelessWidget {
                       size: Constants.ICON_MEDIUM_SIZE,
                     ),
                     prefixIconConstraints: const BoxConstraints(
-                      maxWidth: 28,
+                      minWidth: 32,
                     ),
                     contentPadding: EdgeInsets.zero,
-                    labelStyle: TextStyle(
+                    hintStyle: TextStyle(
                         color: placeholderColor(context),
                         fontWeight: Constants.MEDIUM_FONT_WEIGHT,
                         fontSize: Constants.S1_FONT_SIZE),
-                    labelText: t.searchLabel,
+                    hintText: t.searchLabel,
                     border: InputBorder.none,
                   ),
                   textInputAction: TextInputAction.search,
@@ -96,6 +97,7 @@ class SearchField extends StatelessWidget {
                 bool? loading = snapshot.data as bool?;
                 return Container(
                   width: 32,
+                  height: 32,
                   alignment: Alignment.center,
                   padding: EdgeInsets.zero,
                   margin: const EdgeInsets.only(left: 4),
@@ -117,11 +119,13 @@ class SearchField extends StatelessWidget {
                       ),
                     ),
                     firstChild: PlatformIconButton(
-                      padding: EdgeInsets.zero,
                       cupertino: (_, __) => CupertinoIconButtonData(
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           minSize: Constants.ICON_MEDIUM_SIZE),
+                      material: (_, __) => MaterialIconButtonData(
+                        padding: EdgeInsets.zero,
+                      ),
                       icon: Icon(
                         Feather.my_location,
                         color: Constants.PRIMARY_COLOR,
