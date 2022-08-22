@@ -84,4 +84,21 @@ class SettingsBloc extends RxBloc {
         Constants.GEO_API_PROVIDER_PREFS,
         EnumToString.convertToString(geoApiProvider)));
   }
+
+  ThemeMode currentTheme() {
+    String? themeMode =
+        _sharedPrefsService.instance.getString(Constants.USER_THEME_PREFS);
+    return strNotEmpty(themeMode)
+        ? EnumToString.fromString(ThemeMode.values, themeMode!) ??
+            Constants.DEFAULT_THEME
+        : Constants.DEFAULT_THEME;
+  }
+
+  Locale currentLocale() {
+    String? localePrefs =
+        _sharedPrefsService.instance.getString(Constants.USER_LOCALE_PREFS);
+    return strNotEmpty(localePrefs)
+        ? Locale.fromSubtags(languageCode: localePrefs!)
+        : Constants.DEFAULT_LOCALE;
+  }
 }

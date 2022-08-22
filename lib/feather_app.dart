@@ -48,6 +48,10 @@ class FeatherAppState extends State<FeatherApp> {
         });
       });
       settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
+      setState(() {
+        theme = settingsBloc.currentTheme();
+        locale = settingsBloc.currentLocale();
+      });
     } catch (e) {
       //  TODO: Record crash in crashlytics
     }
