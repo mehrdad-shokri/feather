@@ -59,11 +59,19 @@ class WeatherBloc extends RxBloc {
     _weatherApi = _instantiateWeatherApi(weatherApiProvider, weatherApiUnits);
     _weatherApiProvider.listen((event) {
       _weatherApi = _instantiateWeatherApi(event, _weatherApiUnit.value);
-      if (_lastLocation != null) getCurrentForecast(_lastLocation!);
+      if (_lastLocation != null) {
+        getCurrentForecast(_lastLocation!);
+        getDailyForecast(_lastLocation!);
+        getHourlyForecast(_lastLocation!);
+      }
     });
     _weatherApiUnit.listen((event) {
       _weatherApi = _instantiateWeatherApi(_weatherApiProvider.value, event);
-      if (_lastLocation != null) getCurrentForecast(_lastLocation!);
+      if (_lastLocation != null) {
+        getCurrentForecast(_lastLocation!);
+        getDailyForecast(_lastLocation!);
+        getHourlyForecast(_lastLocation!);
+      }
     });
     _dailyForecast.listen((value) {
       if (_hourlyForecast.hasValue) {
