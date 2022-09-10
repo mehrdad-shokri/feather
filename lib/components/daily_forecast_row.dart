@@ -38,6 +38,7 @@ class _DailyForecastRowState extends State<DailyForecastRow>
   @override
   void dispose() {
     controller.reverse();
+    controller.dispose();
     super.dispose();
   }
 

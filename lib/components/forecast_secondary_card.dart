@@ -232,40 +232,53 @@ class ForecastSecondaryCard extends StatelessWidget {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  WeatherForecastIcon(
-                                    assetDir: 'assets/svg/wind.svg',
-                                    value: forecast.windSpeed == 0
-                                        ? '-'
-                                        : '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
-                                    title: t.wind,
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: WeatherForecastIcon(
+                                      assetDir: 'assets/svg/wind.svg',
+                                      value: forecast.windSpeed == 0
+                                          ? '-'
+                                          : '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                      title: t.wind,
+                                    ),
                                   ),
-                                  StreamBuilder(
-                                    stream: hourlyForecast,
-                                    builder: (context, snapshot) {
-                                      if (forecast.pop == null) {
-                                        return WeatherForecastIcon(
-                                          assetDir:
-                                              'assets/svg/chance-of-rain.svg',
-                                          value: '-',
-                                          title: t.chanceOfRain,
-                                        );
-                                      } else {
-                                        return WeatherForecastIcon(
-                                          assetDir:
-                                              'assets/svg/chance-of-rain.svg',
-                                          value: forecast.pop == 0
-                                              ? '-'
-                                              : '${((forecast.pop!) * 100).toInt()}%',
-                                          title: t.chanceOfRain,
-                                        );
-                                      }
-                                    },
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: StreamBuilder(
+                                      stream: hourlyForecast,
+                                      builder: (context, snapshot) {
+                                        if (forecast.pop == null) {
+                                          return WeatherForecastIcon(
+                                            assetDir:
+                                                'assets/svg/chance-of-rain.svg',
+                                            value: '-',
+                                            title: t.chanceOfRain,
+                                          );
+                                        } else {
+                                          return WeatherForecastIcon(
+                                            assetDir:
+                                                'assets/svg/chance-of-rain.svg',
+                                            value: forecast.pop == 0
+                                                ? '-'
+                                                : '${((forecast.pop!) * 100).toInt()}%',
+                                            title: t.chanceOfRain,
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
-                                  WeatherForecastIcon(
-                                    assetDir: 'assets/svg/humidity.svg',
-                                    value: '${forecast.humidityPercent}%',
-                                    title: t.humidity,
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: WeatherForecastIcon(
+                                      assetDir: 'assets/svg/humidity.svg',
+                                      value: '${forecast.humidityPercent}%',
+                                      title: t.humidity,
+                                    ),
                                   ),
                                 ],
                               )

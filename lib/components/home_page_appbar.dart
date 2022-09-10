@@ -120,7 +120,7 @@ class HomePageAppbar extends StatelessWidget {
                   child: Icon(
                     isMaterial(context)
                         ? Icons.more_vert
-                        : CupertinoIcons.ellipsis_vertical_circle,
+                        : CupertinoIcons.ellipsis_circle,
                     color: Colors.white,
                     size: 32,
                   ),
