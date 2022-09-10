@@ -37,9 +37,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "openWeatherMap": "OpenWeather",
+  "openWeatherMap": "Open Weather",
   "@openWeatherMap": {
-    "description": "OpenWeather",
+    "description": "Open Weather",
     "type": "text",
     "placeholders": {}
   },
@@ -136,6 +136,12 @@
   "tomorrow": "Tomorrow",
   "@tomorrow": {
     "description": "tomorrow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "knowMore": "Know More",
+  "@knowMore": {
+    "description": "know more",
     "type": "text",
     "placeholders": {}
   }

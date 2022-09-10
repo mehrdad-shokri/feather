@@ -199,8 +199,8 @@ class ForecastSecondaryCard extends StatelessWidget {
                                                 child: SvgPicture.asset(
                                                   'assets/svg/degrees.svg',
                                                   color: Colors.white,
-                                                  width: 6,
-                                                  height: 6,
+                                                  width: 8,
+                                                  height: 8,
                                                 ),
                                               )
                                             ],

@@ -39,7 +39,7 @@ class ForecastHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * .7,
+        minHeight: MediaQuery.of(context).size.height * .65,
       ),
       color: backgroundColor(context),
       child: StreamBuilder(
@@ -233,50 +233,110 @@ class ForecastHeroCard extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      WeatherForecastIcon(
-                                        assetDir: 'assets/svg/wind.svg',
-                                        value: forecast.windSpeed == 0
-                                            ? '-'
-                                            : '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
-                                        title: t.wind,
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: WeatherForecastIcon(
+                                          assetDir: 'assets/svg/wind.svg',
+                                          value: forecast.windSpeed == 0
+                                              ? '-'
+                                              : '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                          title: t.wind,
+                                        ),
                                       ),
-                                      StreamBuilder(
-                                        stream: dailyForecast,
-                                        builder: (context, snapshot) {
-                                          List<WeatherForecast>? forecasts =
-                                              snapshot.data
-                                                  as List<WeatherForecast>?;
-                                          WeatherForecast? forecast =
-                                              firstOrNull(
-                                                  forecasts,
-                                                  (forecast) => isSameDay(
-                                                      forecast.date,
-                                                      DateTime.now()));
-                                          if (forecast == null ||
-                                              forecast.pop == null) {
-                                            return WeatherForecastIcon(
-                                              assetDir:
-                                                  'assets/svg/chance-of-rain.svg',
-                                              value: '-',
-                                              title: t.chanceOfRain,
-                                            );
-                                          } else {
-                                            return WeatherForecastIcon(
-                                              assetDir:
-                                                  'assets/svg/chance-of-rain.svg',
-                                              value: forecast.pop == 0
-                                                  ? '-'
-                                                  : '${((forecast.pop!) * 100).toInt()}%',
-                                              title: t.chanceOfRain,
-                                            );
-                                          }
-                                        },
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: StreamBuilder(
+                                          stream: dailyForecast,
+                                          builder: (context, snapshot) {
+                                            List<WeatherForecast>? forecasts =
+                                                snapshot.data
+                                                    as List<WeatherForecast>?;
+                                            WeatherForecast? forecast =
+                                                firstOrNull(
+                                                    forecasts,
+                                                    (forecast) => isSameDay(
+                                                        forecast.date,
+                                                        DateTime.now()));
+                                            if (forecast == null ||
+                                                forecast.pop == null) {
+                                              return WeatherForecastIcon(
+                                                assetDir:
+                                                    'assets/svg/chance-of-rain.svg',
+                                                value: '-',
+                                                title: t.chanceOfRain,
+                                              );
+                                            } else {
+                                              return WeatherForecastIcon(
+                                                assetDir:
+                                                    'assets/svg/chance-of-rain.svg',
+                                                value: forecast.pop == 0
+                                                    ? '-'
+                                                    : '${((forecast.pop!) * 100).toInt()}%',
+                                                title: t.chanceOfRain,
+                                              );
+                                            }
+                                          },
+                                        ),
                                       ),
-                                      WeatherForecastIcon(
-                                        assetDir: 'assets/svg/humidity.svg',
-                                        value: '${forecast.humidityPercent}%',
-                                        title: t.humidity,
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: WeatherForecastIcon(
+                                          assetDir: 'assets/svg/humidity.svg',
+                                          value: '${forecast.humidityPercent}%',
+                                          title: t.humidity,
+                                        ),
                                       ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      PlatformElevatedButton(
+                                        onPressed: () {},
+                                        color: HexColor.fromHex('#252020'),
+                                        material: (context, _) =>
+                                            MaterialElevatedButtonData(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        HexColor.fromHex(
+                                                            '#252020'),
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16)),
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 16),
+                                                    minimumSize:
+                                                        const Size(64, 32))),
+                                        cupertino: (context, _) =>
+                                            CupertinoElevatedButtonData(
+                                                minSize: 32,
+                                                color:
+                                                    HexColor.fromHex('#252020'),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 16),
+                                                borderRadius:
+                                                    BorderRadius.circular(16)),
+                                        child: Text(
+                                          t.knowMore,
+                                          style: const TextStyle(
+                                              fontSize:
+                                                  Constants.CAPTION_FONT_SIZE,
+                                              color: Colors.white,
+                                              fontWeight:
+                                                  Constants.BOLD_FONT_WEIGHT),
+                                        ),
+                                      )
                                     ],
                                   )
                                 ],

@@ -4,6 +4,7 @@ import 'package:client/types/weather_units.dart';
 import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
 import 'package:client/utils/utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -114,10 +115,12 @@ class HomePageAppbar extends StatelessWidget {
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(child: Text(t.about)))
                 ],
-                icon: const Padding(
-                  padding: EdgeInsets.only(right: 8),
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 8),
                   child: Icon(
-                    Icons.more_vert,
+                    isMaterial(context)
+                        ? Icons.more_vert
+                        : CupertinoIcons.ellipsis_vertical_circle,
                     color: Colors.white,
                     size: 32,
                   ),

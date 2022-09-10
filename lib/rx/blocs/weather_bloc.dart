@@ -10,6 +10,7 @@ import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
+import 'package:client/utils/utils.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -126,10 +127,12 @@ class WeatherBloc extends RxBloc {
       _updatingHourlyForecast.add(false);
       if (_dailyForecast.hasValue) {
         _hourlyForecast.add(event.map((e) {
-          WeatherForecast day = _dailyForecast.value
-              .firstWhere((element) => isSameDay(element.date, e.date));
-          e.sunrise = day.sunrise;
-          e.sunset = day.sunset;
+          WeatherForecast? day = firstOrNull(_dailyForecast.value,
+              (element) => isSameDay(element.date, e.date));
+          if (day != null) {
+            e.sunrise = day.sunrise;
+            e.sunset = day.sunset;
+          }
           return e;
         }).toList());
       } else {

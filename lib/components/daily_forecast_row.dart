@@ -37,8 +37,8 @@ class _DailyForecastRowState extends State<DailyForecastRow>
 
   @override
   void dispose() {
-    super.dispose();
     controller.reverse();
+    super.dispose();
   }
 
   @override
@@ -94,6 +94,7 @@ class _DailyForecastRowState extends State<DailyForecastRow>
               child: Stack(
                 fit: StackFit.loose,
                 alignment: Alignment.centerRight,
+                clipBehavior: Clip.none,
                 children: [
                   Text(
                     '${widget.forecast.minTemp.round()}/${widget.forecast.maxTemp.round()}',
@@ -102,13 +103,13 @@ class _DailyForecastRowState extends State<DailyForecastRow>
                     ),
                   ),
                   Positioned(
-                    top: -4,
-                    right: 0,
+                    top: -2,
+                    right: -4,
                     child: SvgPicture.asset(
                       'assets/svg/degrees.svg',
                       color: textColor(context),
-                      width: 6,
-                      height: 6,
+                      width: 4,
+                      height: 4,
                     ),
                   )
                 ],
