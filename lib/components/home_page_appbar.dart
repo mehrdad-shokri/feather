@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class ForecastHeroAppbar extends StatelessWidget {
+class HomePageAppbar extends StatelessWidget {
   final List<WeatherApiProvider> apiProviders;
   final Function(WeatherApiProvider) onApiProviderChanged;
   final Function(WeatherUnits) onWeatherUnitChanged;
@@ -23,7 +23,7 @@ class ForecastHeroAppbar extends StatelessWidget {
   final Stream<WeatherForecast> currentForecast;
   final AppLocalizations t;
 
-  const ForecastHeroAppbar(
+  const HomePageAppbar(
       {Key? key,
       required this.onApiProviderChanged,
       required this.onWeatherUnitChanged,

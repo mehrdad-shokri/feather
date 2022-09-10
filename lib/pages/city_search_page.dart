@@ -24,8 +24,7 @@ class CitySearchPage extends StatefulWidget {
   State<CitySearchPage> createState() => _CitySearchPageState();
 }
 
-class _CitySearchPageState extends State<CitySearchPage>
-    with SingleTickerProviderStateMixin {
+class _CitySearchPageState extends State<CitySearchPage> {
   String? searchedPhrase;
   AppLocalizations? appLocalizations;
 

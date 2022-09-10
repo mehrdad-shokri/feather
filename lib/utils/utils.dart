@@ -51,8 +51,9 @@ bool isRtl(BuildContext context) {
   return ['fa', 'ar', 'he'].contains(currentLocale(context)) ? true : false;
 }
 
-T? firstOrNull<T>(Iterable<T> items, callback) {
+T? firstOrNull<T>(Iterable<T>? items, callback) {
   try {
+    if (items == null) return null;
     return items.firstWhere(callback);
   } catch (e) {
     return null;

@@ -67,7 +67,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "next7Days": "7 days",
+  "next7Days": "7 Days",
   "@next7Days": {
     "description": "Next 7 days",
     "type": "text",
@@ -130,6 +130,12 @@
   "searchLabel": "Search",
   "@searchLabel": {
     "description": "Search",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tomorrow": "Tomorrow",
+  "@tomorrow": {
+    "description": "tomorrow",
     "type": "text",
     "placeholders": {}
   }

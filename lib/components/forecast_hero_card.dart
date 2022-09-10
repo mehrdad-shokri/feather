@@ -19,8 +19,8 @@ class ForecastHeroCard extends StatelessWidget {
   final Stream<Location> location;
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
-  final Stream<WeatherForecast> weatherForecast;
-  final Stream<List<WeatherForecast>> hourlyForecast;
+  final Stream<WeatherForecast> currentForecast;
+  final Stream<List<WeatherForecast>> dailyForecast;
   final Stream<WeatherUnits> weatherUnit;
   final AppLocalizations t;
 
@@ -29,8 +29,8 @@ class ForecastHeroCard extends StatelessWidget {
       required this.location,
       required this.onLocationChangeRequest,
       required this.isUpdating,
-      required this.weatherForecast,
-      required this.hourlyForecast,
+      required this.currentForecast,
+      required this.dailyForecast,
       required this.weatherUnit,
       required this.t})
       : super(key: key);
@@ -38,9 +38,12 @@ class ForecastHeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * .7,
+      ),
       color: backgroundColor(context),
       child: StreamBuilder(
-          stream: weatherForecast,
+          stream: currentForecast,
           builder: (context, snapshot) {
             WeatherForecast? forecast = snapshot.data as WeatherForecast?;
             return Container(
@@ -73,7 +76,7 @@ class ForecastHeroCard extends StatelessWidget {
                       stops: const [0.0, .31, .95],
                       tileMode: TileMode.clamp)),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   PlatformTextButton(
                     onPressed: () {
@@ -154,26 +157,25 @@ class ForecastHeroCard extends StatelessWidget {
                     },
                   ),
                   StreamBuilder(
-                    stream: weatherForecast,
+                    stream: currentForecast,
                     builder: (context, snapshot) {
                       WeatherForecast? forecast =
                           snapshot.data as WeatherForecast?;
-                      return Expanded(
-                          child: AnimatedSwitcher(
+                      return AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         child: forecast == null
                             ? Container()
                             : Column(
-                                mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Expanded(
-                                      child: Lottie.asset(
-                                          'assets/lottie/${forecast.lottieAnimation}.json',
-                                          alignment: Alignment.center,
-                                          fit: BoxFit.contain)),
+                                  Lottie.asset(
+                                      'assets/lottie/${forecast.lottieAnimation}.json',
+                                      alignment: Alignment.center,
+                                      height: 150,
+                                      fit: BoxFit.contain),
                                   const SizedBox(
-                                    height: 16,
+                                    height: 4,
                                   ),
                                   Stack(
                                     alignment: Alignment.topRight,
@@ -182,14 +184,14 @@ class ForecastHeroCard extends StatelessWidget {
                                       Text(
                                         '${forecast.tempFeelsLike?.round()}',
                                         style: const TextStyle(
-                                            fontSize: Constants.H2_FONT_SIZE,
+                                            fontSize: 80,
                                             color: Colors.white,
                                             fontWeight:
                                                 Constants.MEDIUM_FONT_WEIGHT),
                                       ),
                                       Positioned(
                                         top: 0,
-                                        right: -8,
+                                        right: -12,
                                         child: SvgPicture.asset(
                                           'assets/svg/degrees.svg',
                                           color: Colors.white,
@@ -239,14 +241,19 @@ class ForecastHeroCard extends StatelessWidget {
                                         title: t.wind,
                                       ),
                                       StreamBuilder(
-                                        stream: hourlyForecast,
+                                        stream: dailyForecast,
                                         builder: (context, snapshot) {
                                           List<WeatherForecast>? forecasts =
                                               snapshot.data
                                                   as List<WeatherForecast>?;
-                                          if (forecasts == null ||
-                                              forecasts.isEmpty ||
-                                              forecasts.first.pop == null) {
+                                          WeatherForecast? forecast =
+                                              firstOrNull(
+                                                  forecasts,
+                                                  (forecast) => isSameDay(
+                                                      forecast.date,
+                                                      DateTime.now()));
+                                          if (forecast == null ||
+                                              forecast.pop == null) {
                                             return WeatherForecastIcon(
                                               assetDir:
                                                   'assets/svg/chance-of-rain.svg',
@@ -257,9 +264,9 @@ class ForecastHeroCard extends StatelessWidget {
                                             return WeatherForecastIcon(
                                               assetDir:
                                                   'assets/svg/chance-of-rain.svg',
-                                              value: forecasts.first.pop == 0
+                                              value: forecast.pop == 0
                                                   ? '-'
-                                                  : '${((forecasts.first.pop!) * 100).toInt()}%',
+                                                  : '${((forecast.pop!) * 100).toInt()}%',
                                               title: t.chanceOfRain,
                                             );
                                           }
@@ -274,7 +281,7 @@ class ForecastHeroCard extends StatelessWidget {
                                   )
                                 ],
                               ),
-                      ));
+                      );
                     },
                   )
                 ],

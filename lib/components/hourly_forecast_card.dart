@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
-class HourlyForecast extends StatelessWidget {
+class HourlyForecastCard extends StatelessWidget {
   final EdgeInsets? margin;
   final WeatherForecast weatherForecast;
 
-  const HourlyForecast(this.weatherForecast, {Key? key, this.margin})
+  const HourlyForecastCard(this.weatherForecast, {Key? key, this.margin})
       : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class HourlyForecast extends StatelessWidget {
             formatDate(
                 weatherForecast.date
                     .add(Duration(seconds: weatherForecast.timezone)),
-                format: 'MMMM d'),
+                format: 'MMM d'),
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white.withAlpha(200),

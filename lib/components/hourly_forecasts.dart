@@ -1,4 +1,4 @@
-import 'package:client/components/hourly_forecast.dart';
+import 'package:client/components/hourly_forecast_card.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
@@ -11,12 +11,14 @@ class HourlyForecasts extends StatelessWidget {
   final AppLocalizations t;
   final Stream<List<WeatherForecast>> hourlyForecast;
   final Stream<bool> isUpdating;
+  final Function onNextDaysClick;
 
   const HourlyForecasts(
       {Key? key,
       required this.t,
       required this.hourlyForecast,
-      required this.isUpdating})
+      required this.isUpdating,
+      required this.onNextDaysClick})
       : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class HourlyForecasts extends StatelessWidget {
               ),
               PlatformTextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/7days');
+                  onNextDaysClick();
                 },
                 padding: EdgeInsets.zero,
                 child: Row(
@@ -73,33 +75,35 @@ class HourlyForecasts extends StatelessWidget {
           stream: isUpdating,
           builder: (context, snapshot) {
             bool? updating = snapshot.data as bool?;
-            if (updating != null && updating) {
-              return LoadingAnimationWidget.bouncingBall(
-                  color: Constants.SECONDARY_COLOR,
-                  size: Constants.ICON_LARGE_SIZE);
-            }
-            return StreamBuilder(
-              stream: hourlyForecast,
-              builder: (context, snapshot) {
-                List<WeatherForecast>? forecasts =
-                    snapshot.data as List<WeatherForecast>?;
-                if (forecasts == null) {
-                  return Container();
-                }
-                return Container(
-                  height: 140,
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ListView.builder(
-                    itemCount: forecasts.length,
-                    scrollDirection: Axis.horizontal,
-                    itemExtent: 115,
-                    itemBuilder: (context, index) => HourlyForecast(
-                      forecasts.elementAt(index),
-                      key: Key(forecasts.elementAt(index).id),
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: updating != null && updating
+                  ? LoadingAnimationWidget.bouncingBall(
+                      color: Constants.SECONDARY_COLOR,
+                      size: Constants.ICON_LARGE_SIZE)
+                  : StreamBuilder(
+                      stream: hourlyForecast,
+                      builder: (context, snapshot) {
+                        List<WeatherForecast>? forecasts =
+                            snapshot.data as List<WeatherForecast>?;
+                        if (forecasts == null) {
+                          return Container();
+                        }
+                        return Container(
+                          height: 140,
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: ListView.builder(
+                            itemCount: forecasts.length,
+                            scrollDirection: Axis.horizontal,
+                            itemExtent: 115,
+                            itemBuilder: (context, index) => HourlyForecastCard(
+                              forecasts.elementAt(index),
+                              key: Key(forecasts.elementAt(index).id),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
             );
           },
         ),

@@ -1,10 +1,11 @@
-import 'package:client/components/forecast_hero_appbar.dart';
 import 'package:client/components/forecast_hero_card.dart';
+import 'package:client/components/home_page_appbar.dart';
 import 'package:client/components/hourly_forecasts.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/home_page_arguments.dart';
+import 'package:client/types/next_days_arguments.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   late SettingsBloc settingsBloc;
   late WeatherBloc weatherBloc;
   AppLocalizations? appLocalizations;
-  double? deviceHeight;
 
   @override
   void initState() {
@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     appLocalizations ??= AppLocalizations.of(context);
-    deviceHeight ??= MediaQuery.of(context).size.height;
     return PlatformScaffold(
       iosContentPadding: true,
       backgroundColor: backgroundColor(context),
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               ),
               material: (_, __) => const SliverToBoxAdapter(),
             ),
-            ForecastHeroAppbar(
+            HomePageAppbar(
                 weatherUnit: weatherBloc.weatherUnit,
                 onWeatherUnitChanged: (unit) {
                   weatherBloc.onUnitsChanged(unit);
@@ -105,24 +104,23 @@ class _HomePageState extends State<HomePage> {
                 },
                 t: appLocalizations!),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: deviceHeight! * .7,
-                child: ForecastHeroCard(
-                    location: settingsBloc.activeLocation,
-                    onLocationChangeRequest: () {
-                      Navigator.pushNamed(context, '/search');
-                    },
-                    isUpdating: weatherBloc.isUpdating,
-                    weatherForecast: weatherBloc.currentForecast,
-                    weatherUnit: weatherBloc.weatherUnit,
-                    hourlyForecast: weatherBloc.hourlyForecast,
-                    t: appLocalizations!),
-              ),
+              child: ForecastHeroCard(
+                  location: settingsBloc.activeLocation,
+                  onLocationChangeRequest: () {
+                    Navigator.pushNamed(context, '/search');
+                  },
+                  isUpdating: weatherBloc.isUpdating,
+                  currentForecast: weatherBloc.currentForecast,
+                  weatherUnit: weatherBloc.weatherUnit,
+                  dailyForecast: weatherBloc.hourlyForecast,
+                  t: appLocalizations!),
             ),
             SliverToBoxAdapter(
               child: HourlyForecasts(
                   t: appLocalizations!,
                   isUpdating: weatherBloc.isUpdating,
+                  onNextDaysClick: () => Navigator.pushNamed(context, '/7days',
+                      arguments: NextDaysArguments(widget.arguments.location)),
                   hourlyForecast: weatherBloc.hourlyForecast),
             )
           ],
