@@ -8,6 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class Constants {
   Constants._();
+  static const String GITHUB_REPO_URL =
+      'https://github.com/mehrdad-shokri/feather';
+
+  static const String FEATHER_PRIVACY_URL =
+      'https://feather.today/privacypolicy/';
 
   static const String USER_LOCALE_PREFS = 'user_locale';
   static const String USER_LOCATION_PREFS = 'user_location';
@@ -43,11 +48,14 @@ class Constants {
   static const Color PLACEHOLDER_COLOR = Color.fromRGBO(160, 163, 189, 1);
   static const Color PLACEHOLDER_COLOR_DARK =
       Color.fromRGBO(120, 120, 120, 1.0);
-  static const Color LINE_COLOR = Color.fromRGBO(214, 216, 231, 1);
-  static const Color LINE_COLOR_DARK = Color.fromRGBO(41, 39, 24, 1.0);
+  static const Color LINE_COLOR_DARK = Color.fromRGBO(214, 216, 231, 1);
+  static const Color LINE_COLOR = Color.fromRGBO(41, 39, 24, 1.0);
 
   static const Color BACKGROUND_COLOR = Color.fromRGBO(239, 243, 247, 1.0);
+  static const Color BACKGROUND_COLOR_MODAL_SHEET = Colors.white;
   static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(25, 17, 13, 1.0);
+  static const Color BACKGROUND_COLOR_MODAL_SHEET_DARK =
+      Color.fromRGBO(33, 34, 38, 1.0);
   static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(231, 231, 232, 1);
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(45, 44, 46, 1.0);

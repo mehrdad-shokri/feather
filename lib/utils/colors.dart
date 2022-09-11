@@ -25,10 +25,20 @@ Color dividerColor(BuildContext context) {
   return isDark(context) ? Constants.LINE_COLOR_DARK : Constants.LINE_COLOR;
 }
 
+Color borderColor(BuildContext context) {
+  return isDark(context) ? Constants.LINE_COLOR : Constants.LINE_COLOR_DARK;
+}
+
 Color backgroundColor(BuildContext context) {
   return isDark(context)
       ? Constants.BACKGROUND_COLOR_DARK
       : Constants.BACKGROUND_COLOR;
+}
+
+Color modalSheetBackgroundColor(BuildContext context) {
+  return isDark(context)
+      ? Constants.BACKGROUND_COLOR_MODAL_SHEET_DARK
+      : Constants.BACKGROUND_COLOR_MODAL_SHEET;
 }
 
 Color placeholderColor(BuildContext context) {

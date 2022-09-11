@@ -35,6 +35,11 @@ dependencies:
   country_icons: ^2.0.2
   text_scroll: ^0.1.0
   intl: ^0.17.0
+  modal_bottom_sheet: ^2.1.2
+  fl_chart: ^0.55.1
+  in_app_review: ^2.0.4
+  url_launcher: ^6.1.5
+  package_info_plus: ^1.4.3+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

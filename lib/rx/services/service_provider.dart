@@ -1,3 +1,4 @@
+import 'package:client/rx/services/app_info_service.dart';
 import 'package:client/rx/services/connectivity_service.dart';
 import 'package:client/rx/services/env_service.dart';
 import 'package:client/rx/services/position_service.dart';
@@ -10,6 +11,7 @@ class ServiceProvider {
   late PositionService positionService;
   late SharedPrefsService sharedPrefsService;
   late EnvService envService;
+  late AppInfoService appInfoService;
   Function? themeChangeCallback;
   Function? localeChangeCallback;
 
@@ -18,6 +20,7 @@ class ServiceProvider {
     positionService = PositionService();
     sharedPrefsService = SharedPrefsService();
     envService = EnvService();
+    appInfoService = AppInfoService();
   }
 
   Future<void> onCreate() async {
@@ -26,6 +29,7 @@ class ServiceProvider {
     await sharedPrefsService.onCreate();
     await connectivityService.onCreate();
     await envService.onCreate();
+    await appInfoService.onCreate();
   }
 
   void onDispose() {
@@ -33,6 +37,7 @@ class ServiceProvider {
     sharedPrefsService.onTerminate();
     envService.onTerminate();
     positionService.onTerminate();
+    appInfoService.onTerminate();
   }
 
   void _registerSingleton() {

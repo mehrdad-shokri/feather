@@ -6,7 +6,6 @@ import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';
 import 'package:client/types/next_days_arguments.dart';
-import 'package:client/types/weather_providers.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,7 +66,7 @@ class _NextDaysPageState extends State<NextDaysPage> {
             PlatformWidget(
               cupertino: (_, __) => CupertinoSliverRefreshControl(
                 refreshTriggerPullDistance: 250,
-                refreshIndicatorExtent: 50,
+                refreshIndicatorExtent: 150,
                 onRefresh: () async {
                   await weatherBloc.refresh(widget.arguments.location);
                 },
@@ -75,36 +74,7 @@ class _NextDaysPageState extends State<NextDaysPage> {
               material: (_, __) => const SliverToBoxAdapter(),
             ),
             NextDaysPageAppbar(
-                weatherUnit: weatherBloc.weatherUnit,
-                onWeatherUnitChanged: (unit) {
-                  weatherBloc.onUnitsChanged(unit);
-                },
-                onApiProviderChanged: (provider) {
-                  weatherBloc.onWeatherApiProviderChanged(provider);
-                },
-                locale: settingsBloc.locale,
-                dailyForecast: weatherBloc.dailyForecast,
-                apiProvider: weatherBloc.weatherApiProvider,
-                apiProviders: WeatherApiProvider.values,
-                theme: settingsBloc.themeMode,
-                themes: ThemeMode.values,
-                locales: AppLocalizations.supportedLocales,
-                onLocaleChange: (Locale locale) {
-                  settingsBloc.onLocaleChanged(locale);
-                  if (ServiceProvider.getInstance().localeChangeCallback !=
-                      null) {
-                    ServiceProvider.getInstance().localeChangeCallback!(locale);
-                  }
-                },
-                onThemeChange: (ThemeMode themeMode) {
-                  settingsBloc.onThemeChanged(themeMode);
-                  if (ServiceProvider.getInstance().themeChangeCallback !=
-                      null) {
-                    ServiceProvider.getInstance()
-                        .themeChangeCallback!(themeMode);
-                  }
-                },
-                t: appLocalizations!),
+                dailyForecast: weatherBloc.dailyForecast, t: appLocalizations!),
             SliverToBoxAdapter(
               child: ForecastSecondaryCard(
                   location: settingsBloc.activeLocation,

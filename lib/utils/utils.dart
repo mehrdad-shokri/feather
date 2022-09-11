@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
+import 'package:client/utils/colors.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 String languageCodeFromLocaleName(String localeName) =>
     localeName.split('_').first;
@@ -142,6 +144,7 @@ void showPlatformActionSheet<T>(
                     child: Text(
                       cancelText,
                     ))
+                //  where is ol button?
               ],
               contentPadding: const EdgeInsets.only(top: 16),
               content: StreamBuilder(
@@ -166,5 +169,33 @@ void showPlatformActionSheet<T>(
                 },
               ),
             ));
+  }
+}
+
+void showPlatformContentSheet<T>(
+    {required BuildContext context,
+    required String title,
+    required String content,
+    required String cancelText,
+    required Widget child}) {
+  if (isCupertino(context)) {
+    showCupertinoModalBottomSheet(
+        context: context,
+        expand: false,
+        isDismissible: true,
+        useRootNavigator: true,
+        backgroundColor: modalSheetBackgroundColor(context),
+        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
+        topRadius: const Radius.circular(12),
+        builder: (context) => child);
+  } else {
+    showMaterialModalBottomSheet(
+        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
+        backgroundColor: modalSheetBackgroundColor(context),
+        useRootNavigator: true,
+        isDismissible: true,
+        expand: false,
+        context: context,
+        builder: (context) => child);
   }
 }

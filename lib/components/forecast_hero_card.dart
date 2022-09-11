@@ -88,7 +88,7 @@ class ForecastHeroCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Icon(
-                          Feather.location,
+                          Feather.location_on,
                           size: Constants.ICON_MEDIUM_SIZE,
                           color: Colors.white,
                         ),

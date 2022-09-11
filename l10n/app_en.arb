@@ -144,5 +144,47 @@
     "description": "know more",
     "type": "text",
     "placeholders": {}
+  },
+  "featherAbout": "Thanks for using Feather! Feather is an Open-source and Free weather application powered by various weather data providers. It is made available under MIT license and been created with ❤️ with Flutter! If you like this app please consider giving us a 5 star review or star our Github repository! We do not store or process any of your sensitive personal information such is your location and all of your data is stored locally on your device and won't be transmitted to any third-party servers. Visit our Privacy Page for more information.",
+  "@featherAbout": {
+    "description": "Feather about",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rateApp": "Rate App",
+  "@rateApp": {
+    "description": "rate app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "viewRepository": "View Repo",
+  "@viewRepository": {
+    "description": "view repository",
+    "type": "text",
+    "placeholders": {}
+  },
+  "successAddingReview": "Review published successfully!",
+  "@successAddingReview": {
+    "description": "adding review success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorAddingReview": "Error publishing review.",
+  "@errorAddingReview": {
+    "description": "error adding review",
+    "type": "text",
+    "placeholders": {}
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "licences": "Licences",
+  "@licences": {
+    "description": "licences",
+    "type": "text",
+    "placeholders": {}
   }
 }

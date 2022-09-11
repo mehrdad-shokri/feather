@@ -11,35 +11,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class NextDaysPageAppbar extends StatelessWidget {
-  final List<WeatherApiProvider> apiProviders;
-  final Function(WeatherApiProvider) onApiProviderChanged;
-  final Function(WeatherUnits) onWeatherUnitChanged;
-  final Function(ThemeMode) onThemeChange;
-  final Function(Locale) onLocaleChange;
-  final Stream<WeatherApiProvider> apiProvider;
-  final Stream<Locale> locale;
-  final Stream<WeatherUnits> weatherUnit;
-  final List<ThemeMode> themes;
-  final List<Locale> locales;
-  final Stream<ThemeMode> theme;
   final Stream<List<WeatherForecast>> dailyForecast;
   final AppLocalizations t;
 
   const NextDaysPageAppbar(
-      {Key? key,
-      required this.onApiProviderChanged,
-      required this.onWeatherUnitChanged,
-      required this.apiProvider,
-      required this.apiProviders,
-      required this.locale,
-      required this.weatherUnit,
-      required this.themes,
-      required this.theme,
-      required this.onThemeChange,
-      required this.locales,
-      required this.onLocaleChange,
-      required this.dailyForecast,
-      required this.t})
+      {Key? key, required this.dailyForecast, required this.t})
       : super(key: key);
 
   @override

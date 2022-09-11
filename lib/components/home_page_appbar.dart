@@ -1,3 +1,4 @@
+import 'package:client/components/about_detail.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
@@ -109,14 +110,23 @@ class HomePageAppbar extends StatelessWidget {
                           CupertinoPopupMenuOptionData(
                               child: Text(t.language))),
                   PopupMenuOption(
-                      onTap: (_) {},
+                      onTap: (_) {
+                        showPlatformContentSheet(
+                            context: context,
+                            title: t.about,
+                            content: 'This is a dope project',
+                            cancelText: t.cancel,
+                            child: AboutDetail(
+                              t: t,
+                            ));
+                      },
                       material: (context, target) =>
                           MaterialPopupMenuOptionData(child: Text(t.about)),
                       cupertino: (context, target) =>
                           CupertinoPopupMenuOptionData(child: Text(t.about)))
                 ],
                 icon: Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: 12),
                   child: Icon(
                     isMaterial(context)
                         ? Icons.more_vert

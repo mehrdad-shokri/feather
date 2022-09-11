@@ -119,7 +119,7 @@ class _CitySearchPageState extends State<CitySearchPage> {
                       ),
                       border: Border(
                           bottom: BorderSide(
-                              color: dividerColor(context), width: 1)),
+                              color: borderColor(context), width: 1)),
                       middle: Text(
                         appLocalizations!.chooseCity,
                         style: TextStyle(
