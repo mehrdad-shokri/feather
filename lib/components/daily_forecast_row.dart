@@ -56,12 +56,25 @@ class _DailyForecastRowState extends State<DailyForecastRow>
             Flexible(
               flex: 1,
               fit: FlexFit.tight,
-              child: Text(
-                formatDate(widget.forecast.date, format: 'EEEE'),
-                style: TextStyle(
-                    fontSize: Constants.S1_FONT_SIZE,
-                    fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                    color: textColor(context)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    formatDate(widget.forecast.date, format: 'EEEE'),
+                    style: TextStyle(
+                        fontSize: Constants.S1_FONT_SIZE,
+                        fontWeight: Constants.MEDIUM_FONT_WEIGHT,
+                        color: textColor(context)),
+                  ),
+                  Text(
+                    formatDate(widget.forecast.date, format: 'd MMM'),
+                    style: TextStyle(
+                        fontSize: Constants.S2_FONT_SIZE,
+                        fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                        color: secondaryTextColor(context)),
+                  )
+                ],
               ),
             ),
             Flexible(
@@ -84,7 +97,7 @@ class _DailyForecastRowState extends State<DailyForecastRow>
                     style: TextStyle(
                         color: textColor(context),
                         fontSize: Constants.S2_FONT_SIZE,
-                        fontWeight: Constants.BOLD_FONT_WEIGHT),
+                        fontWeight: Constants.MEDIUM_FONT_WEIGHT),
                   )
                 ],
               ),
@@ -92,26 +105,57 @@ class _DailyForecastRowState extends State<DailyForecastRow>
             Flexible(
               flex: 1,
               fit: FlexFit.tight,
-              child: Stack(
-                fit: StackFit.loose,
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.none,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    '${widget.forecast.minTemp.round()}/${widget.forecast.maxTemp.round()}',
-                    style: TextStyle(
-                      color: textColor(context),
-                    ),
+                  Stack(
+                    fit: StackFit.loose,
+                    alignment: Alignment.centerRight,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Text(
+                        '${widget.forecast.minTemp.round()}',
+                        style: TextStyle(
+                            color: textColor(context),
+                            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                            fontSize: Constants.S1_FONT_SIZE),
+                      ),
+                      Positioned(
+                        top: -2,
+                        right: -4,
+                        child: SvgPicture.asset(
+                          'assets/svg/degrees.svg',
+                          color: textColor(context),
+                          width: 4,
+                          height: 4,
+                        ),
+                      )
+                    ],
                   ),
-                  Positioned(
-                    top: -2,
-                    right: -4,
-                    child: SvgPicture.asset(
-                      'assets/svg/degrees.svg',
-                      color: textColor(context),
-                      width: 4,
-                      height: 4,
-                    ),
+                  const SizedBox(width: 8),
+                  Stack(
+                    fit: StackFit.loose,
+                    alignment: Alignment.centerRight,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Text(
+                        '${widget.forecast.maxTemp.round()}',
+                        style: TextStyle(
+                            color: secondaryTextColor(context),
+                            fontWeight: Constants.REGULAR_FONT_WEIGHT,
+                            fontSize: Constants.S1_FONT_SIZE),
+                      ),
+                      Positioned(
+                        top: -2,
+                        right: -4,
+                        child: SvgPicture.asset(
+                          'assets/svg/degrees.svg',
+                          color: textColor(context),
+                          width: 4,
+                          height: 4,
+                        ),
+                      )
+                    ],
                   )
                 ],
               ),

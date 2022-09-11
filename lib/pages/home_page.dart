@@ -1,5 +1,5 @@
 import 'package:client/components/forecast_hero_card.dart';
-import 'package:client/components/home_page_appbar.dart';
+import 'package:client/components/home_appbar.dart';
 import 'package:client/components/hourly_forecasts.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               ),
               material: (_, __) => const SliverToBoxAdapter(),
             ),
-            HomePageAppbar(
+            HomeAppbar(
                 weatherUnit: weatherBloc.weatherUnit,
                 onWeatherUnitChanged: (unit) {
                   weatherBloc.onUnitsChanged(unit);

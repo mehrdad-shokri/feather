@@ -66,7 +66,7 @@ class _NextDaysPageState extends State<NextDaysPage> {
             PlatformWidget(
               cupertino: (_, __) => CupertinoSliverRefreshControl(
                 refreshTriggerPullDistance: 250,
-                refreshIndicatorExtent: 150,
+                refreshIndicatorExtent: 50,
                 onRefresh: () async {
                   await weatherBloc.refresh(widget.arguments.location);
                 },
