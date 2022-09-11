@@ -1,4 +1,4 @@
-import 'package:client/components/weather_forecast_icon.dart';
+import 'package:client/components/atoms/weather_forecast_icon.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_units.dart';
@@ -47,7 +47,7 @@ class ForecastSecondaryCard extends StatelessWidget {
                 snapshot.data as List<WeatherForecast>?;
             WeatherForecast? forecast = firstOrNull(
                 forecasts,
-                (forecast) => isSameDay(forecast.date,
+                (forecast) => isSameDay(forecast.initialDate,
                     DateTime.now().add(const Duration(days: 1))));
             return Container(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),

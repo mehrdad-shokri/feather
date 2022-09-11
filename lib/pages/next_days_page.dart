@@ -1,6 +1,6 @@
-import 'package:client/components/daily_forecast_row.dart';
-import 'package:client/components/forecast_secondary_card.dart';
-import 'package:client/components/next_days_page_appbar.dart';
+import 'package:client/components/molecules/daily_forecast_row.dart';
+import 'package:client/components/organisms/forecast_secondary_card.dart';
+import 'package:client/components/organisms/next_days_page_appbar.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';

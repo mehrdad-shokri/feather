@@ -1,6 +1,6 @@
-import 'package:client/components/forecast_hero_card.dart';
-import 'package:client/components/home_appbar.dart';
-import 'package:client/components/hourly_forecasts.dart';
+import 'package:client/components/organisms/forecast_hero_card.dart';
+import 'package:client/components/organisms/home_appbar.dart';
+import 'package:client/components/organisms/hourly_forecasts.dart';
 import 'package:client/rx/blocs/settings_bloc.dart';
 import 'package:client/rx/blocs/weather_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';

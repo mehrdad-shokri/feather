@@ -1,5 +1,5 @@
-import 'package:client/components/forecast_detail_dialog.dart';
-import 'package:client/components/weather_forecast_icon.dart';
+import 'package:client/components/organisms/forecast_detail_dialog.dart';
+import 'package:client/components/atoms/weather_forecast_icon.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_units.dart';
@@ -260,7 +260,7 @@ class ForecastHeroCard extends StatelessWidget {
                                                 firstOrNull(
                                                     forecasts,
                                                     (forecast) => isSameDay(
-                                                        forecast.date,
+                                                        forecast.initialDate,
                                                         DateTime.now()));
                                             if (forecast == null ||
                                                 forecast.pop == null) {
@@ -300,56 +300,72 @@ class ForecastHeroCard extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      PlatformElevatedButton(
-                                        onPressed: () {
-                                          showPlatformContentSheet(
-                                              context: context,
-                                              child: ForecastDetailDialog(
-                                                  t: t,
-                                                  date: DateTime.now(),
-                                                  dailyForecast: dailyForecast,
-                                                  hourlyForecast:
-                                                      hourlyForecast,
-                                                  currentForecast:
-                                                      currentForecast));
+                                      StreamBuilder(
+                                        stream: location,
+                                        builder: (context, snapshot) {
+                                          Location? location =
+                                              snapshot.data as Location?;
+                                          if (location != null) {
+                                            return PlatformElevatedButton(
+                                              onPressed: () {
+                                                showPlatformContentSheet(
+                                                    context: context,
+                                                    child: ForecastDetailDialog(
+                                                        t: t,
+                                                        location: location,
+                                                        initialDate:
+                                                            DateTime.now(),
+                                                        dailyForecast:
+                                                            dailyForecast,
+                                                        hourlyForecast:
+                                                            hourlyForecast,
+                                                        currentForecast:
+                                                            currentForecast));
+                                              },
+                                              color:
+                                                  HexColor.fromHex('#252020'),
+                                              material: (context, _) => MaterialElevatedButtonData(
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          HexColor.fromHex(
+                                                              '#252020'),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16)),
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                              vertical: 0,
+                                                              horizontal: 16),
+                                                      minimumSize:
+                                                          const Size(64, 32))),
+                                              cupertino: (context, _) =>
+                                                  CupertinoElevatedButtonData(
+                                                      minSize: 32,
+                                                      color: HexColor.fromHex(
+                                                          '#252020'),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 16),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16)),
+                                              child: Text(
+                                                t.knowMore,
+                                                style: const TextStyle(
+                                                    fontSize: Constants
+                                                        .CAPTION_FONT_SIZE,
+                                                    color: Colors.white,
+                                                    fontWeight: Constants
+                                                        .BOLD_FONT_WEIGHT),
+                                              ),
+                                            );
+                                          }
+                                          return Container();
                                         },
-                                        color: HexColor.fromHex('#252020'),
-                                        material: (context, _) =>
-                                            MaterialElevatedButtonData(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        HexColor.fromHex(
-                                                            '#252020'),
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16)),
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 16),
-                                                    minimumSize:
-                                                        const Size(64, 32))),
-                                        cupertino: (context, _) =>
-                                            CupertinoElevatedButtonData(
-                                                minSize: 32,
-                                                color:
-                                                    HexColor.fromHex('#252020'),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 16),
-                                                borderRadius:
-                                                    BorderRadius.circular(16)),
-                                        child: Text(
-                                          t.knowMore,
-                                          style: const TextStyle(
-                                              fontSize:
-                                                  Constants.CAPTION_FONT_SIZE,
-                                              color: Colors.white,
-                                              fontWeight:
-                                                  Constants.BOLD_FONT_WEIGHT),
-                                        ),
                                       )
                                     ],
                                   )

@@ -18,22 +18,18 @@ class WeatherMeasure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformTextButton(
+      key: key,
       onPressed: () => onPress(),
-      child: Row(
-        children: [
-          Text(
-            measure,
-            style: TextStyle(
-                fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                fontSize: Constants.H6_FONT_SIZE,
-                color: isActive
-                    ? HexColor.fromHex('#E8E8E8')
-                    : const Color.fromRGBO(232, 232, 232, .7)),
-          ),
-          const SizedBox(
-            width: 32,
-          )
-        ],
+      child: Text(
+        measure,
+        style: TextStyle(
+            fontWeight: isActive
+                ? Constants.MEDIUM_FONT_WEIGHT
+                : Constants.REGULAR_FONT_WEIGHT,
+            fontSize: Constants.H6_FONT_SIZE,
+            color: isActive
+                ? HexColor.fromHex('#E8E8E8')
+                : const Color.fromRGBO(232, 232, 232, .7)),
       ),
     );
   }

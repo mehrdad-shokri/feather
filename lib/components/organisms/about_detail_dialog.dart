@@ -1,4 +1,4 @@
-import 'package:client/components/bottom_sheet_scroll_indicator.dart';
+import 'package:client/components/atoms/bottom_sheet_scroll_indicator.dart';
 import 'package:client/rx/blocs/review_bloc.dart';
 import 'package:client/rx/blocs/url_launcher_bloc.dart';
 import 'package:client/rx/services/service_provider.dart';

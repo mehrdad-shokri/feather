@@ -128,7 +128,7 @@ class WeatherBloc extends RxBloc {
       if (_dailyForecast.hasValue) {
         _hourlyForecast.add(event.map((e) {
           WeatherForecast? day = firstOrNull(_dailyForecast.value,
-              (element) => isSameDay(element.date, e.date));
+              (element) => isSameDay(element.initialDate, e.date));
           if (day != null) {
             e.sunrise = day.sunrise;
             e.sunset = day.sunset;

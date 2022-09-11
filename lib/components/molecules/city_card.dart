@@ -1,4 +1,4 @@
-import 'package:client/components/temperature_icon.dart';
+import 'package:client/components/atoms/temperature_icon.dart';
 import 'package:client/models/location.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';

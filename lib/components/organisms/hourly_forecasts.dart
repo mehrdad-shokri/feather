@@ -1,4 +1,4 @@
-import 'package:client/components/hourly_forecast_card.dart';
+import 'package:client/components/molecules/hourly_forecast_card.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';

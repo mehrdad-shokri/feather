@@ -28,7 +28,7 @@ class NextDaysPageAppbar extends StatelessWidget {
         WeatherForecast? forecast = firstOrNull(
             weatherForecasts,
             (item) => isSameDay(
-                item.date, DateTime.now().add(const Duration(days: 1))));
+                item.initialDate, DateTime.now().add(const Duration(days: 1))));
         return SliverAppBar(
           elevation: 0,
           primary: true,

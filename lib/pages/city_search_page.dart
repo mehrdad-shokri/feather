@@ -1,5 +1,5 @@
-import 'package:client/components/city_card.dart';
-import 'package:client/components/city_search_field.dart';
+import 'package:client/components/molecules/city_card.dart';
+import 'package:client/components/molecules/city_search_field.dart';
 import 'package:client/models/location.dart';
 import 'package:client/rx/blocs/geo_bloc.dart';
 import 'package:client/rx/blocs/position_bloc.dart';

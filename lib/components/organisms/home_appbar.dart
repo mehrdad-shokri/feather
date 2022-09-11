@@ -1,5 +1,5 @@
-import 'package:client/components/about_detail_dialog.dart';
-import 'package:client/components/about_detail_dialog.dart';
+import 'package:client/components/organisms/about_detail_dialog.dart';
+import 'package:client/components/organisms/about_detail_dialog.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
