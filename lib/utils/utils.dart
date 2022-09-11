@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
 import 'package:client/utils/colors.dart';
+import 'package:client/utils/constants.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ void showPlatformActionSheet<T>(
   if (isCupertino(context)) {
     showCupertinoModalPopup(
         context: context,
-        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
+        barrierColor: Constants.BARRIER_COLOR,
         builder: (context) => CupertinoActionSheet(
               title: Text(title),
               actions: items
@@ -173,11 +174,7 @@ void showPlatformActionSheet<T>(
 }
 
 void showPlatformContentSheet<T>(
-    {required BuildContext context,
-    required String title,
-    required String content,
-    required String cancelText,
-    required Widget child}) {
+    {required BuildContext context, required Widget child}) {
   if (isCupertino(context)) {
     showCupertinoModalBottomSheet(
         context: context,
@@ -185,12 +182,12 @@ void showPlatformContentSheet<T>(
         isDismissible: true,
         useRootNavigator: true,
         backgroundColor: modalSheetBackgroundColor(context),
-        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
-        topRadius: const Radius.circular(12),
+        barrierColor: Constants.BARRIER_COLOR,
+        topRadius: const Radius.circular(32),
         builder: (context) => child);
   } else {
     showMaterialModalBottomSheet(
-        barrierColor: const Color.fromRGBO(20, 20, 43, .4),
+        barrierColor: Constants.BARRIER_COLOR,
         backgroundColor: modalSheetBackgroundColor(context),
         useRootNavigator: true,
         isDismissible: true,

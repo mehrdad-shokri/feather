@@ -1,3 +1,4 @@
+import 'package:client/components/forecast_detail_dialog.dart';
 import 'package:client/components/weather_forecast_icon.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
@@ -20,6 +21,7 @@ class ForecastHeroCard extends StatelessWidget {
   final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<WeatherForecast> currentForecast;
+  final Stream<List<WeatherForecast>> hourlyForecast;
   final Stream<List<WeatherForecast>> dailyForecast;
   final Stream<WeatherUnits> weatherUnit;
   final AppLocalizations t;
@@ -30,6 +32,7 @@ class ForecastHeroCard extends StatelessWidget {
       required this.onLocationChangeRequest,
       required this.isUpdating,
       required this.currentForecast,
+      required this.hourlyForecast,
       required this.dailyForecast,
       required this.weatherUnit,
       required this.t})
@@ -104,7 +107,7 @@ class ForecastHeroCard extends StatelessWidget {
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: Constants.MEDIUM_FONT_WEIGHT,
-                                  fontSize: Constants.H6_FONT_SIZE),
+                                  fontSize: Constants.H5_FONT_SIZE),
                             );
                           },
                         )
@@ -298,7 +301,18 @@ class ForecastHeroCard extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       PlatformElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showPlatformContentSheet(
+                                              context: context,
+                                              child: ForecastDetailDialog(
+                                                  t: t,
+                                                  date: DateTime.now(),
+                                                  dailyForecast: dailyForecast,
+                                                  hourlyForecast:
+                                                      hourlyForecast,
+                                                  currentForecast:
+                                                      currentForecast));
+                                        },
                                         color: HexColor.fromHex('#252020'),
                                         material: (context, _) =>
                                             MaterialElevatedButtonData(

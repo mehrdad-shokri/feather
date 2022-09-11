@@ -28,7 +28,7 @@ class Constants {
 
   static final Color SECONDARY_COLOR = Colors.yellow.shade800;
   static final Color SECONDARY_COLOR_DARK = Colors.yellow.shade900;
-  static final Color SECONDARY_COLOR_LIGHT = Colors.yellow.shade600;
+  static final Color SECONDARY_COLOR_LIGHT = Colors.yellow.shade500;
 
   static const Color ERROR_COLOR = Color.fromRGBO(237, 46, 126, 1);
   static const Color ERROR_COLOR_DARK = Color.fromRGBO(195, 0, 82, 1);
@@ -60,6 +60,7 @@ class Constants {
   static const Color INPUT_BACKGROUND_COLOR_DARK =
       Color.fromRGBO(45, 44, 46, 1.0);
 
+  static Color BARRIER_COLOR = const Color.fromRGBO(20, 20, 43, .4);
   static Color BAR_BACKGROUND_COLOR = const Color.fromRGBO(247, 247, 247, 1);
   static Color BAR_BACKGROUND_COLOR_DARK = const Color.fromRGBO(26, 26, 26, 1);
   static Color CARD_COLOR_DARK = Colors.grey.shade800;

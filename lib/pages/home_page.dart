@@ -112,7 +112,8 @@ class _HomePageState extends State<HomePage> {
                   isUpdating: weatherBloc.isUpdating,
                   currentForecast: weatherBloc.currentForecast,
                   weatherUnit: weatherBloc.weatherUnit,
-                  dailyForecast: weatherBloc.hourlyForecast,
+                  hourlyForecast: weatherBloc.hourlyForecast,
+                  dailyForecast: weatherBloc.dailyForecast,
                   t: appLocalizations!),
             ),
             SliverToBoxAdapter(

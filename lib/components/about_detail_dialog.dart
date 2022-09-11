@@ -13,16 +13,16 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class AboutDetail extends StatefulWidget {
+class AboutDetailDialog extends StatefulWidget {
   final AppLocalizations t;
 
-  const AboutDetail({Key? key, required this.t}) : super(key: key);
+  const AboutDetailDialog({Key? key, required this.t}) : super(key: key);
 
   @override
-  State<AboutDetail> createState() => _AboutDetailState();
+  State<AboutDetailDialog> createState() => _AboutDetailDialogState();
 }
 
-class _AboutDetailState extends State<AboutDetail> {
+class _AboutDetailDialogState extends State<AboutDetailDialog> {
   late ReviewBloc reviewBloc;
   late UrlLauncherBloc urlLauncherBloc;
 

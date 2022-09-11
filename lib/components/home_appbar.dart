@@ -1,4 +1,5 @@
-import 'package:client/components/about_detail.dart';
+import 'package:client/components/about_detail_dialog.dart';
+import 'package:client/components/about_detail_dialog.dart';
 import 'package:client/models/weather_forecast.dart';
 import 'package:client/types/weather_providers.dart';
 import 'package:client/types/weather_units.dart';
@@ -113,10 +114,7 @@ class HomeAppbar extends StatelessWidget {
                       onTap: (_) {
                         showPlatformContentSheet(
                             context: context,
-                            title: t.about,
-                            content: 'This is a dope project',
-                            cancelText: t.cancel,
-                            child: AboutDetail(
+                            child: AboutDetailDialog(
                               t: t,
                             ));
                       },
