@@ -310,17 +310,18 @@ class ForecastHeroCard extends StatelessWidget {
                                               onPressed: () {
                                                 showPlatformContentSheet(
                                                     context: context,
-                                                    child: ForecastDetailDialog(
-                                                        t: t,
-                                                        location: location,
-                                                        initialDate:
-                                                            DateTime.now(),
-                                                        dailyForecast:
-                                                            dailyForecast,
-                                                        hourlyForecast:
-                                                            hourlyForecast,
-                                                        currentForecast:
-                                                            currentForecast));
+                                                    builder: (context) =>
+                                                        ForecastDetailDialog(
+                                                            t: t,
+                                                            location: location,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            dailyForecast:
+                                                                dailyForecast,
+                                                            hourlyForecast:
+                                                                hourlyForecast,
+                                                            currentForecast:
+                                                                currentForecast));
                                               },
                                               color:
                                                   HexColor.fromHex('#252020'),

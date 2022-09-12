@@ -8,6 +8,7 @@ import 'package:client/utils/constants.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -174,17 +175,18 @@ void showPlatformActionSheet<T>(
 }
 
 void showPlatformContentSheet<T>(
-    {required BuildContext context, required Widget child}) {
+    {required BuildContext context, required WidgetBuilder builder}) {
   if (isCupertino(context)) {
     showCupertinoModalBottomSheet(
         context: context,
         expand: false,
         isDismissible: true,
         useRootNavigator: true,
+        enableDrag: true,
         backgroundColor: modalSheetBackgroundColor(context),
         barrierColor: Constants.BARRIER_COLOR,
-        topRadius: const Radius.circular(32),
-        builder: (context) => child);
+        topRadius: const Radius.circular(24),
+        builder: builder);
   } else {
     showMaterialModalBottomSheet(
         barrierColor: Constants.BARRIER_COLOR,
@@ -193,6 +195,6 @@ void showPlatformContentSheet<T>(
         isDismissible: true,
         expand: false,
         context: context,
-        builder: (context) => child);
+        builder: builder);
   }
 }

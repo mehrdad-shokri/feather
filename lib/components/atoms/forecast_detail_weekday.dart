@@ -31,7 +31,7 @@ class ForecastDetailWeekday extends StatelessWidget {
           weekday,
           style: TextStyle(
               fontSize: Constants.S1_FONT_SIZE,
-              fontWeight: Constants.REGULAR_FONT_WEIGHT,
+              fontWeight: Constants.MEDIUM_FONT_WEIGHT,
               color: isActive
                   ? HexColor.fromHex('#E8E8E8')
                   : const Color.fromRGBO(232, 232, 232, .7)),

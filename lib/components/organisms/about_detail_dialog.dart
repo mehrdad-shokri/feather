@@ -92,7 +92,7 @@ class _AboutDetailDialogState extends State<AboutDetailDialog> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 4),
                           color: Constants.PRIMARY_COLOR_DARK,
-                          borderRadius: BorderRadius.circular(32)),
+                          borderRadius: BorderRadius.circular(24)),
                       child: StreamBuilder(
                         stream: reviewBloc.addingReview,
                         builder: (context, snapshot) {

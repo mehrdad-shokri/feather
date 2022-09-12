@@ -114,9 +114,9 @@ class HomeAppbar extends StatelessWidget {
                       onTap: (_) {
                         showPlatformContentSheet(
                             context: context,
-                            child: AboutDetailDialog(
-                              t: t,
-                            ));
+                            builder: (context) => AboutDetailDialog(
+                                  t: t,
+                                ));
                       },
                       material: (context, target) =>
                           MaterialPopupMenuOptionData(child: Text(t.about)),

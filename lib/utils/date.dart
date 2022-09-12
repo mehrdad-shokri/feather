@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DateTime zeroDateTime(DateTime source) {
   return DateTime(source.year, source.month, source.day);
@@ -46,8 +47,8 @@ int diffInDays(DateTime source, DateTime dest) {
   return zeroDateTime(source).difference(zeroDateTime(dest)).inDays;
 }
 
-int diffInMinutes(TimeOfDay source, TimeOfDay dest) {
-  return (dest.hour * 60 + dest.minute) - (source.hour * 60 + source.minute);
+int diffInMinutes(DateTime source, DateTime dest) {
+  return source.difference(dest).inMinutes;
 }
 
 bool isSameOrAfterTime(DateTime a, DateTime b) =>
@@ -64,6 +65,19 @@ String formatDate(DateTime date, {String? format}) {
     return DateFormat(format).format(date);
   }
   return DateFormat.MMMMEEEEd().format(date);
+}
+
+String formatDateRelatively(DateTime date, AppLocalizations t,
+    {String? format}) {
+  String formatted = formatDate(date, format: format);
+  int diff = diffInDays(date, DateTime.now());
+  if (diff == 0) {
+    return '${t.today}, $formatted';
+  } else if (diff == 1) {
+    return '${t.tomorrow}, $formatted';
+  } else {
+    return '${formatDate(date, format: 'EEEE')}, $formatted';
+  }
 }
 
 String formatTime(DateTime date) {
