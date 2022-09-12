@@ -6,9 +6,11 @@ import 'package:client/components/atoms/weather_measure.dart';
 import 'package:client/components/molecules/forecast_chart.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
+import 'package:client/types/weather_units.dart';
 import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
+import 'package:client/utils/utils.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,6 +24,7 @@ class ForecastDetailDialog extends StatefulWidget {
   final Stream<WeatherForecast> currentForecast;
   final DateTime initialDate;
   final Location location;
+  final Stream<WeatherUnits> unit;
 
   const ForecastDetailDialog(
       {Key? key,
@@ -30,6 +33,7 @@ class ForecastDetailDialog extends StatefulWidget {
       required this.dailyForecast,
       required this.hourlyForecast,
       required this.location,
+      required this.unit,
       required this.currentForecast})
       : super(key: key);
 
@@ -65,6 +69,18 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
       default:
         return '';
     }
+  }
+
+  String dataPointUnit(WeatherUnits unit) {
+    switch (measures[activeMeasureIndex]) {
+      case 'wind':
+        return windSpeedUnit(unit);
+      case 'temp':
+        return temperatureUnit(unit);
+      case 'humidity':
+        return ' %';
+    }
+    return '';
   }
 
   List<FlSpot> dataPointToSpots(List<WeatherForecast> forecasts) {
@@ -184,14 +200,24 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                 SizedBox(
                   height: 240,
                   child: StreamBuilder(
-                    stream: widget.hourlyForecast,
+                    stream: widget.unit,
                     builder: (context, snapshot) {
-                      List<WeatherForecast>? forecasts =
-                          snapshot.data as List<WeatherForecast>?;
-                      if (forecasts == null) {
-                        return PlatformCircularProgressIndicator();
-                      }
-                      return ForecastChart(spots: dataPointToSpots(forecasts));
+                      WeatherUnits? unit = snapshot.data as WeatherUnits?;
+                      if (unit == null) return Container();
+                      return StreamBuilder(
+                        stream: widget.hourlyForecast,
+                        builder: (context, snapshot) {
+                          List<WeatherForecast>? forecasts =
+                              snapshot.data as List<WeatherForecast>?;
+                          if (forecasts == null) {
+                            return PlatformCircularProgressIndicator();
+                          }
+                          return ForecastChart(
+                            spots: dataPointToSpots(forecasts),
+                            yAxisUnit: dataPointUnit(unit),
+                          );
+                        },
+                      );
                     },
                   ),
                 ),

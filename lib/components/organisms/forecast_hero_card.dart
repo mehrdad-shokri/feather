@@ -314,6 +314,7 @@ class ForecastHeroCard extends StatelessWidget {
                                                         ForecastDetailDialog(
                                                             t: t,
                                                             location: location,
+                                                            unit: weatherUnit,
                                                             initialDate:
                                                                 DateTime.now(),
                                                             dailyForecast:
