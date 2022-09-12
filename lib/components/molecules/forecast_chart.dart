@@ -56,7 +56,7 @@ class ForecastChart extends StatelessWidget {
                 isStrokeCapRound: true,
                 isStrokeJoinRound: true,
                 barWidth: 8,
-                dotData: FlDotData(show: true),
+                dotData: FlDotData(show: false),
                 showingIndicators: []),
           ],
           minY: minSpotY - averageY / 16,
