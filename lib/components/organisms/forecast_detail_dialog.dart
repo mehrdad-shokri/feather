@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:client/components/atoms/bottom_sheet_scroll_indicator.dart';
 import 'package:client/components/atoms/forecast_detail_weekday.dart';
-import 'package:client/components/atoms/weather_measure.dart';
+import 'package:client/components/atoms/weather_forecast_icon.dart';
+import 'package:client/components/atoms/weather_measurement_title.dart';
 import 'package:client/components/molecules/forecast_chart.dart';
 import 'package:client/models/location.dart';
 import 'package:client/models/weather_forecast.dart';
@@ -45,7 +46,7 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
   final List<String> measures = ['temp', 'wind', 'humidity'];
   DateTime selectedDateTime = DateTime.now();
   int activeMeasureIndex = 0;
-  static const int WEEK_DAYS_PAGER_PER_PAGER = 4;
+  static const int daysPerPager = 4;
 
   @override
   void initState() {
@@ -107,14 +108,14 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
             .map((e) => FlSpot(
                 diffInMinutes(e.date, filteredForecast.first.date).toDouble() /
                     240,
-                e.windSpeed.toDouble() ?? 0.0))
+                e.windSpeed.toDouble()))
             .toList();
       case 'humidity':
         return filteredForecast
             .map((e) => FlSpot(
                 diffInMinutes(e.date, filteredForecast.first.date).toDouble() /
                     240,
-                e.humidityPercent.toDouble() ?? 0.0))
+                e.humidityPercent.toDouble()))
             .toList();
     }
     return [];
@@ -184,7 +185,7 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                       scrollDirection: Axis.horizontal,
                       itemCount: measures.length,
                       shrinkWrap: true,
-                      itemBuilder: (context, index) => WeatherMeasure(
+                      itemBuilder: (context, index) => WeatherMeasurementTitle(
                           key: Key(measures[index]),
                           onPress: () {
                             setState(() {
@@ -247,39 +248,30 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var i = 0;
-                              i <
-                                  (dates.length / WEEK_DAYS_PAGER_PER_PAGER)
-                                      .ceil();
+                              i < (dates.length / daysPerPager).ceil();
                               i++)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 for (var j = 0;
                                     j <
-                                        min(
-                                            dates.length -
-                                                i * WEEK_DAYS_PAGER_PER_PAGER,
-                                            WEEK_DAYS_PAGER_PER_PAGER);
+                                        min(dates.length - i * daysPerPager,
+                                            daysPerPager);
                                     j++)
                                   ForecastDetailWeekday(
                                       key: Key(
-                                          '${dates[i * WEEK_DAYS_PAGER_PER_PAGER + j].microsecondsSinceEpoch}'),
+                                          '${dates[i * daysPerPager + j].microsecondsSinceEpoch}'),
                                       isActive: isSameDay(
-                                          dates[i * WEEK_DAYS_PAGER_PER_PAGER +
-                                              j],
+                                          dates[i * daysPerPager + j],
                                           selectedDateTime),
                                       onPress: () {
-                                        print(
-                                            'on press ${dates[i * WEEK_DAYS_PAGER_PER_PAGER + j]}');
                                         setState(() {
-                                          selectedDateTime = dates[
-                                              i * WEEK_DAYS_PAGER_PER_PAGER +
-                                                  j];
+                                          selectedDateTime =
+                                              dates[i * daysPerPager + j];
                                         });
                                       },
                                       weekday: formatDate(
-                                          dates[i * WEEK_DAYS_PAGER_PER_PAGER +
-                                              j],
+                                          dates[i * daysPerPager + j],
                                           format: 'E'))
                               ],
                             )
@@ -289,7 +281,117 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                   ),
                 ),
                 const SizedBox(
-                  height: 500,
+                  height: 32,
+                ),
+                Padding(
+                  padding: Constants.PAGE_PADDING,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.t.dailySummary,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: Constants.H6_FONT_SIZE,
+                            fontWeight: Constants.MEDIUM_FONT_WEIGHT),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                StreamBuilder(
+                  stream: widget.unit,
+                  builder: (context, snapshot) {
+                    WeatherUnits? unit = snapshot.data as WeatherUnits?;
+                    if (unit == null) return Container();
+                    return StreamBuilder(
+                      stream: widget.dailyForecast,
+                      builder: (contest, snapshot) {
+                        List<WeatherForecast>? forecasts =
+                            snapshot.data as List<WeatherForecast>?;
+                        WeatherForecast? forecast = firstOrNull(forecasts,
+                            (f) => isSameDay(f.date, selectedDateTime));
+                        if (forecasts == null || forecast == null) {
+                          return Container();
+                        }
+                        return Padding(
+                          padding:
+                              EdgeInsets.only(left: 16, right: 16, bottom: 40),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: WeatherForecastIcon(
+                                      assetDir: 'assets/svg/wind.svg',
+                                      value: forecast.windSpeed == 0
+                                          ? '-'
+                                          : '${forecast.windSpeed.round()}${windSpeedUnit(forecast.unit)}',
+                                      direction: Axis.horizontal,
+                                      title: widget.t.wind,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: WeatherForecastIcon(
+                                      assetDir: 'assets/svg/chance-of-rain.svg',
+                                      value: forecast.pop == 0
+                                          ? '-'
+                                          : '${((forecast.pop!) * 100).toInt()}%',
+                                      direction: Axis.horizontal,
+                                      title: widget.t.chanceOfRain,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  if (forecast.sunrise != null)
+                                    Flexible(
+                                      flex: 1,
+                                      fit: FlexFit.tight,
+                                      child: WeatherForecastIcon(
+                                        assetDir: 'assets/svg/sunrise.svg',
+                                        value: formatDate(forecast.sunrise!,
+                                            format: 'hh:mm a'),
+                                        title: widget.t.sunrise,
+                                        direction: Axis.horizontal,
+                                      ),
+                                    ),
+                                  if (forecast.sunset != null)
+                                    Flexible(
+                                      flex: 1,
+                                      fit: FlexFit.tight,
+                                      child: WeatherForecastIcon(
+                                        assetDir: 'assets/svg/sunset.svg',
+                                        value: formatDate(forecast.sunset!,
+                                            format: 'hh:mm a'),
+                                        direction: Axis.horizontal,
+                                        title: widget.t.sunset,
+                                      ),
+                                    )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

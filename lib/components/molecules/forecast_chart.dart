@@ -1,16 +1,14 @@
-import 'package:client/utils/colors.dart';
 import 'package:client/utils/constants.dart';
-import 'package:client/utils/hex_color.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ForecastChart extends StatelessWidget {
   final List<FlSpot> spots;
-  final List<int> indicatorIndexes = [];
   final String yAxisUnit;
   late double minSpotX, maxSpotX;
   late double minSpotY, maxSpotY;
   late double averageY;
+  final List<int> indicatorIndexes = [];
 
   ForecastChart({Key? key, required this.spots, required this.yAxisUnit})
       : super(key: key) {
@@ -135,7 +133,7 @@ class ForecastChart extends StatelessWidget {
             getDrawingVerticalLine: (value) => FlLine(
                 color: const Color.fromRGBO(233, 233, 233, .4),
                 dashArray: [12, 24],
-                strokeWidth: .7)),
+                strokeWidth: .5)),
         showingTooltipIndicators: indicatorIndexes
             .map((index) => ShowingTooltipIndicators([
                   LineBarSpot(

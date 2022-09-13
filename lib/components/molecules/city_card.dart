@@ -33,8 +33,8 @@ class CityCard extends StatelessWidget {
             padding: Constants.CARD_INNER_PADDING,
             material: (_, __) => MaterialElevatedButtonData(
                 style: ElevatedButton.styleFrom(
-                    primary: cardColor(context),
-                    onPrimary: textColor(context),
+                    backgroundColor: cardColor(context),
+                    foregroundColor: textColor(context),
                     alignment: Alignment.center,
                     padding: Constants.CARD_INNER_PADDING,
                     shape: RoundedRectangleBorder(

@@ -243,7 +243,7 @@ class ForecastHeroCard extends StatelessWidget {
                                           assetDir: 'assets/svg/wind.svg',
                                           value: forecast.windSpeed == 0
                                               ? '-'
-                                              : '${forecast.windSpeed.toStringAsFixed(0)}${windSpeedUnit(forecast.unit)}',
+                                              : '${forecast.windSpeed.round()}${windSpeedUnit(forecast.unit)}',
                                           title: t.wind,
                                         ),
                                       ),
@@ -260,8 +260,9 @@ class ForecastHeroCard extends StatelessWidget {
                                                 firstOrNull(
                                                     forecasts,
                                                     (forecast) => isSameDay(
-                                                        forecast.initialDate,
+                                                        forecast.date,
                                                         DateTime.now()));
+                                            print('forecast');
                                             if (forecast == null ||
                                                 forecast.pop == null) {
                                               return WeatherForecastIcon(

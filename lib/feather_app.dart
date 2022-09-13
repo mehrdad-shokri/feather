@@ -197,8 +197,8 @@ class FeatherAppState extends State<FeatherApp> {
                   foregroundColor: Constants.TEXT_BLACK_COLOR_DARK),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
-                      primary: Constants.PRIMARY_COLOR_DARK,
-                      onPrimary: Colors.white,
+                      backgroundColor: Constants.PRIMARY_COLOR_DARK,
+                      foregroundColor: Colors.white,
                       textStyle: const TextStyle(
                           color: Colors.white,
                           fontFamily: Constants.APPLICATION_DEFAULT_FONT),
@@ -245,8 +245,8 @@ class FeatherAppState extends State<FeatherApp> {
                   foregroundColor: Constants.TEXT_BLACK_COLOR),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
-                      primary: Constants.PRIMARY_COLOR_DARK,
-                      onPrimary: Colors.white,
+                      backgroundColor: Constants.PRIMARY_COLOR_DARK,
+                      foregroundColor: Colors.white,
                       textStyle: const TextStyle(
                           color: Colors.white,
                           fontFamily: Constants.APPLICATION_DEFAULT_FONT),

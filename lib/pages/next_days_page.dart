@@ -78,9 +78,6 @@ class _NextDaysPageState extends State<NextDaysPage> {
             SliverToBoxAdapter(
               child: ForecastSecondaryCard(
                   location: settingsBloc.activeLocation,
-                  onLocationChangeRequest: () {
-                    Navigator.pushNamed(context, '/search');
-                  },
                   isUpdating: weatherBloc.isUpdating,
                   dailyForecast: weatherBloc.dailyForecast,
                   weatherUnit: weatherBloc.weatherUnit,

@@ -3,12 +3,12 @@ import 'package:client/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class WeatherMeasure extends StatelessWidget {
+class WeatherMeasurementTitle extends StatelessWidget {
   final String measure;
   final bool isActive;
   final Function onPress;
 
-  const WeatherMeasure(
+  const WeatherMeasurementTitle(
       {Key? key,
       required this.onPress,
       required this.isActive,

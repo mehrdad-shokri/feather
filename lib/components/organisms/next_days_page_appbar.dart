@@ -1,14 +1,10 @@
 import 'package:client/models/weather_forecast.dart';
-import 'package:client/types/weather_providers.dart';
-import 'package:client/types/weather_units.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/date.dart';
-import 'package:client/utils/feather_icons.dart';
 import 'package:client/utils/hex_color.dart';
 import 'package:client/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class NextDaysPageAppbar extends StatelessWidget {
   final Stream<List<WeatherForecast>> dailyForecast;
@@ -27,8 +23,8 @@ class NextDaysPageAppbar extends StatelessWidget {
             snapshot.data as List<WeatherForecast>?;
         WeatherForecast? forecast = firstOrNull(
             weatherForecasts,
-            (item) => isSameDay(
-                item.initialDate, DateTime.now().add(const Duration(days: 1))));
+            (item) => isSameDay(item.date,
+                zeroDateTime(DateTime.now()).add(const Duration(days: 1))));
         return SliverAppBar(
           elevation: 0,
           primary: true,

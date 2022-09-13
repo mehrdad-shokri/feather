@@ -192,5 +192,23 @@
     "description": "temperature",
     "type": "text",
     "placeholders": {}
+  },
+  "dailySummary": "Daily Summar",
+  "@dailySummary": {
+    "description": "daily summary",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sunrise": "Sunrise",
+  "@sunrise": {
+    "description": "sunrise",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sunset": "Sunset",
+  "@sunset": {
+    "description": "sunset",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -15,7 +15,6 @@ import 'package:lottie/lottie.dart';
 
 class ForecastSecondaryCard extends StatelessWidget {
   final Stream<Location> location;
-  final Function onLocationChangeRequest;
   final Stream<bool> isUpdating;
   final Stream<List<WeatherForecast>> dailyForecast;
   final Stream<List<WeatherForecast>> hourlyForecast;
@@ -25,7 +24,6 @@ class ForecastSecondaryCard extends StatelessWidget {
   const ForecastSecondaryCard(
       {Key? key,
       required this.location,
-      required this.onLocationChangeRequest,
       required this.isUpdating,
       required this.dailyForecast,
       required this.hourlyForecast,
@@ -47,8 +45,8 @@ class ForecastSecondaryCard extends StatelessWidget {
                 snapshot.data as List<WeatherForecast>?;
             WeatherForecast? forecast = firstOrNull(
                 forecasts,
-                (forecast) => isSameDay(forecast.initialDate,
-                    DateTime.now().add(const Duration(days: 1))));
+                (forecast) => isSameDay(forecast.date,
+                    zeroDateTime(DateTime.now()).add(const Duration(days: 1))));
             return Container(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
               margin: const EdgeInsets.only(bottom: 8),
