@@ -99,7 +99,13 @@ class _NextDaysPageState extends State<NextDaysPage> {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => DailyForecastRow(
+                      t: appLocalizations!,
+                      currentForecast: weatherBloc.currentForecast,
+                      hourlyForecast: weatherBloc.hourlyForecast,
+                      dailyForecast: weatherBloc.dailyForecast,
+                      weatherUnit: weatherBloc.weatherUnit,
                       forecast: forecasts.elementAt(index),
+                      location: widget.arguments.location,
                       animationDelay: Duration(milliseconds: 60 * index),
                     ),
                     childCount: forecasts.length,

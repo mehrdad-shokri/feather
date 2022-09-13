@@ -193,8 +193,8 @@ class ForecastHeroCard extends StatelessWidget {
                                                 Constants.MEDIUM_FONT_WEIGHT),
                                       ),
                                       Positioned(
-                                        top: 0,
-                                        right: -12,
+                                        top: 8,
+                                        right: -4,
                                         child: SvgPicture.asset(
                                           'assets/svg/degrees.svg',
                                           color: Colors.white,
@@ -262,7 +262,6 @@ class ForecastHeroCard extends StatelessWidget {
                                                     (forecast) => isSameDay(
                                                         forecast.date,
                                                         DateTime.now()));
-                                            print('forecast');
                                             if (forecast == null ||
                                                 forecast.pop == null) {
                                               return WeatherForecastIcon(

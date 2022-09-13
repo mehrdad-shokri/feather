@@ -64,10 +64,10 @@ T? firstOrNull<T>(Iterable<T>? items, callback) {
 }
 
 String windSpeedUnit(WeatherUnits metric) =>
-    metric == WeatherUnits.metric ? ' km/h' : ' mph';
+    metric == WeatherUnits.metric ? 'km/h' : 'mph';
 
 String temperatureUnit(WeatherUnits metric) =>
-    metric == WeatherUnits.metric ? ' °C' : ' °F';
+    metric == WeatherUnits.metric ? '°C' : '°F';
 
 String translateWeatherProvider(
     WeatherApiProvider provider, AppLocalizations t) {
@@ -124,6 +124,7 @@ void showPlatformActionSheet<T>(
     showCupertinoModalPopup(
         context: context,
         barrierColor: Constants.BARRIER_COLOR,
+        barrierDismissible: true,
         builder: (context) => CupertinoActionSheet(
               title: Text(title),
               actions: items

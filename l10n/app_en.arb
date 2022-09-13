@@ -210,5 +210,11 @@
     "description": "sunset",
     "type": "text",
     "placeholders": {}
+  },
+  "hourlyForecastNotAvailable": "Hourly forecast not available",
+  "@hourlyForecastNotAvailable": {
+    "description": "hourly forecast not available",
+    "type": "text",
+    "placeholders": {}
   }
 }

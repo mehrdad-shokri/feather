@@ -1,3 +1,4 @@
+import 'package:client/models/weather_forecast.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -87,4 +88,17 @@ String formatTime(DateTime date) {
     );
   }
   return timeFormat;
+}
+
+List<DateTime> distinctDates(List<WeatherForecast> forecasts) {
+  List<DateTime> dates = [];
+  for (var i = 0; i < forecasts.length; i++) {
+    if (i == 0) {
+      dates.add(forecasts.elementAt(i).date);
+    } else if (!isSameDay(
+        forecasts.elementAt(i).date, forecasts.elementAt(i - 1).date)) {
+      dates.add(forecasts.elementAt(i).date);
+    }
+  }
+  return dates;
 }

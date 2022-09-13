@@ -73,7 +73,7 @@ class HourlyForecastCard extends StatelessWidget {
               ),
               Positioned(
                 top: 0,
-                right: -8,
+                right: -6,
                 child: SvgPicture.asset(
                   'assets/svg/degrees.svg',
                   color: Colors.white,

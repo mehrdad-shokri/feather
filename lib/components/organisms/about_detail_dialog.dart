@@ -97,7 +97,10 @@ class _AboutDetailDialogState extends State<AboutDetailDialog> {
                         builder: (context, snapshot) {
                           bool? updating = snapshot.data as bool?;
                           if (updating != null && updating) {
-                            return PlatformCircularProgressIndicator();
+                            return SizedBox(
+                              height: 16,
+                              child: PlatformCircularProgressIndicator(),
+                            );
                           }
                           return Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +156,10 @@ class _AboutDetailDialogState extends State<AboutDetailDialog> {
                                       element.keys.first ==
                                       Constants.GITHUB_REPO_URL)
                                   .isNotEmpty) {
-                            return PlatformCircularProgressIndicator();
+                            return SizedBox(
+                              height: 16,
+                              child: PlatformCircularProgressIndicator(),
+                            );
                           }
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,

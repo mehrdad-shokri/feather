@@ -30,9 +30,12 @@ class NextDaysPageAppbar extends StatelessWidget {
           primary: true,
           bottom: null,
           centerTitle: true,
+          iconTheme: const IconThemeData(
+              color: Colors.white, size: Constants.ICON_MEDIUM_SIZE),
           title: Text(
             t.next7Days,
             style: const TextStyle(
+                color: Colors.white,
                 fontWeight: Constants.BOLD_FONT_WEIGHT,
                 fontSize: Constants.H4_FONT_SIZE),
           ),
