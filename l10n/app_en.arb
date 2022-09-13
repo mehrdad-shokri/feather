@@ -193,7 +193,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "dailySummary": "Daily Summar",
+  "dailySummary": "Daily Summary",
   "@dailySummary": {
     "description": "daily summary",
     "type": "text",

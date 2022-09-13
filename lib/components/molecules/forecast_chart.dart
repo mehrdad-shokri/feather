@@ -113,8 +113,8 @@ class ForecastChart extends StatelessWidget {
             },
           ),
         ),
-        minY: minSpotY - averageY / 16,
-        maxY: maxSpotY + averageY / 16,
+        minY: minSpotY - averageY / 8,
+        maxY: maxSpotY + averageY / 8,
         maxX: maxSpotX,
         minX: minSpotX,
         titlesData: FlTitlesData(

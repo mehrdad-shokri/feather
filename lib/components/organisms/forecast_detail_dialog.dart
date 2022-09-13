@@ -223,10 +223,10 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                   ),
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 8,
                 ),
                 Container(
-                  height: 40,
+                  height: 32,
                   padding: Constants.PAGE_PADDING,
                   child: StreamBuilder(
                     stream: widget.hourlyForecast,
@@ -255,7 +255,7 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                               children: [
                                 for (var j = 0;
                                     j <
-                                        min(dates.length - i * daysPerPager,
+                                        min(dates.length - 1 - i * daysPerPager,
                                             daysPerPager);
                                     j++)
                                   ForecastDetailWeekday(
@@ -317,8 +317,8 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                           return Container();
                         }
                         return Padding(
-                          padding:
-                              EdgeInsets.only(left: 16, right: 16, bottom: 40),
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, bottom: 40),
                           child: Column(
                             children: [
                               Row(
@@ -330,12 +330,9 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                                     flex: 1,
                                     fit: FlexFit.tight,
                                     child: WeatherForecastIcon(
-                                      assetDir: 'assets/svg/wind.svg',
-                                      value: forecast.windSpeed == 0
-                                          ? '-'
-                                          : '${forecast.windSpeed.round()}${windSpeedUnit(forecast.unit)}',
-                                      direction: Axis.horizontal,
-                                      title: widget.t.wind,
+                                      assetDir: 'assets/svg/humidity.svg',
+                                      value: '${forecast.humidityPercent}%',
+                                      title: widget.t.humidity,
                                     ),
                                   ),
                                   Flexible(
@@ -346,14 +343,13 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                                       value: forecast.pop == 0
                                           ? '-'
                                           : '${((forecast.pop!) * 100).toInt()}%',
-                                      direction: Axis.horizontal,
                                       title: widget.t.chanceOfRain,
                                     ),
                                   )
                                 ],
                               ),
                               const SizedBox(
-                                height: 16,
+                                height: 24,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -366,10 +362,10 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                                       fit: FlexFit.tight,
                                       child: WeatherForecastIcon(
                                         assetDir: 'assets/svg/sunrise.svg',
-                                        value: formatDate(forecast.sunrise!,
+                                        value: formatDate(
+                                            forecast.sunrise!.toLocal(),
                                             format: 'hh:mm a'),
                                         title: widget.t.sunrise,
-                                        direction: Axis.horizontal,
                                       ),
                                     ),
                                   if (forecast.sunset != null)
@@ -378,9 +374,9 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
                                       fit: FlexFit.tight,
                                       child: WeatherForecastIcon(
                                         assetDir: 'assets/svg/sunset.svg',
-                                        value: formatDate(forecast.sunset!,
+                                        value: formatDate(
+                                            forecast.sunset!.toLocal(),
                                             format: 'hh:mm a'),
-                                        direction: Axis.horizontal,
                                         title: widget.t.sunset,
                                       ),
                                     )
