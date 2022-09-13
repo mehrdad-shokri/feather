@@ -59,10 +59,11 @@ class _ForecastDetailDialogState extends State<ForecastDetailDialog> {
       for (var i = 0; i < dates.length; i++) {
         if (isSameDay(widget.initialDate, dates[i])) {
           print('jump index $i  ${(i / daysPerPager).floor()}');
-          if (controller.hasClients) {
-            print('jump index 1 ${(i / daysPerPager).floor()}');
-            controller.jumpToPage((i / daysPerPager).floor());
-          }
+          Future.delayed(const Duration(milliseconds: 50), () {
+            if (controller.hasClients) {
+              controller.jumpToPage((i / daysPerPager).floor());
+            }
+          });
         }
       }
     });
