@@ -52,8 +52,8 @@ class Constants {
   static const Color LINE_COLOR = Color.fromRGBO(41, 39, 24, 1.0);
 
   static const Color BACKGROUND_COLOR = Color.fromRGBO(239, 243, 247, 1.0);
-  static const Color BACKGROUND_COLOR_MODAL_SHEET = Colors.white;
   static const Color BACKGROUND_COLOR_DARK = Color.fromRGBO(25, 17, 13, 1.0);
+  static const Color BACKGROUND_COLOR_MODAL_SHEET = Colors.white;
   static const Color BACKGROUND_COLOR_MODAL_SHEET_DARK =
       Color.fromRGBO(33, 34, 38, 1.0);
   static const Color INPUT_BACKGROUND_COLOR = Color.fromRGBO(231, 231, 232, 1);
